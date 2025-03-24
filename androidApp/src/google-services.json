@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "656294235106",
+    "project_id": "octocon-fb",
+    "storage_bucket": "octocon-fb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:656294235106:android:cce65ec689ee951358c7bb",
+        "android_client_info": {
+          "package_name": "app.octocon.OctoconApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLyRHYbM7bfscAHZOyttG--vq7wt78k8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

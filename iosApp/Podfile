@@ -1,0 +1,22 @@
+def workspace_pods
+  pod 'shared', :path => '../shared'
+end
+
+target 'iosApp' do
+  use_frameworks!
+  platform :ios, '17.6'
+  workspace_pods
+end
+
+target 'OctoconWidgetExtension' do
+  use_frameworks!
+  platform :ios, '17.6'
+  pod 'SDWebImage'
+  pod 'SDWebImageWebPCoder'
+end
+
+#target 'OctoconWidgetExtension' do
+#  use_frameworks!
+#  platform :ios, '17.6'
+#  workspace_pods
+#end

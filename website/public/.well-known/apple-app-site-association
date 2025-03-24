@@ -1,0 +1,15 @@
+{
+  "applinks": {
+      "details": [
+           {
+             "appIDs": ["AVJM9TZ9VF.app.octocon.OctoconApp"],
+             "components": [
+               {
+                  "/": "/deep/*",
+                  "comment": "Matches any URL with a path that starts with /deep/."
+               }
+             ]
+           }
+       ]
+   }
+}

@@ -1,0 +1,741 @@
+<resources>
+    <string name="app_name">Octocon</string>
+    <string name="app_logo">Octocon logo</string>
+    <string name="welcome_title">Welcome to Octocon!</string>
+    <string name="welcome_body">Octocon is the all-in-one solution for people with dissociative disorders (like DID or OSDD) to manage their alters, find resources, and express themselves.</string>
+
+    <string name="system_or_singlet_title">Are you a system?</string>
+    <string name="system_or_singlet_body">If not, tap "I'm a singlet" below to hide all system-specific features. You will only be able to add friends to get updates on their front status.\n\nThis can be changed later in the app's settings!</string>
+    <string name="im_a_system">I'm a system</string>
+    <string name="im_a_singlet">I'm a singlet</string>
+
+    <string name="singlet_mode">Singlet mode</string>
+    <string name="singlet_mode_body">Singlet mode is now enabled. All system-specific features have been hidden. You will only be able to add friends to get updates on their front status.</string>
+
+    <string name="login">Log in</string>
+    <string name="login_google">Log in with Google</string>
+    <string name="login_discord">Log in with Discord</string>
+    <string name="login_apple">Log in with Apple</string>
+    <string name="or_lowercase">or</string>
+
+    <string name="direct_token_login_title">Direct token login</string>
+    <string name="direct_token_login_body">Please enter your token.\n\nThis feature is for testing purposes only. IF YOU DON'T KNOW WHAT THIS MEANS, DO NOT CONTINUE! If someone has asked you to enter a token here, they are trying to scam you.\n\nOnce you enter a token, the app will close. You will need to open it again manually.</string>
+    <string name="token">Token</string>
+
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+    <string name="create">Create</string>
+    <string name="confirm">Confirm</string>
+    <string name="ok">Ok</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="expand">Expand</string>
+    <string name="collapse">Collapse</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="finish">Finish</string>
+    <string name="open">Open</string>
+
+    <string name="get_started">Let's get started</string>
+
+    <string name="menu">Menu</string>
+
+    <string name="update_color">Update color</string>
+    <string name="back_to_top">Back to top</string>
+    <string name="note">Note</string>
+
+    <string name="home">Home</string>
+    <string name="profile">Profile</string>
+    <string name="resources">Resources</string>
+    <string name="settings">Settings</string>
+    <string name="support_us">Support us</string>
+
+    <string name="support_us_patreon_card_title">Patreon</string>
+    <string name="support_us_patreon_card_body">Join our Patreon to support Octocon's server costs and keep it free for everyone!\n\nYou'll also receive access to cool Discord perks like a special role, priority support, and access to a private Minecraft server.</string>
+
+    <string name="support_us_kofi_card_title">Ko-fi</string>
+    <string name="support_us_kofi_card_body">Support our developer on Ko-fi to help fund their cappuccino addiction!\n\nDonations here go directly to the developer, not the Octocon business.</string>
+
+    <string name="transparency">Transparency</string>
+    <string name="transparency_text">Octocon will always be free for everyone; we'll **never** introduce features that require payment to use. However, running the app and its servers costs money, so we rely on donations to keep the lights on.\n\nAll Patreon donations beyond the server costs are donated to a rotating list of mental health charities.\n\nIf you're financially able, please consider supporting us; even the smallest donation means a lot. Thank you.</string>
+
+    <string name="pin">PIN</string>
+    <string name="enter_pin">Enter your PIN</string>
+    <string name="pin_hint">Your Octocon account on this device is protected with a numerical PIN between 4 and 8 digits. Enter it to continue.</string>
+    <string name="invalid_pin">Invalid PIN! Please try again.</string>
+
+    <string name="stealth_app_subtitle">News beyond Earth</string>
+
+    <string name="alters">Alters</string>
+    <string name="add_alter">Add an alter</string>
+    <string name="attach_alter">Attach an alter</string>
+    <string name="create_alter">Log an alter</string>
+    <string name="create_tag">Create a tag</string>
+    <string name="create_subtag">Create a subtag</string>
+
+    <string name="what_does_this_mean">What does this mean?</string>
+    <string name="discord_help_dialog_body">These are settings that only apply to the Octocon Discord bot.\n\n"Alias" is an alternative to this alter's number ID that you specify and can be used in slash commands.\n\n"Proxy name" is an alternative name used when proxying as this alter.</string>
+
+    <string name="set_main_front">Set as main front</string>
+    <string name="unset_main_front">Unset as main front</string>
+    <string name="front_comment">Front comment</string>
+    <string name="edit_front_comment">Edit front comment</string>
+    <string name="add_to_front">Add to front</string>
+    <string name="set_as_front">Set as front</string>
+    <string name="remove_from_front">Remove from front</string>
+    <string name="edit_alter">Edit alter</string>
+    <string name="delete_alter">Delete alter</string>
+
+    <string name="basic_info">Basic info</string>
+    <string name="fields">Fields</string>
+    <string name="tags">Tags</string>
+    <string name="journal">Journal</string>
+    <string name="open_journal">Open journal</string>
+
+    <string name="update_username">Update username</string>
+    <string name="alter_count">Alter count:</string>
+    <string name="tap_to_show">Tap to show</string>
+
+    <plurals name="alters_count">
+        <item quantity="one">%1$d alter</item>
+        <item quantity="other">%1$d alters</item>
+    </plurals>
+
+    <string name="view_alter_journal">View alter's journal</string>
+    <string name="view_name_journal">View %1$s's journal</string>
+    <string name="search_journal_entries">Search journal entries...</string>
+
+    <string name="locked">Locked</string>
+    <string name="pinned">Pinned</string>
+
+    <string name="set_avatar">Set avatar</string>
+    <string name="remove_avatar">Remove avatar</string>
+    <string name="tap_to_set_avatar">Tap to set an avatar</string>
+    <string name="preparing_avatar">Preparing avatar...</string>
+    <string name="uploading_avatar">Uploading avatar...</string>
+
+    <string name="no_alters_title">You haven't logged any alters yet!</string>
+    <string name="no_alters_body">Log an alter to get started:</string>
+    <string name="no_alters_button">Log an alter</string>
+
+    <string name="empty_tag_card_title">This tag is empty!</string>
+    <string name="empty_tag_card_body">Add an alter or create a subtag to get started:</string>
+    <string name="empty_tag_card_button">Add an alter</string>
+
+    <string name="no_journal_entries_title">You haven't written any journal entries yet!</string>
+    <string name="no_journal_entries_body">Write one now to keep track of your day:</string>
+    <string name="no_journal_entries_button">Create journal entry</string>
+
+    <string name="new_user_card_title">New to Octocon?</string>
+    <string name="new_user_card_body">Octocon is an all-in-one toolkit for systems: it lets you manage your alters, set who's fronting, connect with other systems, keep a journal, and much more.</string>
+    <string name="new_user_card_button">Learn more</string>
+
+    <string name="confirm_unlock_journal_entry_title">Journal entry is locked</string>
+    <string name="confirm_unlock_journal_entry_body">This journal entry is locked. It might contain sensitive information that could worsen your mental state!\n\nAre you sure you want to open it?</string>
+
+    <string name="no_alters_in_tag_title">No alters are in this tag yet!</string>
+    <string name="no_alters_in_tag_body">Add one to get started:</string>
+
+    <string name="no_custom_fields_card_title">Whoops, nothing here!</string>
+    <string name="no_custom_fields_card_body">You haven't set up any custom fields for your account yet. Check out the settings page to add some:</string>
+    <string name="no_custom_fields_card_button">Go to settings</string>
+
+    <string name="open_tag">Open tag</string>
+    <string name="add_tag">Add a tag</string>
+    <string name="delete_tag">Delete tag</string>
+    <string name="remove_tag">Remove tag</string>
+    <string name="attach_tag">Attach tag</string>
+    <string name="remove_alter_from_tag">Remove alter from tag</string>
+
+    <string name="subtags">Subtags</string>
+
+    <string name="parent_tag">Parent tag</string>
+    <string name="no_parent_tag">No parent tag</string>
+    <string name="set_parent_tag">Set parent tag</string>
+    <string name="no_other_tags">You have no other tags.</string>
+    <string name="remove_parent_tag">Remove parent tag</string>
+
+    <string name="no_results_found">No results found.</string>
+
+    <string name="no_tags_to_attach">There are no tags you can attach to this alter.</string>
+    <string name="tag_no_valid_alters">You have no alters that can be added to this tag.</string>
+
+    <string name="tag_name">Tag name</string>
+
+    <string name="tag_settings">Tag settings</string>
+    <string name="edit_tag_settings">Edit tag settings</string>
+    <string name="remove_from_tag">Remove from tag</string>
+
+    <string name="unnamed_alter">Unnamed alter</string>
+
+    <string name="name">Name</string>
+    <string name="pronouns">Pronouns</string>
+    <string name="no_pronouns">No pronouns</string>
+    <string name="description">Description</string>
+    <string name="no_description">No description</string>
+    <string name="save_description">Save description</string>
+    <string name="edit_description">Edit description</string>
+    <string name="color">Color</string>
+    <string name="no_color">No color</string>
+    <string name="id">ID</string>
+    <string name="security_level">Security level</string>
+    <string name="untracked">Untracked</string>
+    <string name="archived">Archived</string>
+
+    <string name="count_does_not_include_untracked">The alter count above does not include alters that are marked as "Untracked" on their profile.</string>
+
+    <string name="alias">Alias</string>
+    <string name="no_alias">No alias</string>
+    <string name="proxy_name">Proxy name</string>
+    <string name="no_proxy_name">No proxy name</string>
+
+    <string name="save_field">Save field</string>
+    <string name="edit_field">Edit field</string>
+
+    <string name="error_loading_avatar">Error loading avatar!</string>
+    <string name="error_saving_alter">Error saving alter!</string>
+    <string name="error_saving_tag">Error saving tag!</string>
+    <string name="error_saving_journal_entry">Error saving journal entry!</string>
+    <string name="error_saving_poll">Error saving poll!</string>
+    <string name="poll_no_valid_alters">You have no alters that can vote on this poll.</string>
+
+    <string name="no_avatar">No avatar</string>
+    <string name="name_avatar">%1$s's avatar</string>
+
+    <string name="back">Back</string>
+
+    <string name="public">Public</string>
+    <string name="friends_only">Friends only</string>
+    <string name="trusted_friends_only">Trusted only</string>
+    <string name="private">Private</string>
+
+    <string name="sort_alphabetically">Sort alphabetically</string>
+    <string name="sort_by_id">Sort by ID</string>
+
+    <string name="revert_changes">Revert changes</string>
+
+    <string name="history">History</string>
+    <string name="previous_month">Previous month</string>
+    <string name="next_month">Next month</string>
+    <string name="delete_front">Delete front</string>
+
+    <string name="loading">Loading...</string>
+    <string name="saving">Saving...</string>
+
+    <string name="create_journal_entry">Create a new journal entry</string>
+    <string name="title">Title</string>
+    <string name="start_writing">Start writing...</string>
+    <string name="delete_journal_entry">Delete journal entry</string>
+    <string name="delete_journal_entry_body">Are you sure you want to delete this journal entry?</string>
+    <string name="edit_journal_entry">Edit journal entry</string>
+    <string name="edit_journal_title">Edit journal title</string>
+    <string name="lock_journal_entry">Lock journal entry</string>
+    <string name="unlock_journal_entry">Unlock journal entry</string>
+    <string name="pin_journal_entry">Pin journal entry</string>
+    <string name="unpin_journal_entry">Unpin journal entry</string>
+    <plurals name="friend_fronting_count_expand">
+        <item quantity="one">%1$d fronting (tap to expand)</item>
+        <item quantity="other">%1$d fronting (tap to expand)</item>
+    </plurals>
+    <string name="friend_fronting_count_collapse">Tap to collapse</string>
+
+    <string name="friends">Friends</string>
+
+    <string name="make_trusted_friend">Make trusted friend</string>
+    <string name="make_untrusted_friend">Make untrusted friend</string>
+    <string name="trusted_friend">Trusted friend</string>
+    <string name="view_friend">View friend</string>
+    <string name="remove_friend">Remove friend</string>
+
+    <string name="friend_requests">Friend requests</string>
+
+    <string name="add_friend">Add a friend</string>
+    <string name="add_friend_hint">You may add a friend by their username (e.g. "Username") or their ID (e.g. "abcdefg").</string>
+    <string name="username_or_id">Username or ID</string>
+
+    <string name="username">Username</string>
+    <string name="no_username">No username</string>
+    <string name="currently_fronting">Currently fronting</string>
+    <string name="all_alters">All alters</string>
+    <string name="search_alters">Search alters...</string>
+    <string name="search_tags">Search tags...</string>
+    <string name="privacy_warning">This screen only shows alters you have access to view. You shouldn't show this screen to anyone else!</string>
+
+    <string name="our_community">Our community</string>
+
+    <string name="discord_card_title">Our Discord</string>
+    <string name="discord_card_body">Join our Discord community to get support for the Octocon app.</string>
+
+    <string name="invite_bot_card_title">Invite the bot</string>
+    <string name="invite_bot_card_body">Invite the Octocon bot to your Discord server to use features such as sending messages as your alters. Everything syncs with the app automatically!</string>
+
+    <string name="website_card_title">Website</string>
+    <string name="website_card_body">Visit our website to learn more about the Octocon platform and its features.</string>
+
+    <string name="hotlines">Hotlines</string>
+
+    <string name="emergency_crisis_hotlines_title">Emergency crisis hotlines</string>
+    <string name="emergency_crisis_hotlines_body">If you're in immediate danger of harming yourself, an emergency hotline can provide you with the support you need.</string>
+
+    <string name="mental_health_hotlines_title">Mental health hotlines</string>
+    <string name="mental_health_hotlines_body">If you need someone to talk to, including with LGBTQ+ or addiction issues, consider reaching out to a mental health hotline for help.</string>
+
+    <string name="did_research_org">did-research.org</string>
+
+    <string name="did_research_org_home_title">Home</string>
+    <string name="did_research_org_home_body">did-research.org is a website dedicated to providing information and resources regarding dissociation, trauma, and dissociative disorders.</string>
+
+    <string name="did_research_org_what_is_did_title">What is DID?</string>
+    <string name="did_research_org_what_is_did_body">Learn more about Dissociative Identity Disorder (DID) and its symptoms, including alters and their roles in a system.</string>
+
+    <string name="did_research_org_causes_development_title">Causes and Development</string>
+    <string name="did_research_org_causes_development_body">Discover the causes and development of dissociative disorders, including the role of childhood trauma.</string>
+
+    <string name="did_research_org_comorbidity_title">Comorbidity</string>
+    <string name="did_research_org_comorbidity_body">Explore the comorbidity of dissociative disorders with other mental health conditions, including PTSD and BPD.</string>
+
+    <string name="did_research_org_treatment_title">Treatment</string>
+    <string name="did_research_org_treatment_body">Learn about the treatment options available for systems, including suggestions for finding a therapist and managing symptoms.</string>
+
+    <string name="external_resources_disclaimer">The external resources listed here are not a substitute for professional medical advice, nor are they affiliated with Octocon.</string>
+
+    <string name="appearance">Appearance</string>
+
+    <string name="color_mode">Color mode</string>
+    <string name="color_mode_system">Same as device</string>
+    <string name="color_mode_light">Light</string>
+    <string name="color_mode_dark">Dark</string>
+
+    <string name="theme_color">Theme color</string>
+    <string name="theme_color_blue_default">Blissful Blue (Default)</string>
+    <string name="theme_color_pink">Playful Pink</string>
+    <string name="theme_color_violet">Vibrant Violet</string>
+    <string name="theme_color_orange">Octo Orange</string>
+    <string name="theme_color_red">Radiant Red</string>
+    <string name="theme_color_green">Gleeful Green</string>
+    <string name="theme_color_teal">Tranquil Teal</string>
+    <string name="theme_color_monochrome">Monochrome</string>
+
+    <string name="dynamic_color_type">Dynamic color type</string>
+    <string name="dynamic_color_type_none">None</string>
+    <string name="dynamic_color_type_normal_default">Normal (Default)</string>
+    <string name="dynamic_color_type_vibrant">Vibrant</string>
+
+    <string name="amoled_mode">AMOLED mode</string>
+
+    <string name="corner_style">Corner style</string>
+    <string name="corner_style_rounded_default">Rounded (Default)</string>
+    <string name="corner_style_square">Square</string>
+
+    <string name="change_front_mode">Change front mode</string>
+    <string name="change_front_mode_swipe_default">Swipe (Default)</string>
+    <string name="change_front_mode_swipe">Swipe</string>
+    <string name="change_front_mode_bidirectional_swipe">Swipe (Bidirectional)</string>
+    <string name="change_front_mode_button">Button</string>
+
+    <string name="onboarding_card_what_can_it_do_title">What can it do?</string>
+    <string name="onboarding_card_what_can_it_do_body">Octocon offers a variety of features to help you manage your dissociative disorder, including logging fronts, in-app journaling, and front push notifications for your friends.</string>
+
+    <string name="onboarding_card_get_started_title">How do I get started?</string>
+    <string name="onboarding_card_get_started_body">To get started, we'll have to set a few things up first! Tap the "Next" button below to continue.</string>
+
+    <string name="onboarding_card_front_setting_title">Adding alters to front</string>
+    <string name="onboarding_card_front_setting_body">Octocon provides a few different methods for managing your front status. Choose the one that works best for you.</string>
+
+    <string name="front_setting_swipe_description">Swipe left on an alter to start/stop fronting. Swipe further on a fronting alter to set them as main front.</string>
+    <string name="front_setting_bidirectional_swipe_description">Swipe left on an alter to start/stop fronting. Swipe right on a fronting alter to set them as main front.</string>
+    <string name="front_setting_button_description">Tap on an alter's arrow button to start/stop fronting. Tap and hold on a fronting alter's button to set them as main front.</string>
+
+    <string name="onboarding_card_finish_title">You're all set!</string>
+    <string name="onboarding_card_finish_body">Once you start using Octocon, take a look at the Settings page to customize the app to your liking. Tap the button below to join our Discord community if you need help!</string>
+    <string name="onboarding_card_finish_button">Join our community</string>
+
+    <string name="onboarding_card_discord_title">Use Discord?</string>
+    <string name="onboarding_card_discord_body">If you use Discord, you can invite the Octocon bot to your Discord server to send messages as your alters. Everything syncs with the app automatically!</string>
+    <string name="onboarding_card_discord_button">Invite the bot</string>
+
+    <string name="onboarding_card_import_title">Use Simply Plural or PluralKit?</string>
+    <string name="onboarding_card_import_body">If you use the Simply Plural app or PluralKit Discord bot, you can import your data (including alters) into Octocon to get started quickly. Just follow the instructions on the Settings page!</string>
+
+    <string name="front_setting_try_it_out">Try it out on the alters below!</string>
+
+    <string name="accessibility">Accessibility</string>
+
+    <string name="show_help_button">Show app-wide help button</string>
+    <string name="show_permanent_tips">Show permanent tips</string>
+    <string name="use_dyslexic_font">Use dyslexic font</string>
+
+    <string name="font_size">Font size</string>
+    <string name="font_size_smallest">Smallest</string>
+    <string name="font_size_small">Small</string>
+    <string name="font_size_regular_default">Regular (Default)</string>
+    <string name="font_size_large">Large</string>
+    <string name="font_size_largest">Largest</string>
+
+    <string name="use_small_avatars">Use small avatars</string>
+    <string name="show_alter_ids">Show alter IDs</string>
+    <string name="use_tablet_layout">Use tablet layout on large screens</string>
+    <string name="hide_navigation_bar_on_scroll">Hide navigation bar on scroll</string>
+    <string name="hide_alters_in_tags">Hide alters in tags from root</string>
+
+    <string name="color_contrast_level">Color contrast level</string>
+    <string name="color_contrast_level_minimum">Minimum</string>
+    <string name="color_contrast_level_reduced">Reduced</string>
+    <string name="color_contrast_level_normal_default">Normal (Default)</string>
+    <string name="color_contrast_level_increased">Increased</string>
+    <string name="color_contrast_level_maximum">Maximum</string>
+
+    <string name="reduce_motion">Reduce motion</string>
+
+    <string name="screen_transition_type">Screen transition</string>
+    <string name="screen_transition_native_default">Native (Default)</string>
+    <string name="screen_transition_zoom">Zoom</string>
+    <string name="screen_transition_fade">Fade</string>
+    <string name="screen_transition_none">None</string>
+
+    <string name="security">Security</string>
+
+    <string name="lock_app_with_pin">Lock app with PIN</string>
+    <string name="create_pin_title">Create a PIN</string>
+    <string name="create_pin_body">Enter a PIN between 4 and 8 digits below.\n\nThis must be entered every time you open Octocon on this device. If you forget your PIN, you will have to log out!</string>
+
+    <string name="stealth_mode">Stealth mode</string>
+    <string name="stealth_mode_body">Stealth mode is now enabled. When you launch the app, you will see a "fake" app that looks like a news aggregator.\n\nTo access the real app, tap the "Octocon" logo at the top of the screen twice.</string>
+
+    <string name="quick_exit">Quick exit</string>
+    <string name="quick_exit_body">Quick exit is now enabled. Double-tap anywhere that isn't already interactive (like a button) to immediately exit the app.</string>
+
+    <string name="notifications">Notifications</string>
+
+    <string name="show_push_notifications">Show push notifications</string>
+
+    <string name="account">Account</string>
+
+    <string name="create_custom_field">Create custom field</string>
+    <string name="custom_fields">Custom fields</string>
+    <string name="custom_field_options">Custom field options</string>
+    <string name="create_custom_field_icon">Create custom field icon</string>
+    <string name="edit">Edit</string>
+    <string name="edit_name">Edit name</string>
+    <string name="edit_field_name">Edit field name</string>
+    <string name="lock_field">Lock field</string>
+    <string name="field_locked">Field locked</string>
+    <string name="tap_to_unlock">Tap to unlock</string>
+    <string name="unlock_field">Unlock field</string>
+    <string name="delete_field">Delete field</string>
+    <string name="type">Type</string>
+    <string name="custom_field_type_text">Text</string>
+    <string name="custom_field_type_number">Number</string>
+    <string name="custom_field_type_boolean">Yes/No</string>
+
+    <string name="confirm_delete_field">Are you sure you want to delete the custom field "%1$s"?</string>
+    <string name="confirm_delete_tag">Are you sure you want to delete the tag "%1$s"?</string>
+    <string name="confirm_delete_alter">Are you sure you want to delete %1$s?</string>
+    <string name="confirm_delete_poll">Are you sure you want to delete the poll "%1$s"?</string>
+
+    <string name="action_irreversible">This can't be undone!</string>
+
+    <string name="tag_context_menu">Tag context menu</string>
+
+    <string name="google_account">Google account</string>
+    <string name="discord_account">Discord account</string>
+    <string name="link">Link</string>
+    <string name="unlink">Unlink</string>
+
+    <string name="discord_info">Discord info</string>
+
+    <string name="link_google_account_title">Link Google account</string>
+    <string name="link_google_account_body">Are you sure you want to link a Google account to Octocon? You will be redirected to Google's sign-in page.</string>
+
+    <string name="unlink_google_account_title">Unlink Google account</string>
+    <string name="unlink_google_account_body">Are you sure you want to unlink your Google account from Octocon?</string>
+
+    <string name="link_discord_account_title">Link Discord account</string>
+    <string name="link_discord_account_body">Are you sure you want to link a Discord account to Octocon? You will be redirected to Discord's sign-in page.</string>
+
+    <string name="unlink_discord_account_title">Unlink Discord account</string>
+    <string name="unlink_discord_account_body">Are you sure you want to unlink your Discord account from Octocon?</string>
+
+    <string name="logout">Log out</string>
+    <string name="logout_body">Are you sure you want to log out? This will also reset all of your local device settings.</string>
+
+    <string name="import_alters">Import alters</string>
+
+    <string name="simply_plural">Simply Plural</string>
+    <string name="import_sp_title">Import from Simply Plural</string>
+    <string name="import_sp_body">To import your alters from Simply Plural, you'll need a "token" from Simply Plural first. You can get this by opening the Simply Plural app and navigating to the following page:\n~\n**Settings** -> **Account** -> **Tokens**\n~\nFrom here:\n- Click the **Add Token** button\n- Enable the **Read** permission\n- Click the **Add Token** button at the bottom of the screen\n- Tap **Yes** 3 times to confirm\n- Click the copy button on the left of the token to copy it to your clipboard\n- Enter the token below!</string>
+
+    <string name="pluralkit">PluralKit</string>
+    <string name="import_pk_title">Import from PluralKit</string>
+    <string name="import_pk_body">To import your alters from PluralKit, you'll need your PluralKit "token" first.\n~\nTo receive this, DM the PluralKit Discord bot with the command `pk;token`, then copy the long, random string it gives you and enter it below.</string>
+
+    <string name="import_complete_title">Import complete!</string>
+
+    <string name="import_complete_sp_body">Your alters have been successfully imported from Simply Plural!\n~\n**Note:** it may take a while longer for your avatars (profile pictures) to import.</string>
+    <string name="import_complete_pk_body">Your alters have been successfully imported from PluralKit!\n~\n**Note:** it may take a while longer for your avatars (profile pictures) to import.</string>
+
+    <string name="import">Import</string>
+
+    <string name="danger_zone">Danger zone</string>
+
+    <string name="reset_device_settings">Reset device settings</string>
+    <string name="reset_device_settings_body">Are you sure you want to reset your device settings? This will not log you out.</string>
+
+    <string name="delete_account">Delete account</string>
+    <string name="delete_account_body">Are you sure you want to delete your account? This is irreversible; you CANNOT recover your data after this!</string>
+
+    <string name="wipe_alters">Wipe alters</string>
+    <string name="wipe_alters_body">Are you sure you want to delete all of your alters? This is irreversible; you CANNOT recover your old alters after this!</string>
+
+    <string name="app_info">App info</string>
+    <string name="app">App</string>
+    <string name="style">Style</string>
+    <string name="functionality">Functionality</string>
+    <string name="contents">Contents</string>
+
+    <string name="open_source_licenses">Open source licenses</string>
+    <string name="server_status">Server status</string>
+
+    <string name="google_account_link_success">Your Google account was successfully linked!</string>
+    <string name="discord_account_link_success">Your Discord account was successfully linked!</string>
+
+    <string name="polls">Polls</string>
+    <string name="create_poll">Create a poll</string>
+    <string name="poll_type_vote">Vote</string>
+    <string name="poll_type_choice">Choice</string>
+    <string name="end_time">End time</string>
+    <string name="no_end_time">No end time</string>
+    <string name="results">Results</string>
+    <string name="poll_ends_at">Ends on %1$s</string>
+    <string name="poll_ended_at">Ended on %1$s</string>
+    <string name="no_votes">No votes</string>
+    <string name="no_responses">No responses</string>
+    <string name="yes_vote_count">"Yes" vote count</string>
+    <string name="no_vote_count">"No" vote count</string>
+    <string name="abstain_vote_count">"Abstain" vote count</string>
+    <string name="veto_vote_count">"Veto" vote count</string>
+    <string name="vote_type">Vote type</string>
+    <string name="vote_yes">Yes</string>
+    <string name="vote_no">No</string>
+    <string name="vote_abstain">Abstain</string>
+    <string name="vote_veto">Veto</string>
+    <string name="poll_title">Poll title</string>
+    <string name="poll_description">Poll description</string>
+    <string name="remove_end_time">Remove end time</string>
+    <string name="delete_poll">Delete poll</string>
+    <string name="allow_veto">Allow veto</string>
+    <string name="comment">Comment</string>
+    <string name="no_comment">No comment</string>
+    <string name="edit_comment">Edit comment</string>
+    <string name="remove_vote">Remove vote</string>
+    <string name="view_poll">View poll</string>
+    <string name="choice">Choice</string>
+    <string name="choices">Choices</string>
+    <string name="add_choice">Add a choice</string>
+    <string name="edit_choice">Edit choice</string>
+    <string name="remove_choice">Remove choice</string>
+    <string name="confirm_delete_poll_choice">Are you sure you want to delete the choice "%1$s"?</string>
+
+    <string name="no_choices_card_title">This poll has no choices!</string>
+    <string name="no_choices_card_body">Add a choice to get started:</string>
+    <string name="no_choices_card_button">Add a choice</string>
+
+    <string name="sheet_no_choices_card_title">This poll has no choices!</string>
+    <string name="sheet_no_choices_card_body">Add one in the "Settings" tab first.</string>
+
+    <string name="choose_an_alter">Choose an alter</string>
+
+    <string name="no_polls_card_title">You don't have any polls!</string>
+    <string name="no_polls_card_body">Create a poll to get started:</string>
+    <string name="no_polls_card_button">Create a poll</string>
+
+    <string name="no_votes_card_title">No alters have voted on this poll yet!</string>
+    <string name="no_votes_card_body">Cast a vote to get started:</string>
+    <string name="no_votes_card_button">Cast a vote</string>
+    <string name="cast_a_vote">Cast a vote</string>
+    <string name="cast_vote">Cast vote</string>
+
+    <string name="encryption_not_initialized_card_title">Set up encryption</string>
+    <string name="encryption_not_initialized_card_body_1">Octocon protects your journal entries with end-to-end encryption for maximum security. To use the journaling feature, you must set up encryption first.</string>
+    <string name="encryption_not_initialized_card_body_2">When you tap the button below, you will be shown a recovery code. Write this down and keep it in a safe place!</string>
+    <string name="encryption_not_initialized_card_button">Set up</string>
+
+    <string name="setup_encryption_dialog_title">Set up encryption</string>
+    <string name="setup_encryption_dialog_body_1">Write down the recovery code below and keep it in a safe place. You will need this code to access your journal entries on another device.</string>
+    <string name="setup_encryption_dialog_body_2">If you lose this code, you will permanently lose access to your journal entries!</string>
+    <string name="tap_to_copy">Tap to copy</string>
+
+    <string name="encryption_recovery_needed_card_title">Recovery code needed</string>
+    <string name="encryption_recovery_needed_card_body">To access your existing journal entries, you'll need to enter your recovery code you wrote down when you set up encryption on another device.</string>
+    <string name="encryption_recovery_needed_card_button">Recover</string>
+
+    <string name="unencrypted_warning_title">Unencrypted journal entry</string>
+    <string name="unencrypted_warning_body">This journal entry was created in a previous version of Octocon and is not end-to-end encrypted. It will be encrypted the next time you save it.</string>
+
+    <string name="reset_encryption_card_title">Lost your recovery code?</string>
+    <string name="reset_encryption_card_body">If you've lost your recovery code, you can reset your encryption key. This will permanently delete all of your journal entries, and you will have to start over.</string>
+    <string name="reset_encryption_card_button">Reset</string>
+
+    <string name="reset_encryption_dialog_title">Reset encryption key</string>
+    <string name="reset_encryption_dialog_body">Are you absolutely sure you want to reset your encryption key? This will permanently delete all of your journal entries on all devices!</string>
+    <string name="reset_encryption_dialog_button">Reset</string>
+
+    <string name="encryption_reset_successfully">Encryption key reset successfully!</string>
+    <string name="recovery_code">Recovery code</string>
+
+    <string name="recover_encryption_dialog_title">Recover encryption key</string>
+    <string name="recover_encryption_dialog_body">Enter your recovery code below to recover your encryption key. This will allow you to access your journal entries on this device.</string>
+
+    <string name="font_choice">Font choice</string>
+    <string name="font_choice_default">Default</string>
+    <string name="font_choice_lexie_readable">Lexie Readable</string>
+    <string name="font_choice_open_dyslexic">OpenDyslexic</string>
+
+    <string name="permanent_tip_friends">This is a list of your system's friends.\n\nIf they have a star next to their name, they are a trusted friend.\n\nYou can tap below their name to see who's currently fronting.</string>
+    <string name="permanent_tip_front_history">This is a view of your front history. You can tap on the arrow buttons to switch between months.</string>
+    <string name="permanent_tip_global_journals">This is a list of your system-wide journal entries.\n\nYou can create a new one by tapping the pencil icon in the bottom-right corner.</string>
+    <string name="permanent_tip_alters_swipe">This is a list of alters in your system.\n\nSwipe left on an alter to start/stop fronting. Swipe further to set them as main front.\n\nYou can hold tap on an alter to see more options.</string>
+    <string name="permanent_tip_alters_bidirectional_swipe">This is a list of alters in your system.\n\nSwipe left on an alter to start/stop fronting. Swipe right instead to set them as main front.\n\nYou can hold tap on an alter to see more options.</string>
+    <string name="permanent_tip_alters_button">This is a list of alters in your system.\n\nTap on an alter's arrow button to start/stop fronting. Tap and hold on the button to set them as main front.\n\nYou can hold tap on an alter to see more options.</string>
+
+    <string name="select_alter_or_tag_placeholder">Select an alter or tag to get started!</string>
+    <string name="select_friend_placeholder">Select a friend to view their alters and tags!</string>
+    <string name="select_journal_entry_placeholder">Select a journal entry to start writing!</string>
+    <string name="select_poll_placeholder">Select a poll to view or vote on!</string>
+    <string name="select_settings_placeholder">Select a submenu to view its settings!</string>
+
+    <string name="pin_alter">Pin alter</string>
+    <string name="unpin_alter">Unpin alter</string>
+    <string name="pinned_alters">Pinned alters</string>
+
+    <string name="cannot_be_blank">Cannot be blank!</string>
+
+    <string name="open_tooltip">Open Spotlight tooltip</string>
+    <string name="spotlight">Spotlight</string>
+    <string name="spotlight_tooltips">Spotlight tooltips</string>
+    <string name="spotlight_enabled">Enable Spotlight</string>
+    <string name="spotlight_long_press_timeout">Hold tap duration</string>
+    <string name="spotlight_hover_timeout">Hover duration</string>
+    <string name="spotlight_long_press_timeout_shorter">Shorter</string>
+    <string name="spotlight_long_press_timeout_short">Short</string>
+    <string name="spotlight_long_press_timeout_medium">Medium (Default)</string>
+    <string name="spotlight_long_press_timeout_long">Long</string>
+    <string name="spotlight_long_press_timeout_longer">Longer</string>
+
+    <string name="tooltip_main_front_title">Main front</string>
+    <string name="tooltip_main_front_desc">"Main front" refers to the alter who is currently fronting the most. This puts them at the top of the alter list and also enables some Discord features.</string>
+    <string name="tooltip_front_comment_title">Front comments</string>
+    <string name="tooltip_front_comment_desc">Front comments are notes that can be added to an alter whenever they are fronting. They will also appear in the History tab.</string>
+    <string name="tooltip_fronting_title">Fronting</string>
+    <string name="tooltip_fronting_desc">A "fronting" alter is one who is currently in control of the body, whether partially or fully. All front changes are permanently logged in the History tab.\n\nYou can use "Set as front" to remove all other alters from front, adding only the selected alter.</string>
+    <string name="tooltip_alter_pinning_title">Alter pinning</string>
+    <string name="tooltip_alter_pinning_desc">Pinning an alter will keep them in a carousel at the top of the alter list, even if they are not fronting. This enables quick access to alters who front frequently.</string>
+    <string name="tooltip_delete_alter_desc">Deleting an alter will permanently remove them from your system. This action cannot be undone, and all data associated with the alter will be lost.</string>
+
+    <string name="tooltip_home_desc">The home screen is where you can view your system's alters, front history, friends, and journal entries.</string>
+
+    <string name="tooltip_alters_desc">"Alters" are the different identities within your system. They can have their own names, pronouns, descriptions, profile pictures, and more.\n\nYou can also add "custom fields" in the app settings to alters to track additional information.</string>
+    <string name="tooltip_history_desc">The "History" tab shows a list of all front changes you have ever recorded.</string>
+    <string name="tooltip_journal_desc">The "Journal" tab is where you can write and save private journal entries. These entries are encrypted and can only be accessed by you.\n\nAlters also have their own journal entries, which can be viewed in the alter's profile.</string>
+    <string name="tooltip_friends_desc">"Friends" are other systems you have added to your friends list. You can view their alters and tags they have shared with you, as well as who's fronting in their system.</string>
+
+    <string name="tooltip_alter_ids_title">Alter IDs</string>
+    <string name="tooltip_alter_ids_desc">Alter IDs are unique identifiers assigned to each alter in your system. These IDs are used to reference alters in the app and cannot be changed.\n\nIDs are also chronological: an alter with a lower ID was logged before an alter with a higher ID.\n\nIf seeing numeric IDs associated with your alters makes you uncomfortable, you can hide them in the app settings (Appearance -> Functionality).</string>
+
+    <string name="tooltip_tags_desc">"Tags" are labels (similar to folders) that can be attached to alters to group them together. They can be used to categorize alters by role, age, or any other criteria you choose.\n\nTags can also have "subtags" nested within them to create a hierarchy.</string>
+
+    <string name="tooltip_polls_desc">"Polls" are questions you can ask the alters in your system to vote on. There are two types: "vote polls," which represent a simple yes/no question, and "choice polls," which have custom choices for alters to pick from.\n\nPolls can be used to make decisions, gather opinions, or just for fun!</string>
+    <string name="tooltip_profile_desc">The "Profile" screen is where you can view and edit information about your entire system, such as your username, profile picture, and alter count.</string>
+    <string name="tooltip_resources_desc">The "Resources" screen is where you can find a variety of external resources related to DID, mental health, and other topics. You can also access the Octocon website and Discord server from here.</string>
+    <string name="tooltip_settings_desc">The "Settings" screen is where you can customize the app to your liking. You can change the app's appearance, enable accessibility features, and set up security options.\n\nYou can also import alters from other apps, link your Google or Discord account, and miscellaneous information about the app.</string>
+
+    <string name="tooltip_support_us_desc">If you enjoy using Octocon, consider supporting us by leaving a review on the app store, sharing the app with friends, or donating to our Patreon or Ko-fi. Your support helps us continue to improve the app and provide new features!</string>
+
+    <string name="tooltip_basic_info_desc">This tab contains this alter's basic information, such as their name, pronouns, and profile picture.</string>
+    <string name="tooltip_custom_fields_desc">Custom fields are additional pieces of information you can add to alters. These can be used to track arbitrary information of your choosing, such as system role, age, and boundaries.</string>
+    <string name="tooltip_alter_journal_title">Alter journals</string>
+    <string name="tooltip_alter_journal_desc">The "Journal" tab is where you can write and save private journal entries for this alter. These entries are encrypted and can only be accessed by you.\n\nThese are separate from system-wide journal entries.</string>
+
+    <string name="tooltip_remove_alter_from_tag_title">Remove alter from tag</string>
+    <string name="tooltip_remove_alter_from_tag_desc">This action will remove this alter from the selected tag. This will not delete the alter or the tag, only the association between them.</string>
+
+    <string name="tooltip_revert_changes_desc">This button will revert any changes you have made to this item since it was opened by you. This cannot be undone!</string>
+
+    <string name="tooltip_delete_tag_desc">This action will permanently delete this tag from your system. This will not delete any alters, only the tag itself.\n\nAny tags that are immediately under this tag will be moved up one level.</string>
+
+    <string name="tooltip_tag_contents_title">Tag contents</string>
+    <string name="tooltip_tag_contents_desc">This tab shows all of the alters and subtags that are currently associated with this tag.</string>
+    <string name="tooltip_tag_settings_title">Tag settings</string>
+    <string name="tooltip_tag_settings_desc">This tab allows you to edit this tag's name, color, and parent tag, as well as edit its security level to determine its privacy.</string>
+
+    <string name="tooltip_add_subtag_desc">This action will create a new subtag under this tag. Subtags can be used to create a hierarchy of tags, allowing for more complex organization of alters.</string>
+
+    <string name="tooltip_security_level_desc">The security level of an item determines who can view it. "Public" items can be viewed by anyone, while "Private" items can only be viewed by you.\n\nMark an item as "Friends only" to have it be viewable by your friends, or "Trusted only" to have it be viewable by only your trusted friends.</string>
+
+    <string name="tooltip_delete_front_desc">This action will permanently delete this front entry from your system. This will not delete the associated alter, only the front entry itself.</string>
+
+    <string name="tooltip_trusted_friends_title">Trusted friends</string>
+    <string name="tooltip_trusted_friends_desc">Trusted friends are friends you have explicitly marked as "trusted." This allows them to access any items you have marked with the "Trusted only" security level, in addition to "Friends only."\n\nTrusted friends appear with a star next to their name.</string>
+
+    <string name="tooltip_remove_friend_title">Remove friend</string>
+    <string name="tooltip_remove_friend_desc">This action will remove this friend from your friends list. They will immediately lose access to any alters or tags you have shared with them.</string>
+
+    <string name="tooltip_alter_avatars_title">Alter avatars</string>
+    <string name="tooltip_alter_avatars_desc">Alters can have an avatar, which is a profile picture that represents them. Your chosen avatar will be uploaded to our servers and lightly compressed.</string>
+
+    <string name="tooltip_profile_avatar_title">Profile avatar</string>
+    <string name="tooltip_profile_avatar_desc">Your profile can have an avatar, which is a profile picture that represents you to others. Your chosen avatar will be uploaded to our servers and lightly compressed.</string>
+
+    <string name="tooltip_alter_count_title">Alter count</string>
+    <string name="tooltip_alter_count_desc">The alter count is the total number of alters you have logged in your system. This includes all alters except for those marked as "Untracked" on their profile.</string>
+
+    <string name="tooltip_settings_appearance_desc">This category contains settings pertaining to the look and feel of the app.</string>
+    <string name="tooltip_settings_accessibility_desc">This category contains settings that can help make the app easier to use for those with disabilities or impairments.</string>
+    <string name="tooltip_settings_security_desc">This category contains settings that help keep your data secure and private. These settings are especially useful for those in abusive environments.</string>
+
+    <string name="tooltip_notifications_desc">When enabled, you will receive push notifications from Octocon. These notifications currently alert you when the front status of a friend has changed.</string>
+
+    <string name="tooltip_google_account_desc">You can link your Google account to Octocon to allow signing in with Google. Octocon cannot access your Google account data; it only collects your email address.\n\nYou must have your account linked to at least one sign-in method (Google or Discord) at all times.</string>
+    <string name="tooltip_discord_account_desc">You can link your Discord account to Octocon to allow signing in with Discord and link your system with the Octocon Discord bot. Octocon cannot access your Discord account data; it only collects your Discord user ID.\n\nYou must have your account linked to at least one sign-in method (Google or Discord) at all times.</string>
+
+    <string name="tooltip_simply_plural_import_title">Simply Plural import</string>
+    <string name="tooltip_simply_plural_import_desc">You can import your alters from the Simply Plural app into Octocon. To do this, you will need a "token" from Simply Plural, which you can get from the app's settings.\n\nThis will import all of your alters, including their names, pronouns, and profile pictures.</string>
+    <string name="tooltip_plural_kit_import_title">PluralKit import</string>
+    <string name="tooltip_plural_kit_import_desc">You can import your alters from the PluralKit Discord bot into Octocon. To do this, you will need a "token" from PluralKit, which you can get by DMing the PluralKit bot with the command `pk;token`.\n\nThis will import all of your alters, including their names, pronouns, and profile pictures.</string>
+
+    <string name="tooltip_reset_device_settings_desc">This action will reset all of your device settings to their default values. This will not log you out of the app, or reset any settings that are synced across devices (such as custom fields).</string>
+    <string name="tooltip_delete_account_desc">This action will permanently delete your account and all associated data. You will be logged out of the app and all data will be permanently lost.</string>
+    <string name="tooltip_wipe_alters_desc">This action will permanently delete all of your alters from your system. This will not delete any other data, only the alters themselves.</string>
+
+    <string name="tooltip_open_source_licenses_desc">This screen contains a list of all open source libraries and software used by the Octocon app.</string>
+    <string name="tooltip_server_status_desc">This button opens a link to the Octocon server status page. If the app is misbehaving, you can check here to see if our servers are down or under maintenance!</string>
+
+    <string name="tooltip_color_mode_desc">This setting controls the color mode of the app. "Same as device" will match the setting on your device, while "Light" and "Dark" will force the app to use those modes.</string>
+    <string name="tooltip_theme_color_desc">This setting controls the primary color of the app. Choose a color that you like, and the app will change its color to match.\n\nIf "Dynamic color type" is not "None," alters, tags, and journal entries will override this color with their own.</string>
+    <string name="tooltip_dynamic_color_type_desc">This setting controls whether or not alters, tags, and journal entries will use their own colors instead of the app-wide theme color.\n\n"None" will use the theme color across the entire app.\n\n"Normal" will use a slightly muted shade of an item's color when viewing that item.\n\n"Vibrant" uses each item's exact hex code as the basis for the color.</string>
+    <string name="tooltip_amoled_mode_desc">When enabled, the app will use a completely black background (i.e. hex #000000). This saves battery life on devices with AMOLED screens.</string>
+
+    <string name="tooltip_change_front_mode_desc">This setting controls which gestures you use to change the front status of alters in your system.\n\n"Swipe" adds or removes an alter from front when swiping left on them, or sets them as main front if you swipe left even further.\n\n"Swipe (Bidirectional)" adds or removes an alter from front when swiping left on them, or sets them as main front if you swipe right instead.\n\n"Button" adds or removes an alter from front when tapping on their arrow button, or sets them as main front if you tap and hold on the button.</string>
+    <string name="tooltip_show_alter_ids_desc">This setting controls whether or not numeric IDs are shown next to alters in the app. These IDs are used to reference alters in the app and Discord bot and cannot be changed.\n\nIf seeing numeric IDs associated with your alters makes you uncomfortable, you can enable this setting to hide them across the entire app.</string>
+    <string name="tooltip_hide_alters_in_tags_desc">When enabled, alters that are part of at least one tag are shown in the root alter list. If enabled, alters that are part of at least one tag will only be accessible through those tags. This can help keep your alter list clean and organized.</string>
+    <string name="tooltip_use_tablet_layout_desc">When enabled, the app will modify its layout to better suit larger screens, such as tablets, foldable devices, or desktops. Disable this to use the phone layout on all devices.</string>
+
+    <string name="tooltip_corner_style_desc">This setting controls the style of the corners of the app. "Rounded" will round the corners of various UI elements, while "Square" will keep them sharp.</string>
+    <string name="tooltip_use_small_avatars_desc">When enabled, the app will slightly shrink the avatars of alters in the alter list. Alters in the pinned alters carousel will also be smaller.\n\nThis can assist those with visual impairments by simplifying the UI.</string>
+
+    <string name="tooltip_show_permanent_tips_desc">When enabled, most screens in the app will show a small, permanent tooltip at the top of the screen.\n\nThese tooltips provide helpful information about the screen you're currently viewing and how to interact with it, and are especially useful for those with heavy dissociative amnesia.</string>
+    <string name="tooltip_font_choice_desc">This setting controls the font used throughout the app. "Default" will use Octocon's built-in fonts, while "Lexie Readable" and "OpenDyslexic" will use those fonts instead.\n\nThese alternate fonts are designed to be more legible for those with dyslexia; users have reported better success with Lexie Readable in particular.</string>
+    <string name="tooltip_font_size_desc">This setting controls the size of the font used throughout the app. Try adjusting this if you find text difficult to read.</string>
+    <string name="tooltip_color_contrast_level_desc">This setting controls the contrast level of the app. The app was designed with "Normal" contrast in mind, so some UI elements may not look as intended.</string>
+    <string name="tooltip_reduce_motion_desc">This setting controls the amount of motion &amp; animations used in the app. When enabled, the app will use less intense screen transitions, and disable certain types of animations.\n\nThis can help reduce motion sickness for some users.</string>
+
+    <string name="tooltip_spotlight_desc">Spotlight is a feature that provides helpful tooltips for almost every interactive part of the app. These tooltips can be accessed by holding tap on an item for a short duration.\n\nYou're reading a Spotlight tooltip right now!</string>
+    <string name="tooltip_spotlight_long_press_timeout_desc">This setting controls how long you need to hold tap on an item to access a Spotlight tooltip. The duration ranges from 500 milliseconds ("Shorter") to 2 seconds ("Longer").</string>
+
+    <string name="tooltip_lock_app_with_pin_desc">When enabled, the app will require you to enter a PIN every time you open it. This can help keep your data secure from prying eyes.\n\nIf you forget your PIN, you will have no choice but to log out of the app.</string>
+    <string name="tooltip_stealth_mode_desc">When enabled, the app will disguise itself as a "fake" news aggregator when launched. To access the real app, tap the Octocon logo at the top of the screen twice.\n\nThis can help keep your system's existence private from others who may use or confiscate your device, and provide plausible deniability.</string>
+    <string name="tooltip_quick_exit_desc">When enabled, you can quickly exit the app by double-tapping anywhere that isn't already interactive (like a button). This can help you quickly exit the app in an emergency, such as if you realize someone is looking over your shoulder.</string>
+
+    <string name="tooltip_singlet_mode_desc">When enabled, the app will hide all system-specific features, such as alters, tags, front history, and polls. You will only be able to edit your profile and view your friends' profiles.</string>
+    <string name="tooltip_logout_desc">This action will log you out of the app and reset all of your local device settings. This will not delete your account or any data stored on the server.</string>
+</resources>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="false"
+        android:enableOnBackInvokedCallback="true"
+        android:icon="@mipmap/octo_launcher"
+        android:label="Octocon"
+        android:roundIcon="@mipmap/octo_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Octocon.Main"
+        tools:ignore="DataExtractionRules,UnusedAttribute">
+        <receiver android:name=".glance.FrontWidgetReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/front_widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|mnc|colorMode|density|fontScale|fontWeightAdjustment|keyboard|layoutDirection|locale|mcc|navigation|smallestScreenSize|touchscreen|uiMode"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <tools:validation testUrl="https://api.octocon.app/auth/token" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="api.octocon.app" />
+                <data android:pathPattern="/auth/token" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="api.octocon.app" />
+                <data android:pathPattern="/link_success/google" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="api.octocon.app" />
+                <data android:pathPattern="/link_success/discord" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="octocon.app" />
+                <data android:pathPattern="/deep/auth/token" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="octocon.app" />
+                <data android:pathPattern="/deep/link_success/google" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="octocon.app" />
+                <data android:pathPattern="/deep/link_success/discord" />
+            </intent-filter>
+            <!--
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https" />
+                <data android:host="api.octocon.app" />
+                <data android:pathPattern="/auth/token" />
+            </intent-filter>
+            -->
+
+        </activity>
+
+        <service
+            android:name=".OctoconFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:value="@drawable/ic_stat_name" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:value="#4F89FD" /> <!-- Required: set your sentry.io project identifier (DSN) -->
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="https://de05e582fe2980115c36f512c74788e8@o4506836867022848.ingest.us.sentry.io/4506131075104768" /> <!-- enable automatic breadcrumbs for user interactions (clicks, swipes, scrolls) -->
+        <meta-data
+            android:name="io.sentry.traces.user-interaction.enable"
+            android:value="true" /> <!-- disable screenshot for crashes -->
+        <meta-data
+            android:name="io.sentry.attach-screenshot"
+            android:value="false" /> <!-- enable view hierarchy for crashes -->
+        <meta-data
+            android:name="io.sentry.attach-view-hierarchy"
+            android:value="true" /> <!-- enable the performance API by setting a sample-rate, adjust in production env -->
+        <meta-data
+            android:name="io.sentry.traces.sample-rate"
+            android:value="1.0" /> <!-- enable profiling when starting transactions, adjust in production env -->
+        <meta-data
+            android:name="io.sentry.traces.profiling.sample-rate"
+            android:value="1.0" />
+    </application>
+
+</manifest>

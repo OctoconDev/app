@@ -1,0 +1,3 @@
+<resources>
+    <string name="public_key">-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4m1WqJfFxVlk4RQcPoI9lICmt3f0EGK3F6rMW1LdZOQ0aMj9w4dKAPqa+0gJ0j1XynsIi8qOt35mWMGNBo0LVx7+ZrJgSGw3/2ZfkycdHCk4FA9v7quW0lYYiIIIOaM7n2wHOgRi+ifhKyYZu3MQ6B5Krq16TBT8m2kjFMI2u+c3GeVsScMwaEYFnpdC7hmxnHjk3Tl2qdRow9xhILI7b5QcV8E6ZkGUxkIRBjQ79EdBiyuFcTVWl1tNEJpFNqhY1dbyJHstdx1QbHw/ICgFs7RpWrfmqb8RMhVl97du6bAgF3vcWUpLTx9o2rvofBfNIxf/UZfzjvMWJzfKS1mMmwIDAQAB-----END PUBLIC KEY-----</string>
+</resources>

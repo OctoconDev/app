@@ -1,0 +1,55 @@
+{
+  "name": "@octocon/website",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+
+    "app:clean": "shx rm -rf \"./public/priv/app/*\" && shx rm -rf \"./public/composeResources\" && shx rm -rf \"./public/app/composeResources/*\"",
+
+    "app:gradle:windows": "..\\gradlew.bat webApp:wasmJsBrowserDistribution -p ..\\",
+    "app:gradle:unix": "../gradlew webApp:wasmJsBrowserDistribution -p ../",
+
+    "app:copy": "shx cp -r \"../webApp/build/dist/wasmJs/productionExecutable/*\" \"./public/priv/app\" && shx rm \"./public/priv/app/index.html\" && shx rm \"./public/priv/app/octocon-app.js.LICENSE.txt\"",
+    "app:move-resources": "shx mv \"./public/priv/app/composeResources\" \"./public/\" && shx cp -r \"./public/composeResources/*\" \"./public/app/composeResources\"",
+
+    "app:build:windows": "run-s app:clean app:gradle:windows app:copy app:move-resources",
+    "app:build:unix": "run-s app:clean app:gradle:unix app:copy app:move-resources"
+  },
+  "dependencies": {
+    "nuxt": "^3.10.1",
+    "vue": "^3.4.15",
+    "vue-router": "^4.2.5"
+  },
+  "devDependencies": {
+    "@iconify/json": "^2.2.180",
+    "@nuxt/content": "^2.12.0",
+    "@nuxt/eslint-config": "^0.2.0",
+    "@nuxt/image": "^1.3.0",
+    "@nuxtjs/eslint-module": "^4.1.0",
+    "@nuxtjs/seo": "2.0.0-rc.8",
+    "@unocss/extractor-mdc": "^0.58.5",
+    "@unocss/nuxt": "^0.58.5",
+    "@vueuse/nuxt": "^10.7.2",
+    "eslint": "^8.56.0",
+    "npm-run-all2": "^7.0.2",
+    "prettier": "^3.2.5",
+    "shx": "^0.3.4",
+    "unocss": "^0.58.5"
+  },
+  "packageManager": "pnpm@10.3.0+sha512.ee592eda8815a8a293c206bb0917c4bb0ff274c50def7cbc17be05ec641fc2d1b02490ce660061356bd0d126a4d7eb2ec8830e6959fb8a447571c631d5a2442d",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@parcel/watcher",
+      "esbuild",
+      "sharp",
+      "vue-demi"
+    ]
+  }
+}
