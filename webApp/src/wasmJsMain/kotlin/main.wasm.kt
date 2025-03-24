@@ -13,9 +13,11 @@ import com.arkivanov.essenty.lifecycle.resume
 import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
+import kotlinx.browser.window
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.w3c.dom.Document
+import org.w3c.dom.url.URLSearchParams
 
 @OptIn(ExperimentalComposeUiApi::class)
 fun main() {
@@ -48,8 +50,15 @@ fun main() {
   }
 }
 
-private fun tryGetToken(): String? =
-  localStorage.getItem("token")?.also { localStorage.removeItem("token") }
+private fun tryGetToken(): String? {
+  val params = URLSearchParams(window.location.search.toJsString())
+
+  return params.get("token").also {
+    if(it != null) {
+      window.history.replaceState(null, document.title, window.location.pathname)
+    }
+  }
+}
 
 @Suppress("unused")
 @JsFun("(document) => document.visibilityState")
