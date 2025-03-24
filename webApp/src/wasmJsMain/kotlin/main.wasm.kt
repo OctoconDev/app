@@ -26,6 +26,8 @@ fun main() {
 
   val token = tryGetToken()
 
+  consoleLog("Got token: $token")
+
   var initialSettings = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)?.let {
     Settings.deserialize(it)
   } ?: Settings()
@@ -50,12 +52,17 @@ fun main() {
   }
 }
 
+private fun consoleLog(text: String): Unit = js("console.log(text)")
+
 private fun tryGetToken(): String? {
+  consoleLog("Trying to get token")
   val params = URLSearchParams(window.location.search.toJsString())
 
   return params.get("token").also {
+    consoleLog("Token is: $it")
     if(it != null) {
       window.history.replaceState(null, document.title, window.location.pathname)
+      consoleLog("Token is not null; nuking history URL")
     }
   }
 }
