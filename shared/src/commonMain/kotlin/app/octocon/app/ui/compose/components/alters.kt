@@ -119,6 +119,7 @@ import app.octocon.app.ui.compose.theme.ThemeFromColor
 import app.octocon.app.ui.compose.theme.getSubsectionStyle
 import app.octocon.app.ui.compose.utils.SpotlightTooltip
 import app.octocon.app.ui.model.interfaces.SettingsInterface
+import app.octocon.app.utils.DevicePlatform
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.fuse.Fuse
@@ -1379,7 +1380,7 @@ fun LazyAlterList(
   val settingsData by settings.collectAsState()
   val tagsCollapsed by derive { settingsData.tagsCollapsed }
 
-  val searchBarVisible = /*!DevicePlatform.isWasm &&*/ sortedAlters.size > 5
+  val searchBarVisible = !DevicePlatform.isWasm && sortedAlters.size > 5
 
   @Suppress("LocalVariableName")
   val unnamed_alter = Res.string.unnamed_alter.compose
