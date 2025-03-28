@@ -113,7 +113,7 @@ It is built with TypeScript, Vue, Nuxt 3, and UnoCSS. Content is
 authored in Markdown for use with `@nuxt/content`.
 
 It is recommended to open this directory as a *separate* project in a web development-focused IDE with support for Vue,
-such as WebStorm or Visual Studio Code with Vue language support extension (previously "Volar"). However, if you are only
+such as WebStorm or Visual Studio Code with the Vue language support extension (previously "Volar"). However, if you are only
 syncing the web app's assets, it is sufficient to run `pnpm` tasks directly from Android Studio's terminal.
 
 The Nuxt application embeds the Octocon web app in the form of a WebAssembly binary, which **must** be built through the
