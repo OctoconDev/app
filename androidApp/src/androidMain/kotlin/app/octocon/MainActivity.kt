@@ -364,6 +364,12 @@ class MainActivity : AppCompatActivity() {
         settings
       }
 
+      "/link_success/apple", "/deep/link_success/apple" -> {
+        platformLog("/deep/link_success/google hit!")
+        platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.AppleAccountLinked)
+        settings
+      }
+
       else -> settings
     }
 

@@ -183,6 +183,12 @@ sealed interface ChannelMessage {
   data object GoogleAccountUnlinked : ChannelMessage
 
   @Serializable
+  data class AppleAccountLinked(@SerialName("apple_id") val appleID: String) : ChannelMessage
+
+  @Serializable
+  data object AppleAccountUnlinked : ChannelMessage
+
+  @Serializable
   data class SelfUpdated(val data: MySystem) : ChannelMessage
 
   @Serializable
@@ -251,6 +257,9 @@ sealed interface ChannelMessage {
 
       "google_account_linked" to typeOf<GoogleAccountLinked>(),
       "google_account_unlinked" to typeOf<GoogleAccountUnlinked>(),
+
+      "apple_account_linked" to typeOf<AppleAccountLinked>(),
+      "apple_account_unlinked" to typeOf<AppleAccountUnlinked>(),
 
       "encrypted_data_wiped" to typeOf<EncryptedDataWiped>(),
 

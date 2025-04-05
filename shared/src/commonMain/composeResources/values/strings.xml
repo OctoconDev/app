@@ -439,6 +439,7 @@
 
     <string name="google_account">Google account</string>
     <string name="discord_account">Discord account</string>
+    <string name="apple_account">Apple account</string>
     <string name="link">Link</string>
     <string name="unlink">Unlink</string>
 
@@ -455,6 +456,12 @@
 
     <string name="unlink_discord_account_title">Unlink Discord account</string>
     <string name="unlink_discord_account_body">Are you sure you want to unlink your Discord account from Octocon?</string>
+
+    <string name="link_apple_account_title">Link Apple account</string>
+    <string name="link_apple_account_body">Are you sure you want to link an Apple account to Octocon? You will be redirected to Apple's sign-in page.</string>
+
+    <string name="unlink_apple_account_title">Unlink Apple account</string>
+    <string name="unlink_apple_account_body">Are you sure you want to unlink your Apple account from Octocon?</string>
 
     <string name="logout">Log out</string>
     <string name="logout_body">Are you sure you want to log out? This will also reset all of your local device settings.</string>
@@ -695,8 +702,9 @@
 
     <string name="tooltip_notifications_desc">When enabled, you will receive push notifications from Octocon. These notifications currently alert you when the front status of a friend has changed.</string>
 
-    <string name="tooltip_google_account_desc">You can link your Google account to Octocon to allow signing in with Google. Octocon cannot access your Google account data; it only collects your email address.\n\nYou must have your account linked to at least one sign-in method (Google or Discord) at all times.</string>
-    <string name="tooltip_discord_account_desc">You can link your Discord account to Octocon to allow signing in with Discord and link your system with the Octocon Discord bot. Octocon cannot access your Discord account data; it only collects your Discord user ID.\n\nYou must have your account linked to at least one sign-in method (Google or Discord) at all times.</string>
+    <string name="tooltip_google_account_desc">You can link your Google account to Octocon to allow signing in with Google. Octocon cannot access your Google account data; it only collects your email address.\n\nYou must have your account linked to at least one sign-in method (Google, Apple, or Discord) at all times.</string>
+    <string name="tooltip_apple_account_desc">You can link your Apple account to Octocon to allow signing in with Apple. Octocon cannot access your Apple account data.\n\nYou must have your account linked to at least one sign-in method (Google, Apple, or Discord) at all times.</string>
+    <string name="tooltip_discord_account_desc">You can link your Discord account to Octocon to allow signing in with Discord and link your system with the Octocon Discord bot. Octocon cannot access your Discord account data; it only collects your Discord user ID.\n\nYou must have your account linked to at least one sign-in method (Google, Apple, or Discord) at all times.</string>
 
     <string name="tooltip_simply_plural_import_title">Simply Plural import</string>
     <string name="tooltip_simply_plural_import_desc">You can import your alters from the Simply Plural app into Octocon. To do this, you will need a "token" from Simply Plural, which you can get from the app's settings.\n\nThis will import all of your alters, including their names, pronouns, and profile pictures.</string>

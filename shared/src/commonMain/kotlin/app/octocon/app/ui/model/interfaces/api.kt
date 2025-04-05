@@ -188,6 +188,8 @@ interface ApiInterface {
   fun tryUnlinkDiscord()
   fun tryLinkGoogle(openUri: (String) -> Unit)
   fun tryUnlinkEmail()
+  fun tryLinkApple(openUri: (String) -> Unit)
+  fun tryUnlinkApple()
 
   fun updateUsername(username: String)
   fun updateDescription(description: String?)
@@ -829,6 +831,17 @@ internal class ApiInterfaceImpl(
         )
       }
 
+      is ChannelMessage.AppleAccountLinked -> {
+        if (_systemMe.value !is APIState.Success) return
+        _systemMe.tryEmit(
+          APIState.Success(
+            _systemMe.value.ensureData.copy(
+              appleID = message.appleID
+            )
+          )
+        )
+      }
+
       is ChannelMessage.DiscordAccountUnlinked -> {
         if (_systemMe.value !is APIState.Success) return
         _systemMe.tryEmit(
@@ -846,6 +859,17 @@ internal class ApiInterfaceImpl(
           APIState.Success(
             _systemMe.value.ensureData.copy(
               email = null
+            )
+          )
+        )
+      }
+
+      is ChannelMessage.AppleAccountUnlinked -> {
+        if (_systemMe.value !is APIState.Success) return
+        _systemMe.tryEmit(
+          APIState.Success(
+            _systemMe.value.ensureData.copy(
+              appleID = null
             )
           )
         )
@@ -1573,6 +1597,29 @@ internal class ApiInterfaceImpl(
     sendAPIRequest(
       Post,
       "settings/unlink_email"
+    )
+  }
+
+  override fun tryLinkApple(openUri: (String) -> Unit) {
+    if (_systemMe.value !is APIState.Success) return
+    sendAPIRequest<LinkTokenResponse>(
+      Get,
+      "settings/link_token",
+      callback = { isSuccess, response ->
+        if (isSuccess) {
+          val linkToken = response.data!!.token
+
+          openUri("https://api.octocon.app/auth/link/apple?link_token=$linkToken")
+        }
+      }
+    )
+  }
+
+  override fun tryUnlinkApple() {
+    if (_systemMe.value !is APIState.Success) return
+    sendAPIRequest(
+      Post,
+      "settings/unlink_apple"
     )
   }
 

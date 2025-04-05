@@ -19,7 +19,7 @@ interface LoginComponent {
 
   fun logInWithGoogle(colorSchemeParams: ColorSchemeParams)
   fun logInWithDiscord(colorSchemeParams: ColorSchemeParams)
-  // fun logInWithApple(colorSchemeParams: ColorSchemeParams)
+  fun logInWithApple(colorSchemeParams: ColorSchemeParams)
 
   fun incrementDirectTokenLoginTimesPressed()
   fun closeDirectTokenDialog()
@@ -51,7 +51,7 @@ internal class LoginComponentImpl(
 
   override fun logInWithGoogle(colorSchemeParams: ColorSchemeParams) = logInWithProvider("google", colorSchemeParams)
   override fun logInWithDiscord(colorSchemeParams: ColorSchemeParams) = logInWithProvider("discord", colorSchemeParams)
-  // override fun logInWithApple(colorSchemeParams: ColorSchemeParams) = logInWithProvider("apple", colorSchemeParams)
+  override fun logInWithApple(colorSchemeParams: ColorSchemeParams) = logInWithProvider("apple", colorSchemeParams)
 
   private fun logInWithProvider(provider: String, colorSchemeParams: ColorSchemeParams) {
     platformUtilities.openURL(

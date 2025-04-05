@@ -114,5 +114,10 @@ fun handleDeepLink(latestDeepLink: String?) {
       platformLog("/deep/link_success/google hit!")
       platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.GoogleAccountLinked)
     }
+
+    "/deep/link_success/apple" -> {
+      platformLog("/deep/link_success/apple hit!")
+      platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.AppleAccountLinked)
+    }
   }
 }

@@ -72,6 +72,7 @@ import octoconapp.shared.generated.resources.account
 import octoconapp.shared.generated.resources.app
 import octoconapp.shared.generated.resources.app_info
 import octoconapp.shared.generated.resources.appearance
+import octoconapp.shared.generated.resources.apple_account
 import octoconapp.shared.generated.resources.cancel
 import octoconapp.shared.generated.resources.confirm
 import octoconapp.shared.generated.resources.custom_fields
@@ -90,6 +91,8 @@ import octoconapp.shared.generated.resources.import_pk_title
 import octoconapp.shared.generated.resources.import_sp_body
 import octoconapp.shared.generated.resources.import_sp_title
 import octoconapp.shared.generated.resources.link
+import octoconapp.shared.generated.resources.link_apple_account_body
+import octoconapp.shared.generated.resources.link_apple_account_title
 import octoconapp.shared.generated.resources.link_discord_account_body
 import octoconapp.shared.generated.resources.link_discord_account_title
 import octoconapp.shared.generated.resources.link_google_account_body
@@ -110,6 +113,7 @@ import octoconapp.shared.generated.resources.simply_plural
 import octoconapp.shared.generated.resources.singlet_mode
 import octoconapp.shared.generated.resources.singlet_mode_body
 import octoconapp.shared.generated.resources.token
+import octoconapp.shared.generated.resources.tooltip_apple_account_desc
 import octoconapp.shared.generated.resources.tooltip_custom_fields_desc
 import octoconapp.shared.generated.resources.tooltip_delete_account_desc
 import octoconapp.shared.generated.resources.tooltip_discord_account_desc
@@ -130,13 +134,14 @@ import octoconapp.shared.generated.resources.tooltip_simply_plural_import_title
 import octoconapp.shared.generated.resources.tooltip_singlet_mode_desc
 import octoconapp.shared.generated.resources.tooltip_wipe_alters_desc
 import octoconapp.shared.generated.resources.unlink
+import octoconapp.shared.generated.resources.unlink_apple_account_body
+import octoconapp.shared.generated.resources.unlink_apple_account_title
 import octoconapp.shared.generated.resources.unlink_discord_account_body
 import octoconapp.shared.generated.resources.unlink_discord_account_title
 import octoconapp.shared.generated.resources.unlink_google_account_body
 import octoconapp.shared.generated.resources.unlink_google_account_title
 import octoconapp.shared.generated.resources.wipe_alters
 import octoconapp.shared.generated.resources.wipe_alters_body
-import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -256,6 +261,15 @@ fun SettingsRootScreen(
                   system.ensureData,
                   tryLinkGoogle = api::tryLinkGoogle,
                   tryUnlinkEmail = api::tryUnlinkEmail,
+                  openURL = platformUtilities::openURL
+                )
+              },
+              {
+                SettingsAppleAccount(
+                  it,
+                  system.ensureData,
+                  tryLinkApple = api::tryLinkApple,
+                  tryUnlinkApple = api::tryUnlinkApple,
                   openURL = platformUtilities::openURL
                 )
               },
@@ -466,7 +480,7 @@ private fun SettingsGoogleAccount(
   tryUnlinkEmail: () -> Unit,
   openURL: (String, ColorSchemeParams) -> Unit
 ) {
-  val buttonEnabled = system.discordID != null
+  val buttonEnabled = system.appleID != null || system.discordID != null
 
   val (Dialog, isOpen, openDialog) = if (system.email == null) {
     createConfirmationDialog(
@@ -510,9 +524,11 @@ private fun SettingsGoogleAccount(
 
   SettingsButtonItem(
     text = Res.string.google_account.compose,
-    buttonText = if (system.email == null) Res.string.link.compose else stringResource(
-      Res.string.unlink
-    ),
+    buttonText =
+      if (system.email == null)
+        Res.string.link.compose
+      else
+        Res.string.unlink.compose,
     spotlightDescription = Res.string.tooltip_google_account_desc.compose,
     cardGroupPosition = cardGroupPosition,
     enabled = buttonEnabled,
@@ -528,7 +544,7 @@ private fun SettingsDiscordAccount(
   tryUnlinkDiscord: () -> Unit,
   openURL: (String, ColorSchemeParams) -> Unit
 ) {
-  val buttonEnabled = system.email != null
+  val buttonEnabled = system.email != null || system.appleID != null
 
   val (Dialog, isOpen, openDialog) = if (system.discordID == null) {
     createConfirmationDialog(
@@ -572,15 +588,82 @@ private fun SettingsDiscordAccount(
 
   SettingsButtonItem(
     text = Res.string.discord_account.compose,
-    buttonText = if (system.discordID == null) Res.string.link.compose else stringResource(
-      Res.string.unlink
-    ),
+    buttonText =
+      if (system.discordID == null)
+        Res.string.link.compose
+      else
+        Res.string.unlink.compose,
     spotlightDescription = Res.string.tooltip_discord_account_desc.compose,
     cardGroupPosition = cardGroupPosition,
     enabled = buttonEnabled,
     onClick = openDialog
   )
 }
+
+@Composable
+private fun SettingsAppleAccount(
+  cardGroupPosition: CardGroupPosition,
+  system: MySystem,
+  tryLinkApple: ((String) -> Unit) -> Unit,
+  tryUnlinkApple: () -> Unit,
+  openURL: (String, ColorSchemeParams) -> Unit
+) {
+  val buttonEnabled = system.email != null || system.discordID != null
+
+  val (Dialog, isOpen, openDialog) = if (system.appleID == null) {
+    createConfirmationDialog(
+      title = Res.string.link_apple_account_title.compose,
+      messageText = Res.string.link_apple_account_body.compose,
+      confirmText = Res.string.confirm.compose,
+      cancelText = Res.string.cancel.compose,
+      icon = {
+        Icon(
+          imageVector = Icons.Rounded.Link,
+          contentDescription = null
+        )
+      },
+      onConfirm = {
+        tryLinkApple(it)
+      },
+      openUri = openURL
+    )
+  } else {
+    createConfirmationDialog(
+      title = Res.string.unlink_apple_account_title.compose,
+      messageText = Res.string.unlink_apple_account_body.compose,
+      confirmText = Res.string.confirm.compose,
+      cancelText = Res.string.cancel.compose,
+      icon = {
+        Icon(
+          imageVector = Icons.Rounded.Link,
+          contentDescription = null
+        )
+      },
+      onConfirm = {
+        tryUnlinkApple()
+      },
+      openUri = openURL
+    )
+  }
+
+  if (isOpen) {
+    Dialog()
+  }
+
+  SettingsButtonItem(
+    text = Res.string.apple_account.compose,
+    buttonText =
+      if (system.appleID == null)
+        Res.string.link.compose
+      else
+        Res.string.unlink.compose,
+    spotlightDescription = Res.string.tooltip_apple_account_desc.compose,
+    cardGroupPosition = cardGroupPosition,
+    enabled = buttonEnabled,
+    onClick = openDialog
+  )
+}
+
 
 @Composable
 private fun SettingsLogOut(

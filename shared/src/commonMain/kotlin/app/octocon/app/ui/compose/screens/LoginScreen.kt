@@ -57,12 +57,14 @@ import app.octocon.app.utils.derive
 import app.octocon.app.utils.state
 import octoconapp.shared.generated.resources.Res
 import octoconapp.shared.generated.resources.app_logo
+import octoconapp.shared.generated.resources.apple_logo
 import octoconapp.shared.generated.resources.cancel
 import octoconapp.shared.generated.resources.direct_token_login_body
 import octoconapp.shared.generated.resources.direct_token_login_title
 import octoconapp.shared.generated.resources.discord_logo
 import octoconapp.shared.generated.resources.google_logo
 import octoconapp.shared.generated.resources.login
+import octoconapp.shared.generated.resources.login_apple
 import octoconapp.shared.generated.resources.login_discord
 import octoconapp.shared.generated.resources.login_google
 import octoconapp.shared.generated.resources.or_lowercase
@@ -105,8 +107,8 @@ fun LoginScreen(
           Row(
           ) {
             GoogleLoginButton(component::logInWithGoogle, modifier = Modifier.weight(1f))
-            // Spacer(modifier = Modifier.width(8.dp))
-            // AppleLoginButton(component::logInWithApple, modifier = Modifier.weight(1f))
+            Spacer(modifier = Modifier.width(8.dp))
+            AppleLoginButton(component::logInWithApple, modifier = Modifier.weight(1f))
           }
           Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.systemBars))
         }
@@ -192,7 +194,7 @@ private fun GoogleLoginButton(logIn: (ColorSchemeParams) -> Unit, modifier: Modi
   }
 }
 
-/*@Composable
+@Composable
 private fun AppleLoginButton(logIn: (ColorSchemeParams) -> Unit, modifier: Modifier = Modifier) {
   val colorSchemeParams = composeColorSchemeParams
   Button(
@@ -208,7 +210,7 @@ private fun AppleLoginButton(logIn: (ColorSchemeParams) -> Unit, modifier: Modif
     Spacer(modifier = Modifier.width(ButtonDefaults.IconSpacing))
     Text(Res.string.login_apple.compose, maxLines = 2)
   }
-}*/
+}
 
 @Composable
 private fun DiscordLoginButton(logIn: (ColorSchemeParams) -> Unit) {

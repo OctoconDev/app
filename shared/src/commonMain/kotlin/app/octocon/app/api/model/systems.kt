@@ -29,8 +29,14 @@ data class MySystem(
   val autoproxyMode: String,
   @SerialName("avatar_url")
   override val avatarUrl: String? = null,
+
   @SerialName("discord_id")
   override val discordID: String? = null,
+  @SerialName("google_id")
+  val googleID: String? = null,
+  @SerialName("apple_id")
+  val appleID: String? = null,
+
   val email: String? = null,
   override val id: String,
   override val username: String? = null,

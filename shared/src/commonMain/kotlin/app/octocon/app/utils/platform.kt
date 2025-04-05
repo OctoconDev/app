@@ -165,6 +165,13 @@ sealed interface PlatformEvent {
       }
     }
 
+    data object AppleAccountLinked :
+      ExternallyHandleable() {
+      override fun handle(platformUtilities: PlatformUtilities) {
+        platformUtilities.showAlert("Your Apple account was successfully linked!")
+      }
+    }
+
     abstract fun handle(platformUtilities: PlatformUtilities)
   }
 
