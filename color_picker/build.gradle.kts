@@ -10,6 +10,8 @@ plugins {
 }
 
 kotlin {
+  jvm("desktop")
+
   androidTarget()
 
   /*listOf(

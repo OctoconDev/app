@@ -3,7 +3,6 @@ package app.octocon.app
 import app.octocon.app.utils.globalSerializer
 import app.octocon.app.utils.encryptionVault
 import com.liftric.kvault.KVault
-import kotlinx.serialization.encodeToString
 
 private val vault = KVault("octocon_settings", accessGroup = "AVJM9TZ9VF.app.octocon.OctoconApp.Keychain", accessibility = KVault.Accessible.WhenUnlockedThisDeviceOnly)
 

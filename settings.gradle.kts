@@ -3,6 +3,7 @@ rootProject.name = "OctoconApp"
 include(":shared")
 include(":androidApp")
 include(":webApp")
+include("desktopApp")
 include(":color_picker")
 include(":krop")
 include(":kotlix")

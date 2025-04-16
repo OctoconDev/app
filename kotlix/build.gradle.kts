@@ -10,6 +10,7 @@ plugins {
 }
 
 kotlin {
+  jvm("desktop")
   androidTarget()
 
   @OptIn(ExperimentalKotlinGradlePluginApi::class)
@@ -62,15 +63,22 @@ kotlin {
       }
     }
 
+    val mobile by creating {
+      dependsOn(commonMain)
+    }
+
     val wasmJsMain by getting {
       dependencies {
         compileOnly("io.ktor:ktor-client-js-wasm-js:$ktorVersion")
       }
     }
 
-    val mobile by creating {
-      dependsOn(commonMain)
+    val desktopMain by getting {
+      dependencies {
+        implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+      }
     }
+
     androidMain.dependsOn(mobile)
     iosMain.dependsOn(mobile)
   }

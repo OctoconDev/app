@@ -39,6 +39,8 @@ kotlin {
     }
   }*/
 
+  jvm("desktop")
+
   iosArm64()
   iosSimulatorArm64()
 
@@ -178,6 +180,9 @@ kotlin {
       }
     }
 
+    androidMain.dependsOn(mobileMain)
+    iosMain.dependsOn(mobileMain)
+
     val wasmJsMain by getting {
       dependencies {
         implementation("io.ktor:ktor-client-js-wasm-js:$ktorVersion")
@@ -186,8 +191,11 @@ kotlin {
       }
     }
 
-    androidMain.dependsOn(mobileMain)
-    iosMain.dependsOn(mobileMain)
+    val desktopMain by getting {
+      dependencies {
+        implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+      }
+    }
 
     all {
       languageSettings.optIn("org.jetbrains.compose.resources.ExperimentalResourceApi")

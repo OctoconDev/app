@@ -55,6 +55,15 @@ enum class DevicePlatform(
     hasPushNotifications = false,
     isDarwin = false,
     isMobile = false
+  ),
+
+  Desktop(
+    displayName = "Desktop",
+    internalName = "desktop",
+    usesNativeImageCropper = false,
+    hasPushNotifications = false,
+    isDarwin = false,
+    isMobile = false
   );
 
   val isAndroid: Boolean
@@ -63,6 +72,8 @@ enum class DevicePlatform(
     inline get() = this == iOS
   val isWasm
     inline get() = this == Wasm
+  val isDesktop
+    inline get() = this == Desktop
 
   @Suppress("unused")
   companion object {
@@ -92,6 +103,9 @@ enum class DevicePlatform(
 
     val isWasm: Boolean
       inline get() = currentPlatform.isWasm
+
+    val isDesktop: Boolean
+      inline get() = currentPlatform.isDesktop
   }
 }
 
