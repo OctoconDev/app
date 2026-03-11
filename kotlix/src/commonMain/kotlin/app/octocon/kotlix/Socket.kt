@@ -283,9 +283,14 @@ abstract class SocketCommon(
     return ref.toString()
   }
 
-  /** A nullable-aware wrapper around the [logger] lambda */
+  /** A nullable-aware wrapper around the [logger] lambda that sanitizes sensitive data */
   internal fun logItems(body: String) {
-    logger?.invoke(body)
+    var sanitized = body
+    // Redact system IDs: "system:123" -> "system:<redacted>"
+    sanitized = sanitized.replace(Regex("""system:[^"]+"""), "system:<redacted>")
+    // Redact token values in JSON: "token":"..." -> "token":"<redacted>"
+    sanitized = sanitized.replace(Regex(""""token":"[^"]*"""), """"token":"<redacted>""")
+    logger?.invoke(sanitized)
   }
 
   /**
