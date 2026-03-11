@@ -288,7 +288,7 @@ abstract class SocketCommon(
     var sanitized = body
     // Redact system IDs: "system:123" -> "system:<redacted>"
     sanitized = sanitized.replace(Regex("""system:[^"]+"""), "system:<redacted>")
-    // Redact token values in JSON: "token":"..." -> "token":"<REDACTED>"
+    // Redact token values in JSON: "token":"..." -> "token":"<redacted>"
     sanitized = sanitized.replace(Regex(""""token":"[^"]*"""), """"token":"<redacted>""")
     logger?.invoke(sanitized)
   }
