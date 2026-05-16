@@ -294,7 +294,7 @@ fun SettingsRootScreen(
             SettingsSection(
               import_alters,
               settingsData,
-              { SettingsImportSP(it, api::importSP, api) },
+              { SettingsImportSP(it, { token -> api.importSP(token, settingsData.encryptedEncryptionKey) }, api) },
               { SettingsImportPK(it, api::importPK, api) }
             )
           }

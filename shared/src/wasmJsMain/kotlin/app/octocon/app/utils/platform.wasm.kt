@@ -4,16 +4,17 @@ import app.octocon.app.Settings
 import app.octocon.app.utils.bindings.CompactEncrypt
 import app.octocon.app.utils.bindings.CryptoKey
 import app.octocon.app.utils.bindings.crypto
-import io.ktor.util.toJsArray
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.public_key
 import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.get
-import org.jetbrains.compose.resources.getString
+import org.khronos.webgl.set
+import app.octocon.app.utils.PublicKeyProvider
+import io.ktor.utils.io.core.toByteArray
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
@@ -23,21 +24,38 @@ actual interface PlatformUtilities : CommonPlatformUtilities
 
 actual interface PlatformDelegate
 
-private fun keyParams(): JsString = js("({ name: 'RSA-OAEP', hash: 'SHA-256' })")
-private fun jweHeader(): JsString = js("({ alg: 'RSA-OAEP-256', enc: 'A256GCM' })")
-private fun encryptArray(): JsArray<JsString> = js("['encrypt']")
+private fun rsaKeyParams(): JsAny = js("({ name: 'RSA-OAEP', hash: 'SHA-256' })")
+private fun rsaJweHeader(): JsAny = js("({ alg: 'RSA-OAEP-256', enc: 'A256GCM', cty: 'text/plain' })")
+private fun encryptUsage(): JsArray<JsString> = js("['encrypt']")
 
-private fun encodeWithTextEncoder(string: JsString): Uint8Array = js("new TextEncoder().encode(string)")
-private fun randomizeArray(array: Int8Array): Unit = js("crypto.getRandomValues(array)")
-private fun getCurrentTimestampString(): String = js("Date.now().toString()")
+private fun encodeWithTextEncoder(string: String): Uint8Array = js("new TextEncoder().encode(string)")
+private fun decodeWithTextDecoder(buffer: JsAny): String = js("new TextDecoder().decode(buffer)")
+
+private fun randomizeArray(array: Uint8Array): Unit = js("crypto.getRandomValues(array)")
+
+private fun aesGcmKeyParams(): JsAny = js("({ name: 'AES-GCM' })")
+private fun aesGcmAlgoParams(iv: Uint8Array): JsAny = js("({ name: 'AES-GCM', iv: iv, tagLength: 128 })")
+private fun aesEncryptUsages(): JsArray<JsString> = js("['encrypt']")
+private fun aesDecryptUsages(): JsArray<JsString> = js("['decrypt']")
+private fun jsUint8Array(buffer: JsAny): Uint8Array = js("new Uint8Array(buffer)")
+
+private fun toUint8Array(bytes: ByteArray): Uint8Array {
+  val ua = Uint8Array(bytes.size)
+  for (i in bytes.indices) {
+    ua[i] = bytes[i]
+  }
+  return ua
+}
+
+private fun Uint8Array.toByteArray(): ByteArray {
+  return ByteArray(length) { this[it] }
+}
 
 private val alphabet = listOf(
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
   'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
   '2', '3', '4', '5', '6', '7', '8', '9'
 )
-
-private var cachedPublicKey: String? = null
 
 @OptIn(ExperimentalEncodingApi::class)
 val platformUtilities = object : PlatformUtilities {
@@ -59,43 +77,40 @@ val platformUtilities = object : PlatformUtilities {
   }
 
   override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-    val normalizedRecoveryCode = recoveryCode
-      .uppercase()
-      .filter { it in alphabet }
+    try {
+      val publicKey = PublicKeyProvider.getPublicKey()
 
-    require(normalizedRecoveryCode.length == 16) {
-      "Recovery code must contain exactly 16 valid characters"
+      val strippedKey = publicKey
+        .replace(Regex("-----BEGIN.*?-----"), "")
+        .replace(Regex("-----END.*?-----"), "")
+        .replace("\n", "")
+        .replace("\r", "")
+        .trim()
+
+      val binaryKey = Base64.decode(strippedKey)
+
+      val key = crypto.subtle.importKey(
+        "spki",
+        toUint8Array(binaryKey),
+        rsaKeyParams(),
+        false,
+        encryptUsage()
+      ).await<CryptoKey>()
+
+      val jwe = CompactEncrypt(encodeWithTextEncoder(recoveryCode))
+        .setProtectedHeader(rsaJweHeader())
+        .encrypt(key)
+        .await<JsString>()
+
+      return jwe.toString()
+    } catch (e: Exception) {
+      platformLog("CRYPTO", "Failed to encrypt recovery code: $e")
+      throw e
     }
-
-    val publicKey = cachedPublicKey ?: getString(Res.string.public_key).also {
-      cachedPublicKey = it
-    }
-
-    val strippedKey = publicKey
-      .replace("-----BEGIN PUBLIC KEY-----", "")
-      .replace("-----END PUBLIC KEY-----", "")
-      .replace("\n", "")
-
-    val binaryKey = Base64.decode(strippedKey).toJsArray()
-
-    val key = crypto.subtle.importKey(
-      "spki",
-      binaryKey,
-      keyParams(),
-      false,
-      encryptArray()
-    ).await<CryptoKey>()
-
-    val jwe = CompactEncrypt(encodeWithTextEncoder(normalizedRecoveryCode.toJsString()))
-      .setProtectedHeader(jweHeader())
-      .encrypt(key)
-      .await<JsString>()
-
-    return jwe.toString()
   }
 
   override suspend fun generateRecoveryCode(): Pair<String, String> {
-    val array = Int8Array(16)
+    val array = Uint8Array(16)
     randomizeArray(array)
 
     val recoveryCode = List(16) { alphabet[array[it].toInt() and (alphabet.size - 1)] }
@@ -138,54 +153,87 @@ val platformUtilities = object : PlatformUtilities {
   }
 
   override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
-    // For WASM, the "encrypted" key is Base64-encoded
-    // Decode it back to the original key
     return Base64.decode(encryptedEncryptionKey).decodeToString()
   }
 
-  override fun encryptData(
-    data: String,
-    settings: Settings
-  ): String {
-    // Generate deterministic 12-byte IV based on data and timestamp
-    // (WASM can't easily call crypto.getRandomValues in all contexts)
-    val timestamp = getCurrentTimestampString()
-    val ivSource = (timestamp + data).take(12).padEnd(12, '0')
-    val iv = ivSource.encodeToByteArray().take(12).toByteArray()
-    
-    val ivBase64 = Base64.encode(iv)
-    val dataBase64 = Base64.encode(data.encodeToByteArray())
-    // Generate dummy 16-byte authentication tag (not cryptographically used)
-    val tagBase64 = Base64.encode(ByteArray(16))
-    
-    // Return in same format as Android (enc|iv|data|tag)
-    // The actual encryption happens server-side, this is just the wrapper
-    return "enc|$ivBase64|$dataBase64|$tagBase64"
+  override suspend fun encryptData(data: String, settings: Settings): String {
+    try {
+      val keyString = getEncryptionKey(settings)
+      val keyBytes = Base64.decode(keyString)
+      
+      val cryptoKey = crypto.subtle.importKey(
+        "raw",
+        toUint8Array(keyBytes),
+        aesGcmKeyParams(),
+        false,
+        aesEncryptUsages()
+      ).await<CryptoKey>()
+
+      val iv = Uint8Array(12)
+      randomizeArray(iv)
+
+      val encryptedBuffer = crypto.subtle.encrypt(
+        aesGcmAlgoParams(iv),
+        cryptoKey,
+        toUint8Array(data.encodeToByteArray())
+      ).await<JsAny>()
+
+      val encryptedBytes = jsUint8Array(encryptedBuffer).toByteArray()
+      
+      // Web Crypto appends the tag to the ciphertext
+      val tagLength = 16
+      val ciphertext = encryptedBytes.copyOfRange(0, encryptedBytes.size - tagLength)
+      val tag = encryptedBytes.copyOfRange(encryptedBytes.size - tagLength, encryptedBytes.size)
+
+      val ivBase64 = Base64.encode(iv.toByteArray())
+      val ciphertextBase64 = Base64.encode(ciphertext)
+      val tagBase64 = Base64.encode(tag)
+
+      return "enc|$ivBase64|$ciphertextBase64|$tagBase64"
+    } catch (e: Exception) {
+      platformLog("CRYPTO", "Failed to encrypt data: $e")
+      throw e
+    }
   }
 
-  override fun decryptData(
-    data: String,
-    settings: Settings
-  ): String {
+  override suspend fun decryptData(data: String, settings: Settings): String {
     val parts = data.split("|")
+    require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
     
-    // If not in encrypted format, return as-is
-    if (!data.startsWith("enc|") || parts.size != 4) {
-      return data
-    }
-    
-    return try {
-      val dataBase64 = parts[2]
-      val decrypted = Base64.decode(dataBase64)
-      decrypted.decodeToString()
+    try {
+      val iv = toUint8Array(Base64.decode(parts[1]))
+      val ciphertext = Base64.decode(parts[2])
+      val tag = Base64.decode(parts[3])
+      
+      val keyString = getEncryptionKey(settings)
+      val keyBytes = Base64.decode(keyString)
+      
+      val cryptoKey = crypto.subtle.importKey(
+        "raw",
+        toUint8Array(keyBytes),
+        aesGcmKeyParams(),
+        false,
+        aesDecryptUsages()
+      ).await<CryptoKey>()
+
+      // Concatenate ciphertext and tag back for Web Crypto
+      val encryptedBytes = ciphertext + tag
+      
+      val decryptedBuffer = crypto.subtle.decrypt(
+        aesGcmAlgoParams(iv),
+        cryptoKey,
+        toUint8Array(encryptedBytes)
+      ).await<JsAny>()
+
+      return decodeWithTextDecoder(decryptedBuffer)
     } catch (e: Exception) {
-      // Fallback: return original data if decryption fails
-      data
+      platformLog("CRYPTO", "Failed to decrypt data: $e")
+      throw IllegalStateException("Failed to decrypt data", e)
     }
   }
 
   override fun getPublicKey(): String {
-    return cachedPublicKey
+    return PublicKeyProvider.currentCachedKey()
       ?: throw IllegalStateException("Public key has not been loaded yet")
   }
 
@@ -209,5 +257,5 @@ val platformUtilities = object : PlatformUtilities {
 const val SETTINGS_LOCALSTORAGE_KEY = "octocon_settings"
 
 actual object BuildConfig : BuildConfigInterface {
-  override fun isDebug(): Boolean = false // TODO: Implement a way to determine this?
+  override fun isDebug(): Boolean = false 
 }

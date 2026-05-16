@@ -41,6 +41,7 @@ kotlin {
     implementation("androidx.glance:glance-material3:1.1.1")
     compileOnly("com.materialkolor:material-kolor:2.1.1")
     compileOnly("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
+    compileOnly("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
     // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
 
     val ktorVersion = "3.4.0"

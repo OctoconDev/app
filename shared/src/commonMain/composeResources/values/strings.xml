@@ -425,12 +425,12 @@
     <string name="unlock_field">Unlock field</string>
     <string name="delete_field">Delete field</string>
     <string name="type">Type</string>
-    <string name="custom_field_type_text">Text</string>
+    <string name="custom_field_type_text">Markdown</string>
     <string name="custom_field_type_number">Number</string>
     <string name="custom_field_type_boolean">Yes/No</string>
     <string name="custom_field_type_colour">Colour</string>
     <string name="custom_field_type_date">Date</string>
-    <string name="custom_field_type_plaintext">Plain text</string>
+    <string name="custom_field_type_plaintext">Text</string>
     <string name="custom_field_type_month">Month</string>
     <string name="custom_field_type_year">Year</string>
     <string name="custom_field_type_month_year">Month &amp; Year</string>

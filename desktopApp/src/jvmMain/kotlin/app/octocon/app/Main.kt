@@ -17,6 +17,10 @@ import com.arkivanov.essenty.lifecycle.LifecycleRegistry
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import app.octocon.app.utils.PublicKeyProvider
 import java.awt.Dimension
 
 fun main() {
@@ -25,6 +29,28 @@ fun main() {
   val platformEventFlow = MutableSharedFlow<PlatformEvent>(replay = 3)
   val initialSettings = javaPreferences.get(SETTINGS_KEY, null)?.let { Settings.deserialize(it) }
     ?: Settings()
+
+  // Restore persisted public key from Preferences if still within TTL
+  try {
+    val storedPem = javaPreferences.get("PUBLIC_KEY_PEM", null)
+    val storedAt = javaPreferences.getLong("PUBLIC_KEY_AT", 0L)
+    val now = System.currentTimeMillis()
+    if (storedPem != null && (now - storedAt) < PublicKeyProvider.TTL_MS) {
+      runBlocking { PublicKeyProvider.setCachedKey(storedPem, storedAt) }
+    }
+
+    GlobalScope.launch {
+      try {
+        val key = PublicKeyProvider.getPublicKey()
+        javaPreferences.put("PUBLIC_KEY_PEM", key)
+        javaPreferences.putLong("PUBLIC_KEY_AT", System.currentTimeMillis())
+      } catch (_: Exception) {
+        // ignore
+      }
+    }
+  } catch (e: Exception) {
+    println("Failed to restore persisted public key: $e")
+  }
 
   val rootComponent = runOnUiThread {
     RootComponentImpl(

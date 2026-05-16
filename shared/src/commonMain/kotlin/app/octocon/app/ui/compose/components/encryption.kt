@@ -121,17 +121,24 @@ internal fun SetupEncryptionCard(api: ApiInterface, settings: SettingsInterface,
   }
 
   if (encryptionDialogOpen) {
-    SetupEncryptionDialog(api, settings) { encryptionDialogOpen = false }
+    SetupEncryptionDialog(api, settings, closeDialog = { encryptionDialogOpen = false })
   }
 }
 
 @Composable
-internal fun SetupEncryptionDialog(api: ApiInterface, settings: SettingsInterface, closeDialog: () -> Unit) {
+internal fun SetupEncryptionDialog(
+  api: ApiInterface,
+  settings: SettingsInterface,
+  closeDialog: () -> Unit,
+  onRecoveryCodeGenerated: ((String) -> Unit)? = null
+) {
   val haptics = LocalHapticFeedback.current
   var recoveryCode by state<Pair<String, String>?>(null)
 
   LaunchedEffect(Unit) {
-    recoveryCode = api.generateRecoveryCode()
+    recoveryCode = api.generateRecoveryCode().also {
+      onRecoveryCodeGenerated?.invoke(it.first)
+    }
   }
 
   var isInitializing by savedState(false)
@@ -242,11 +249,6 @@ internal fun SetupEncryptionDialog(api: ApiInterface, settings: SettingsInterfac
     }
   )
 }
-
-/*@Composable
-fun RecoverEncryptionCard(modifier: Modifier = Modifier) {
-  SetupEncryptionCard(modifier)
-}*/
 
 private val alphabet = listOf(
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',

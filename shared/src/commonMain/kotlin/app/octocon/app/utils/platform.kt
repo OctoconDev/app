@@ -134,8 +134,8 @@ interface CommonPlatformUtilities {
 
   fun decryptEncryptionKey(encryptedEncryptionKey: String): String
 
-  fun encryptData(data: String, settings: Settings): String
-  fun decryptData(data: String, settings: Settings): String
+  suspend fun encryptData(data: String, settings: Settings): String
+  suspend fun decryptData(data: String, settings: Settings): String
 
   fun getPublicKey(): String
 

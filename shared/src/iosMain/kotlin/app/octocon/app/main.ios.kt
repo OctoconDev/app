@@ -18,11 +18,14 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import platform.Foundation.NSLog
 import platform.UIKit.UIViewController
+import kotlin.time.Clock
 
 val platformEventFlow = MutableSharedFlow<PlatformEvent>(replay = 3)
 
@@ -51,6 +54,27 @@ fun MainViewController(platformDelegate: PlatformDelegate, root: RootComponent, 
   }
 
   val settings = getSettingsFromKeychain()
+
+  // Restore persisted public key (if within TTL) and asynchronously refresh
+  try {
+    getStoredPublicKey()?.let { (pem, at) ->
+      val now = Clock.System.now().toEpochMilliseconds()
+      if (now - at < app.octocon.app.utils.PublicKeyProvider.TTL_MS) {
+        runBlocking { app.octocon.app.utils.PublicKeyProvider.setCachedKey(pem, at) }
+      }
+    }
+
+    GlobalScope.launch {
+      try {
+        val key = app.octocon.app.utils.PublicKeyProvider.getPublicKey()
+        saveStoredPublicKey(key, kotlinx.datetime.Clock.System.now().toEpochMilliseconds())
+      } catch (e: Exception) {
+        NSLog("Failed to preload public key: $e")
+      }
+    }
+  } catch (e: Exception) {
+    NSLog("Public key persistence restore failed: $e")
+  }
 
   platformUtilities.injectPlatformDelegate(platformDelegate)
 

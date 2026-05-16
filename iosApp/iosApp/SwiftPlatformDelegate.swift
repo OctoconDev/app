@@ -102,9 +102,18 @@ class SwiftPlatformDelegate : PlatformDelegate {
   }
   
   private func publicKeyFromString(_ keyString: String) -> SecKey {
-    let publicKeyStringWithoutHeaders = keyString.replacingOccurrences(of: "-----BEGIN PUBLIC KEY-----", with: "").replacingOccurrences(of: "-----END PUBLIC KEY-----", with: "")
+    // Robustly strip any PEM headers/footers using regex
+    let pattern = "-----BEGIN.*?-----|-----END.*?-----"
+    let regex = try! NSRegularExpression(pattern: pattern, options: [])
+    let range = NSRange(location: 0, length: keyString.utf16.count)
+    let strippedHeaderFooter = regex.stringByReplacingMatches(in: keyString, options: [], range: range, withTemplate: "")
     
-    let publicKeyData = NSData(base64Encoded: publicKeyStringWithoutHeaders, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)!
+    let publicKeyStringWithoutHeaders = strippedHeaderFooter
+        .replacingOccurrences(of: "\n", with: "")
+        .replacingOccurrences(of: "\r", with: "")
+        .trimmingCharacters(in: .whitespacesAndNewlines)
+    
+    let publicKeyData = Data(base64Encoded: publicKeyStringWithoutHeaders, options: .ignoreUnknownCharacters)!
     
     let keyDict: [NSString: AnyObject] = [
       kSecAttrKeyType: kSecAttrKeyTypeRSA,

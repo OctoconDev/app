@@ -43,13 +43,11 @@ import com.nimbusds.jose.crypto.RSAEncrypter
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.public_key
-import org.jetbrains.compose.resources.getString
+import app.octocon.app.utils.PublicKeyProvider
 import java.security.GeneralSecurityException
 import java.security.KeyFactory
 import java.security.SecureRandom
@@ -60,7 +58,8 @@ import javax.crypto.spec.GCMParameterSpec
 import javax.crypto.spec.SecretKeySpec
 
 private const val SETTINGS_KEY = "SERIALIZED_SETTINGS"
-private const val ENCRYPTED_PREFS_FILE = "encrypted_prefs.txt"
+private const val PREF_PUBLIC_KEY = "PUBLIC_KEY_PEM"
+private const val PREF_PUBLIC_KEY_AT = "PUBLIC_KEY_AT"
 
 private val alphabet = listOf(
   'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
@@ -105,11 +104,14 @@ class MainActivity : AppCompatActivity() {
       get() = this@MainActivity
 
     override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-      val publicKeyPEM =
-        getString(Res.string.public_key)
-          .replace("-----BEGIN PUBLIC KEY-----", "")
-          .replace("-----END PUBLIC KEY-----", "")
-          .replace(System.lineSeparator(), "")
+      val publicKeyRaw = PublicKeyProvider.getPublicKey()
+      val publicKeyPEM = publicKeyRaw
+        .replace(Regex("-----BEGIN.*?-----"), "")
+        .replace(Regex("-----END.*?-----"), "")
+        .replace(System.lineSeparator(), "")
+        .replace("\n", "")
+        .replace("\r", "")
+        .trim()
 
       val encodedKey = Base64.decode(publicKeyPEM, Base64.DEFAULT)
       val keyFactory = KeyFactory.getInstance("RSA")
@@ -170,24 +172,11 @@ class MainActivity : AppCompatActivity() {
       return String(decryptedEncryptionKey)
     }
 
-    /*override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
-      val keyPair = KeyStoreHelper.getKeyPair()
-      val privateKey = keyPair.private
-
-      val cipher = Cipher.getInstance("RSA/ECB/OAEPWithSHA-256AndMGF1Padding")
-      cipher.init(Cipher.DECRYPT_MODE, privateKey)
-
-      val encryptedBytes = Base64.decode(encryptedEncryptionKey, Base64.DEFAULT)
-      val decryptedBytes = cipher.doFinal(encryptedBytes)
-
-      return String(decryptedBytes)
-    }*/
-
     override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
       return String(Base64.decode(encryptedEncryptionKey, Base64.DEFAULT))
     }
 
-    override fun encryptData(data: String, settings: Settings): String {
+    override suspend fun encryptData(data: String, settings: Settings): String {
       val iv = ByteArray(12) // GCM standard nonce length (12 bytes)
       SecureRandom().nextBytes(iv)
 
@@ -214,7 +203,7 @@ class MainActivity : AppCompatActivity() {
       return "enc|$ivBase64|$ciphertextBase64|$tagBase64"
     }
 
-    override fun decryptData(data: String, settings: Settings): String {
+    override suspend fun decryptData(data: String, settings: Settings): String {
       val parts = data.split("|")
 
       require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
@@ -240,15 +229,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun getPublicKey(): String {
-      /*val keyPair = KeyStoreHelper.getKeyPair()
-      val publicKey = keyPair.public
-      return "-----BEGIN PUBLIC KEY-----\n${
-        Base64.encodeToString(
-          publicKey.encoded,
-          Base64.NO_WRAP
-        )
-      }\n-----END PUBLIC KEY-----"*/
-      TODO("Not yet implemented")
+      return PublicKeyProvider.currentCachedKey() ?: throw IllegalStateException("Public key has not been loaded yet")
     }
 
     override fun openURL(
@@ -315,6 +296,32 @@ class MainActivity : AppCompatActivity() {
     val initialSettings: Settings = handleIntent(settings)
 
     BuildConfig.applicationContext = context
+
+    // Restore cached public key from device storage if still within TTL
+    try {
+      val storedPem = sharedPreferences.getString(PREF_PUBLIC_KEY, null)
+      val storedAt = sharedPreferences.getLong(PREF_PUBLIC_KEY_AT, 0L)
+      val now = System.currentTimeMillis()
+      if (storedPem != null && (now - storedAt) < PublicKeyProvider.TTL_MS) {
+        runBlocking { PublicKeyProvider.setCachedKey(storedPem, storedAt) }
+      }
+    } catch (e: Exception) {
+      Log.e("OCTOCON", "Failed to restore stored public key: $e")
+    }
+
+    // Asynchronously ensure we have a fresh public key and persist it for future runs
+    GlobalScope.launch {
+      try {
+        val key = PublicKeyProvider.getPublicKey()
+        val fetchedAt = System.currentTimeMillis()
+        sharedPreferences.edit(commit = true) {
+          putString(PREF_PUBLIC_KEY, key)
+          putLong(PREF_PUBLIC_KEY_AT, fetchedAt)
+        }
+      } catch (e: Exception) {
+        Log.e("OCTOCON", "Failed to preload public key: $e")
+      }
+    }
 
     GlobalScope.launch {
       try {

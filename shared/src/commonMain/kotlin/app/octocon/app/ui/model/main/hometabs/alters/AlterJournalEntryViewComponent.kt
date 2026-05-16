@@ -131,7 +131,9 @@ internal class AlterJournalEntryViewComponentImpl(
 
     lifecycle.doOnDestroy {
       if(model.entryHasChanged.value && model.saveState.value == SaveState.NotSaved) {
-        doPatchRequest()
+        coroutineScope.launch(Dispatchers.Default) {
+          doPatchRequest()
+        }
       }
     }
   }
@@ -175,11 +177,12 @@ internal class AlterJournalEntryViewComponentImpl(
     }
   }
 
-  private fun doPatchRequest(callback: ((Boolean, APIResponse<JsonElement>) -> Unit)? = null) {
+  private suspend fun doPatchRequest(callback: ((Boolean, APIResponse<JsonElement>) -> Unit)? = null) {
+    val jsonDiff = _model.buildJsonDiff { platformUtilities.encryptData(it, settings.data.value) }
     (api as ApiInterfaceImpl).sendAPIRequest<JsonElement>(
       HttpMethod.Patch,
       "systems/me/alters/journals/${entryID}",
-      _model.buildJsonDiff { platformUtilities.encryptData(it, settings.data.value) },
+      jsonDiff,
       callback
     )
   }
@@ -274,7 +277,7 @@ internal class AlterJournalEntryViewComponentImpl(
       _color.value = initialEntry.value!!.color
     }
 
-    fun buildJsonDiff(encryptData: (String) -> String) =
+    suspend fun buildJsonDiff(encryptData: suspend (String) -> String) =
       buildJsonObject {
         if (_title.value != initialEntry.value!!.title)
           put("title", _title.value)

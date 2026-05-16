@@ -1,12 +1,19 @@
 package app.octocon.app.utils
 
 import app.octocon.app.Settings
+import app.octocon.app.utils.PublicKeyProvider
 import org.jetbrains.skiko.OS
 import org.jetbrains.skiko.hostOs
 import java.awt.Desktop
 import java.net.URI
 import java.net.URL
+import java.security.SecureRandom
 import java.util.prefs.Preferences
+import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
+import javax.crypto.spec.SecretKeySpec
+import kotlin.io.encoding.Base64
+import kotlin.io.encoding.ExperimentalEncodingApi
 import kotlin.system.exitProcess
 
 actual val currentPlatform = DevicePlatform.Desktop
@@ -18,6 +25,7 @@ const val SETTINGS_KEY = "octocon_settings"
 
 val javaPreferences: Preferences by lazy { Preferences.userRoot().node(SETTINGS_KEY) }
 
+@OptIn(ExperimentalEncodingApi::class)
 val platformUtilities = object : PlatformUtilities {
   override fun exitApplication(exitApplicationType: ExitApplicationType) = exitProcess(0)
 
@@ -50,14 +58,14 @@ val platformUtilities = object : PlatformUtilities {
     TODO("Not yet implemented")
   }
 
-  override fun encryptData(
+  override suspend fun encryptData(
     data: String,
     settings: Settings
   ): String {
     TODO("Not yet implemented")
   }
 
-  override fun decryptData(
+  override suspend fun decryptData(
     data: String,
     settings: Settings
   ): String {
@@ -65,7 +73,7 @@ val platformUtilities = object : PlatformUtilities {
   }
 
   override fun getPublicKey(): String {
-    TODO("Not yet implemented")
+    return PublicKeyProvider.currentCachedKey() ?: throw IllegalStateException("Public key has not been loaded yet")
   }
 
   override fun openURL(

@@ -12,9 +12,6 @@ import kotlinx.cinterop.memScoped
 import kotlinx.cinterop.refTo
 import kotlinx.cinterop.usePinned
 import kotlinx.coroutines.runBlocking
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.public_key
-import org.jetbrains.compose.resources.getString
 import platform.Foundation.NSData
 import platform.Foundation.NSURL
 import platform.Foundation.create
@@ -31,12 +28,15 @@ import platform.posix.memcpy
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import app.octocon.app.utils.PublicKeyProvider
 
 actual val currentPlatform = DevicePlatform.iOS
 
 @Suppress("unused") // Used in Swift
 fun getOctoconPublicKey(): String {
-  return runBlocking(ioDispatcher) { getString(Res.string.public_key) }
+  return runBlocking(ioDispatcher) {
+    PublicKeyProvider.getPublicKey()
+  }
 }
 
 actual interface PlatformUtilities : CommonPlatformUtilities {
@@ -90,14 +90,6 @@ val platformUtilities = object : PlatformUtilities {
       preferredStyle = UIAlertControllerStyleAlert
     )
 
-    // alertController.addAction(
-    //        UIAlertAction.actionWithTitle(
-    //            "OK",
-    //            style = UIAlertControllerStyle.MAX_VALUE,
-    //            handler = null
-    //        )
-    //    )
-
     viewController?.presentViewController(alert, animated = true, completion = null)
   }
 
@@ -117,7 +109,6 @@ val platformUtilities = object : PlatformUtilities {
 
     val jwe = recoveryCodeToJWE(recoveryCode)
     return recoveryCode to jwe
-    // return recoveryCode to ""
   }
 
   override fun setupEncryptionKey(encryptionKey: String): Settings {
@@ -143,7 +134,7 @@ val platformUtilities = object : PlatformUtilities {
     return iv
   }
 
-  override fun encryptData(data: String, settings: Settings): String {
+  override suspend fun encryptData(data: String, settings: Settings): String {
     val iv = generateIV()
     val key = Base64.decode(this.getEncryptionKey(settings))
 
@@ -158,11 +149,10 @@ val platformUtilities = object : PlatformUtilities {
     val tagBase64 = Base64.encode(tag)
 
     val result = "enc|$ivBase64|$cipherTextBase64|$tagBase64"
-    platformLog(result)
     return result
   }
 
-  override fun decryptData(data: String, settings: Settings): String {
+  override suspend fun decryptData(data: String, settings: Settings): String {
     require (injectedPlatformDelegate != null) {
       "PlatformDelegate must be injected before calling decryptData"
     }
@@ -186,7 +176,7 @@ val platformUtilities = object : PlatformUtilities {
   }
 
   override fun getPublicKey(): String {
-    TODO("Not yet implemented")
+    return PublicKeyProvider.currentCachedKey() ?: throw IllegalStateException("Public key has not been loaded yet")
   }
 
   override fun openURL(
@@ -196,12 +186,7 @@ val platformUtilities = object : PlatformUtilities {
   ) {
     val nsUrl = NSURL(string = url)
 
-    sfSafariViewController = SFSafariViewController(nsUrl)/*.apply {
-        colorSchemeParams.let { params ->
-          params.navigationBarColor?.let { preferredBarTintColor = Color(it).toUIColor() }
-          params.toolbarColor?.let { preferredControlTintColor = Color(it).toUIColor() }
-        }
-      }*/
+    sfSafariViewController = SFSafariViewController(nsUrl)
 
     UIApplication.sharedApplication.keyWindow?.rootViewController?.presentViewController(
       sfSafariViewController!!,

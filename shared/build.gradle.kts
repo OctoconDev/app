@@ -211,6 +211,10 @@ kotlin {
   }
 }
 
+compose.resources {
+  publicResClass = true
+}
+
 android {
   compileSdk = (findProperty("android.compileSdk") as String).toInt()
   namespace = "app.octocon.common"

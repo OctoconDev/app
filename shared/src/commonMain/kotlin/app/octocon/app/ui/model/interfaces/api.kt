@@ -197,7 +197,7 @@ interface ApiInterface {
   fun setSystemAvatar(bytes: ByteArray, fileName: String)
   fun removeSystemAvatar()
 
-  fun importSP(spToken: String)
+  fun importSP(spToken: String, encryptionKey: String? = null)
   fun importPK(pkToken: String)
 
   fun deleteAccount()
@@ -1715,16 +1715,25 @@ internal class ApiInterfaceImpl(
       "settings/avatar"
     )
 
-  override fun importSP(spToken: String) =
-    sendAPIRequest(
-      Post,
-      "settings/import-sp",
-      buildRequestBody(
-        mapOf(
-          "token" to globalSerializer.encodeToJsonElement(spToken)
-        )
+  override fun importSP(spToken: String, encryptionKey: String?) {
+    launchIO {
+      val params = mutableMapOf<String, JsonElement>(
+        "token" to globalSerializer.encodeToJsonElement(spToken)
       )
-    )
+      if (encryptionKey != null) {
+        val jwe = platformUtilities.recoveryCodeToJWE(
+          encryptionKey.chunked(4).joinToString("-")
+        )
+        params["encryption_key"] = globalSerializer.encodeToJsonElement(jwe)
+      }
+
+      sendAPIRequest(
+        Post,
+        "settings/import-sp",
+        buildRequestBody(params)
+      )
+    }
+  }
 
   override fun importPK(pkToken: String) =
     sendAPIRequest(

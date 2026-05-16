@@ -3,10 +3,9 @@ package app.octocon.app.utils.bindings
 
 import kotlin.js.Promise
 
-// TODO: Replace JsAny with actual types?
-
 external object crypto {
   val subtle: SubtleCrypto
+  fun getRandomValues(array: org.khronos.webgl.Uint8Array): org.khronos.webgl.Uint8Array
 }
 
 external interface SubtleCrypto {
@@ -17,6 +16,18 @@ external interface SubtleCrypto {
     extractable: Boolean,
     keyUsages: JsArray<JsString>
   ): Promise<CryptoKey>
+
+  fun encrypt(
+    algorithm: JsAny,
+    key: CryptoKey,
+    data: JsAny
+  ): Promise<JsAny>
+
+  fun decrypt(
+    algorithm: JsAny,
+    key: CryptoKey,
+    data: JsAny
+  ): Promise<JsAny>
 }
 
 external class CryptoKey : JsAny {

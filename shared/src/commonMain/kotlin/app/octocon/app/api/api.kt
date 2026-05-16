@@ -471,24 +471,28 @@ internal fun parseChannelMessage(
     ChannelMessage.Error("Error parsing event: $e")
   }
 
-val httpBuilder: (token: String, body: Any) -> (HttpRequestBuilder.() -> Unit) = { token, body ->
+val httpBuilder: (token: String?, body: Any?) -> (HttpRequestBuilder.() -> Unit) = { token, body ->
   {
     headers {
-      header("Authorization", "Bearer $token")
-      if (body !is MultiPartFormDataContent) {
+      if (token != null) {
+        header("Authorization", "Bearer $token")
+      }
+      if (body != null && body !is MultiPartFormDataContent) {
         header("Content-Type", "application/json")
       }
     }
-    setBody(body)
+    if (body != null) {
+      setBody(body)
+    }
   }
 }
 
-private suspend fun get(token: String, path: String, body: Any = "") =
+private suspend fun get(token: String?, path: String) =
   withContext(ioDispatcher) {
-    client.get("$endpoint/$path", httpBuilder(token, body))
+    client.get("$endpoint/$path", httpBuilder(token, null))
   }
 
-private suspend fun post(token: String, path: String, body: Any = "") =
+private suspend fun post(token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.post("$endpoint/$path", httpBuilder(token, body))
   }
@@ -501,7 +505,7 @@ private suspend fun post(token: String, path: String, body: Any = "") =
  * @param body The body of the request.
  * @return The response from the API.
  */
-private suspend fun put(token: String, path: String, body: Any = "") =
+private suspend fun put(token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.put("$endpoint/$path", httpBuilder(token, body))
   }
@@ -514,7 +518,7 @@ private suspend fun put(token: String, path: String, body: Any = "") =
  * @param body The body of the request.
  * @return The response from the API.
  */
-private suspend fun delete(token: String, path: String, body: Any = "") =
+private suspend fun delete(token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.delete("$endpoint/$path", httpBuilder(token, body))
   }
@@ -552,27 +556,6 @@ data class KeyResponse(
   val key: String
 )
 
-/*suspend fun getFrontsPastMonthWithEndAnchor(token: String, unixTime: Long) =
-  get(token, "systems/me/front/month", buildJsonObject {
-    put("end_anchor", unixTime)
-  })
-
-suspend fun getFriend(token: String, friendID: String): APIResponse<FriendshipContainer> =
-  get(token, "friends/${parseAmbiguousID(friendID)}")
-    .body<APIResponse<FriendshipContainer>>()
-
-suspend fun getFriendAlter(
-  token: String,
-  friendID: String,
-  alterID: Int
-): APIResponse<ExternalAlter> =
-  get(token, "systems/${parseAmbiguousID(friendID)}/alters/${alterID}")
-    .body<APIResponse<ExternalAlter>>()
-
-suspend fun getFriendAlters(token: String, friendID: String): APIResponse<List<ExternalAlter>> =
-  get(token, "systems/${parseAmbiguousID(friendID)}/alters")
-    .body<APIResponse<List<ExternalAlter>>>()*/
-
 suspend fun updatePushNotificationToken(token: String, pushToken: String?): HttpResponse? {
   if (pushToken == null) return null
   return post(token, "settings/push-token", buildJsonObject {
@@ -586,3 +569,6 @@ suspend fun invalidatePushNotificationToken(token: String, pushToken: String?): 
     put("token", pushToken)
   }.toString())
 }
+
+suspend fun fetchPublicKey(): APIResponse<String> =
+  get(null, "settings/public-key").body<APIResponse<String>>()

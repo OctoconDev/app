@@ -1,4 +1,3 @@
-
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
 import app.octocon.app.Settings
@@ -14,12 +13,16 @@ import com.arkivanov.essenty.lifecycle.stop
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import app.octocon.app.utils.PublicKeyProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import org.w3c.dom.Document
 import org.w3c.dom.url.URLSearchParams
+import kotlin.time.Clock
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, kotlinx.coroutines.DelicateCoroutinesApi::class)
 fun main() {
   val lifecycle = LifecycleRegistry()
   val platformEventFlow = MutableSharedFlow<PlatformEvent>(replay = 3)
@@ -31,6 +34,40 @@ fun main() {
   var initialSettings = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)?.let {
     Settings.deserialize(it)
   } ?: Settings()
+
+  // Restore persisted public key from localStorage if within TTL and asynchronously refresh
+  try {
+    val initialStoredPem = localStorage.getItem("PUBLIC_KEY_PEM")
+    val initialStoredAt = localStorage.getItem("PUBLIC_KEY_AT")?.toLongOrNull() ?: 0L
+    val now = Clock.System.now().toEpochMilliseconds()
+
+    GlobalScope.launch {
+      try {
+        var pemToCache = initialStoredPem
+        var atToCache = initialStoredAt
+
+        if (pemToCache == null || (now - atToCache) >= PublicKeyProvider.TTL_MS) {
+          try {
+            val freshKey = PublicKeyProvider.getPublicKey()
+            pemToCache = freshKey
+            atToCache = now
+            localStorage.setItem("PUBLIC_KEY_PEM", freshKey)
+            localStorage.setItem("PUBLIC_KEY_AT", now.toString())
+          } catch (e: Exception) {
+            consoleLog("Failed to refresh public key: ${e.message ?: e.toString()}")
+          }
+        }
+
+        pemToCache?.let {
+          PublicKeyProvider.setCachedKey(it, atToCache)
+        }
+      } catch (e: Exception) {
+        consoleLog("Error in startup public key coroutine: ${e.message ?: e.toString()}")
+      }
+    }
+  } catch (e: Exception) {
+    consoleLog("Failed to initiate public key restoration: $e")
+  }
 
   if(token != null) {
     initialSettings = initialSettings.copy(token = token)
