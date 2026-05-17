@@ -18,6 +18,7 @@ import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.state.updateAppWidgetState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import app.octocon.app.AndroidAppWrapper
 import app.octocon.app.Settings
 import app.octocon.app.ui.model.RootComponentImpl

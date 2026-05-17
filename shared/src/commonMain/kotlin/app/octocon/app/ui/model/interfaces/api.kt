@@ -1722,7 +1722,7 @@ internal class ApiInterfaceImpl(
       )
       if (encryptionKey != null) {
         val jwe = platformUtilities.recoveryCodeToJWE(
-          encryptionKey.chunked(4).joinToString("-")
+          encryptionKey
         )
         params["encryption_key"] = globalSerializer.encodeToJsonElement(jwe)
       }

@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalWasmJsInterop::class, ExperimentalEncodingApi::class)
+
 package app.octocon.app.utils
 
 import app.octocon.app.Settings
@@ -7,16 +9,12 @@ import app.octocon.app.utils.bindings.crypto
 import kotlinx.browser.localStorage
 import kotlinx.browser.window
 import kotlinx.coroutines.await
-import org.khronos.webgl.Int8Array
 import org.khronos.webgl.Uint8Array
 import org.khronos.webgl.get
 import org.khronos.webgl.set
-import app.octocon.app.utils.PublicKeyProvider
-import io.ktor.utils.io.core.toByteArray
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
+import kotlin.js.ExperimentalWasmJsInterop
 
 actual val currentPlatform = DevicePlatform.Wasm
 
@@ -24,238 +22,291 @@ actual interface PlatformUtilities : CommonPlatformUtilities
 
 actual interface PlatformDelegate
 
-private fun rsaKeyParams(): JsAny = js("({ name: 'RSA-OAEP', hash: 'SHA-256' })")
-private fun rsaJweHeader(): JsAny = js("({ alg: 'RSA-OAEP-256', enc: 'A256GCM', cty: 'text/plain' })")
-private fun encryptUsage(): JsArray<JsString> = js("['encrypt']")
+@JsFun("() => ({ name: 'RSA-OAEP', hash: 'SHA-256' })")
+private external fun rsaKeyParams(): JsAny
 
-private fun encodeWithTextEncoder(string: String): Uint8Array = js("new TextEncoder().encode(string)")
-private fun decodeWithTextDecoder(buffer: JsAny): String = js("new TextDecoder().decode(buffer)")
+@JsFun("() => ({ alg: 'RSA-OAEP-256', enc: 'A256GCM', cty: 'text/plain' })")
+private external fun rsaJweHeader(): JsAny
 
-private fun randomizeArray(array: Uint8Array): Unit = js("crypto.getRandomValues(array)")
+@JsFun("() => ['encrypt']")
+private external fun encryptUsage(): JsArray<JsString>
 
-private fun aesGcmKeyParams(): JsAny = js("({ name: 'AES-GCM' })")
-private fun aesGcmAlgoParams(iv: Uint8Array): JsAny = js("({ name: 'AES-GCM', iv: iv, tagLength: 128 })")
-private fun aesEncryptUsages(): JsArray<JsString> = js("['encrypt']")
-private fun aesDecryptUsages(): JsArray<JsString> = js("['decrypt']")
-private fun jsUint8Array(buffer: JsAny): Uint8Array = js("new Uint8Array(buffer)")
+@JsFun("(string) => new TextEncoder().encode(string)")
+private external fun encodeWithTextEncoder(string: String): Uint8Array
+
+@JsFun("(buffer) => new TextDecoder().decode(buffer)")
+private external fun decodeWithTextDecoder(buffer: JsAny): String
+
+@JsFun("(array) => crypto.getRandomValues(array)")
+private external fun randomizeArray(array: Uint8Array)
+
+@JsFun("() => ({ name: 'AES-GCM' })")
+private external fun aesGcmKeyParams(): JsAny
+
+@JsFun("(iv) => ({ name: 'AES-GCM', iv: iv, tagLength: 128 })")
+private external fun aesGcmAlgoParams(iv: Uint8Array): JsAny
+
+@JsFun("() => ['encrypt']")
+private external fun aesEncryptUsages(): JsArray<JsString>
+
+@JsFun("() => ['decrypt']")
+private external fun aesDecryptUsages(): JsArray<JsString>
+
+@JsFun("(buffer) => new Uint8Array(buffer)")
+private external fun jsUint8Array(buffer: JsAny): Uint8Array
 
 private fun toUint8Array(bytes: ByteArray): Uint8Array {
-  val ua = Uint8Array(bytes.size)
-  for (i in bytes.indices) {
-    ua[i] = bytes[i]
-  }
-  return ua
+    val ua = Uint8Array(bytes.size)
+    for (i in bytes.indices) {
+        ua[i] = bytes[i]
+    }
+    return ua
 }
 
 private fun Uint8Array.toByteArray(): ByteArray {
-  return ByteArray(length) { this[it] }
+    return ByteArray(length) { this[it] }
 }
 
 private val alphabet = listOf(
-  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
-  'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-  '2', '3', '4', '5', '6', '7', '8', '9'
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
+    'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+    '2', '3', '4', '5', '6', '7', '8', '9'
 )
 
-@OptIn(ExperimentalEncodingApi::class)
 val platformUtilities = object : PlatformUtilities {
-  override fun exitApplication(exitApplicationType: ExitApplicationType) {
-    when (exitApplicationType) {
-      // TODO: Make quick exit URL configurable on web?
-      ExitApplicationType.QuickExit -> window.location.assign("https://google.com")
-      ExitApplicationType.ForcedRestart -> window.location.reload()
-    }
-  }
-
-  override fun saveSettings(settings: Settings) {
-    localStorage.setItem(SETTINGS_LOCALSTORAGE_KEY, settings.serialize())
-  }
-
-  override fun showAlert(message: String) {
-    // TODO: Implement a better alert system?
-    window.alert(message)
-  }
-
-  override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-    try {
-      val publicKey = PublicKeyProvider.getPublicKey()
-
-      val strippedKey = publicKey
-        .replace(Regex("-----BEGIN.*?-----"), "")
-        .replace(Regex("-----END.*?-----"), "")
-        .replace("\n", "")
-        .replace("\r", "")
-        .trim()
-
-      val binaryKey = Base64.decode(strippedKey)
-
-      val key = crypto.subtle.importKey(
-        "spki",
-        toUint8Array(binaryKey),
-        rsaKeyParams(),
-        false,
-        encryptUsage()
-      ).await<CryptoKey>()
-
-      val jwe = CompactEncrypt(encodeWithTextEncoder(recoveryCode))
-        .setProtectedHeader(rsaJweHeader())
-        .encrypt(key)
-        .await<JsString>()
-
-      return jwe.toString()
-    } catch (e: Exception) {
-      platformLog("CRYPTO", "Failed to encrypt recovery code: $e")
-      throw e
-    }
-  }
-
-  override suspend fun generateRecoveryCode(): Pair<String, String> {
-    val array = Uint8Array(16)
-    randomizeArray(array)
-
-    val recoveryCode = List(16) { alphabet[array[it].toInt() and (alphabet.size - 1)] }
-      .joinToString("")
-      .chunked(4)
-      .joinToString("-")
-
-    val jwe = recoveryCodeToJWE(recoveryCode)
-    return recoveryCode to jwe
-  }
-
-  override fun setupEncryptionKey(encryptionKey: String): Settings? {
-    // Base64 encode the key for storage in the encryptedEncryptionKey field
-    val encryptedBase64 = Base64.encode(encryptionKey.encodeToByteArray())
-
-    // Get current settings and update with encrypted key
-    val currentSettingsJson = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)
-    var currentSettings = if (currentSettingsJson != null) {
-      try {
-        globalSerializer.decodeFromString<Settings>(currentSettingsJson)
-      } catch (e: Exception) {
-        Settings()
-      }
-    } else {
-      Settings()
+    override fun exitApplication(exitApplicationType: ExitApplicationType) {
+        when (exitApplicationType) {
+            // TODO: Make quick exit URL configurable on web?
+            ExitApplicationType.QuickExit -> window.location.assign("https://google.com")
+            ExitApplicationType.ForcedRestart -> window.location.reload()
+        }
     }
 
-    currentSettings = currentSettings.copy(encryptedEncryptionKey = encryptedBase64)
-    saveSettings(currentSettings)
-    return currentSettings
-  }
-
-  override fun getEncryptionKey(settings: Settings): String {
-    // For WASM, get the encryption key from the Settings object
-    val encryptedKey = settings.encryptedEncryptionKey 
-      ?: throw IllegalStateException("Encryption key not set up. Call setupEncryptionKey first.")
-    
-    // Decrypt (decode) the Base64-encoded key
-    return Base64.decode(encryptedKey).decodeToString()
-  }
-
-  override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
-    return Base64.decode(encryptedEncryptionKey).decodeToString()
-  }
-
-  override suspend fun encryptData(data: String, settings: Settings): String {
-    try {
-      val keyString = getEncryptionKey(settings)
-      val keyBytes = Base64.decode(keyString)
-      
-      val cryptoKey = crypto.subtle.importKey(
-        "raw",
-        toUint8Array(keyBytes),
-        aesGcmKeyParams(),
-        false,
-        aesEncryptUsages()
-      ).await<CryptoKey>()
-
-      val iv = Uint8Array(12)
-      randomizeArray(iv)
-
-      val encryptedBuffer = crypto.subtle.encrypt(
-        aesGcmAlgoParams(iv),
-        cryptoKey,
-        toUint8Array(data.encodeToByteArray())
-      ).await<JsAny>()
-
-      val encryptedBytes = jsUint8Array(encryptedBuffer).toByteArray()
-      
-      // Web Crypto appends the tag to the ciphertext
-      val tagLength = 16
-      val ciphertext = encryptedBytes.copyOfRange(0, encryptedBytes.size - tagLength)
-      val tag = encryptedBytes.copyOfRange(encryptedBytes.size - tagLength, encryptedBytes.size)
-
-      val ivBase64 = Base64.encode(iv.toByteArray())
-      val ciphertextBase64 = Base64.encode(ciphertext)
-      val tagBase64 = Base64.encode(tag)
-
-      return "enc|$ivBase64|$ciphertextBase64|$tagBase64"
-    } catch (e: Exception) {
-      platformLog("CRYPTO", "Failed to encrypt data: $e")
-      throw e
+    override fun saveSettings(settings: Settings) {
+        localStorage.setItem(SETTINGS_LOCALSTORAGE_KEY, settings.serialize())
     }
-  }
 
-  override suspend fun decryptData(data: String, settings: Settings): String {
-    val parts = data.split("|")
-    require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
-    
-    try {
-      val iv = toUint8Array(Base64.decode(parts[1]))
-      val ciphertext = Base64.decode(parts[2])
-      val tag = Base64.decode(parts[3])
-      
-      val keyString = getEncryptionKey(settings)
-      val keyBytes = Base64.decode(keyString)
-      
-      val cryptoKey = crypto.subtle.importKey(
-        "raw",
-        toUint8Array(keyBytes),
-        aesGcmKeyParams(),
-        false,
-        aesDecryptUsages()
-      ).await<CryptoKey>()
-
-      // Concatenate ciphertext and tag back for Web Crypto
-      val encryptedBytes = ciphertext + tag
-      
-      val decryptedBuffer = crypto.subtle.decrypt(
-        aesGcmAlgoParams(iv),
-        cryptoKey,
-        toUint8Array(encryptedBytes)
-      ).await<JsAny>()
-
-      return decodeWithTextDecoder(decryptedBuffer)
-    } catch (e: Exception) {
-      platformLog("CRYPTO", "Failed to decrypt data: $e")
-      throw IllegalStateException("Failed to decrypt data", e)
+    override fun showAlert(message: String) {
+        // TODO: Implement a better alert system?
+        window.alert(message)
     }
-  }
 
-  override fun getPublicKey(): String {
-    return PublicKeyProvider.currentCachedKey()
-      ?: throw IllegalStateException("Public key has not been loaded yet")
-  }
+    override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
+        try {
+            val publicKey = getPublicKey()
+            val strippedKey = publicKey
+                .replace(Regex("-----BEGIN.*?-----"), "")
+                .replace(Regex("-----END.*?-----"), "")
+                .replace("\n", "")
+                .replace("\r", "")
+                .trim()
 
-  override fun openURL(
-    url: String,
-    colorSchemeParams: ColorSchemeParams,
-    webURLOpenBehavior: WebURLOpenBehavior
-  ) {
-    when (webURLOpenBehavior) {
-      WebURLOpenBehavior.NewTab -> window.open(url, "_blank")
-      WebURLOpenBehavior.SameTab -> window.location.assign(url)
-      WebURLOpenBehavior.PopupWindow -> window.open(url, "_blank", "popup=true")
+            val binaryKey = Base64.decode(strippedKey)
+            val key = crypto.subtle.importKey(
+                "spki",
+                toUint8Array(binaryKey),
+                rsaKeyParams(),
+                false,
+                encryptUsage()
+            ).await<CryptoKey>()
+
+            val jwe = CompactEncrypt(encodeWithTextEncoder(recoveryCode))
+                .setProtectedHeader(rsaJweHeader())
+                .encrypt(key)
+                .await<JsString>()
+
+            platformLog("CRYPTO", "Encrypted recovery code")
+            return jwe.toString()
+        } catch (e: Exception) {
+            platformLog("CRYPTO", "Failed to encrypt recovery code: $e")
+            throw e
+        }
     }
-  }
 
-  // Stubs: not implemented on web
-  override fun performAdditionalPushNotificationSetup() = Unit
-  override fun updateWidgets(sessionInvalidated: Boolean) = Unit
+    override suspend fun generateRecoveryCode(): Pair<String, String> {
+        platformLog("CRYPTO", "Creating recovery code")
+        val array = Uint8Array(16)
+        randomizeArray(array)
+
+        val recoveryCode = List(16) { alphabet[array[it].toInt() and 31] }
+            .joinToString("")
+            .chunked(4)
+            .joinToString("-")
+
+        val jwe = recoveryCodeToJWE(recoveryCode)
+        return recoveryCode to jwe
+    }
+
+    override fun setupEncryptionKey(encryptionKey: String): Settings? {
+        try {
+            // Store the encryption key in localStorage directly
+            // The key is already in the correct format from decryptEncryptionKey
+            localStorage.setItem("ENCRYPTION_KEY", encryptionKey)
+
+            val currentSettingsJson = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)
+            val currentSettings = if (currentSettingsJson != null) {
+                try {
+                    Settings.deserialize(currentSettingsJson)
+                } catch (e: Exception) {
+                    platformLog("SETTINGS", "Failed to deserialize settings in setupEncryptionKey: $e")
+                    return null
+                }
+            } else {
+                Settings()
+            }
+
+            val updatedSettings = currentSettings.copy(encryptedEncryptionKey = encryptionKey)
+            saveSettings(updatedSettings)
+
+            platformLog("CRYPTO", "Encryption key setup successful")
+            return updatedSettings
+        } catch (e: Exception) {
+            platformLog("CRYPTO", "Failed to setup encryption key: ${e.message}")
+            return null
+        }
+    }
+
+    override fun getEncryptionKey(settings: Settings): String {
+        val key = settings.encryptedEncryptionKey
+            ?: localStorage.getItem("ENCRYPTION_KEY")
+            ?: throw IllegalStateException("Encryption key not found")
+
+        return key
+    }
+
+    override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
+        return try {
+            // On WASM, the server sends us the key as Base64 encoded
+            // We just decode it since we don't have platform-specific encryption like Android KeyStore
+            // We keep it Base64 encoded for storage - it will be decoded when actually used
+            encryptedEncryptionKey
+        } catch (e: Exception) {
+            platformLog("CRYPTO", "Failed to decrypt encryption key: ${e.message}")
+            throw e
+        }
+    }
+
+    override suspend fun encryptData(data: String, settings: Settings): String {
+        try {
+            val keyString = getEncryptionKey(settings)
+            val keyBytes = Base64.decode(keyString)
+
+            val cryptoKey = crypto.subtle.importKey(
+                "raw",
+                toUint8Array(keyBytes),
+                aesGcmKeyParams(),
+                false,
+                aesEncryptUsages()
+            ).await<CryptoKey>()
+
+            val iv = Uint8Array(12)
+            randomizeArray(iv)
+
+            val encryptedBuffer = crypto.subtle.encrypt(
+                aesGcmAlgoParams(iv),
+                cryptoKey,
+                toUint8Array(data.encodeToByteArray())
+            ).await<JsAny>()
+
+            val encryptedBytes = jsUint8Array(encryptedBuffer).toByteArray()
+
+            // Web Crypto appends the tag to the ciphertext
+            val tagLength = 16
+            val ciphertext = encryptedBytes.copyOfRange(0, encryptedBytes.size - tagLength)
+            val tag = encryptedBytes.copyOfRange(encryptedBytes.size - tagLength, encryptedBytes.size)
+
+            val ivBase64 = Base64.encode(iv.toByteArray())
+            val ciphertextBase64 = Base64.encode(ciphertext)
+            val tagBase64 = Base64.encode(tag)
+
+            val result = "enc|$ivBase64|$ciphertextBase64|$tagBase64"
+            return result
+        } catch (e: Exception) {
+            platformLog("CRYPTO", "Failed to encrypt data: ${e.message}")
+            platformLog("CRYPTO", "Exception type: ${e::class.simpleName}")
+            platformLog("CRYPTO", "Stack trace: ${e.stackTraceToString()}")
+            throw e
+        }
+    }
+
+    override suspend fun decryptData(data: String, settings: Settings): String {
+        val parts = data.split("|")
+        require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
+
+        try {
+            val iv = toUint8Array(Base64.decode(parts[1]))
+            val ciphertext = Base64.decode(parts[2])
+            val tag = Base64.decode(parts[3])
+
+            val keyString = getEncryptionKey(settings)
+            val keyBytes = Base64.decode(keyString)
+
+            val cryptoKey = crypto.subtle.importKey(
+                "raw",
+                toUint8Array(keyBytes),
+                aesGcmKeyParams(),
+                false,
+                aesDecryptUsages()
+            ).await<CryptoKey>()
+
+            // Concatenate ciphertext and tag back for Web Crypto
+            val encryptedBytes = ciphertext + tag
+
+            val decryptedBuffer = crypto.subtle.decrypt(
+                aesGcmAlgoParams(iv),
+                cryptoKey,
+                toUint8Array(encryptedBytes)
+            ).await<JsAny>()
+
+            return decodeWithTextDecoder(decryptedBuffer)
+        } catch (e: Exception) {
+            platformLog("CRYPTO", "Failed to decrypt data: $e")
+            throw IllegalStateException("Failed to decrypt data", e)
+        }
+    }
+
+    override fun getPublicKey(): String {
+        return PublicKeyProvider.currentCachedKey()
+            ?: throw IllegalStateException("Public key has not been loaded yet")
+    }
+
+    override fun openURL(
+        url: String,
+        colorSchemeParams: ColorSchemeParams,
+        webURLOpenBehavior: WebURLOpenBehavior
+    ) {
+        when (webURLOpenBehavior) {
+            WebURLOpenBehavior.NewTab -> window.open(url, "_blank")
+            WebURLOpenBehavior.SameTab -> window.location.assign(url)
+            WebURLOpenBehavior.PopupWindow -> window.open(url, "_blank", "popup=true")
+        }
+    }
+
+    // Stubs: not implemented on web
+    override fun performAdditionalPushNotificationSetup() = Unit
+    override fun updateWidgets(sessionInvalidated: Boolean) = Unit
 }
 
 const val SETTINGS_LOCALSTORAGE_KEY = "octocon_settings"
 
 actual object BuildConfig : BuildConfigInterface {
-  override fun isDebug(): Boolean = false 
+    override fun isDebug(): Boolean {
+        // Check for explicit debug flag in localStorage
+        val debugFlag = localStorage.getItem("OCTOCON_DEBUG")
+        if (debugFlag != null) {
+            return debugFlag.toBoolean()
+        }
+
+        // Auto-detect: running on localhost or with query parameter means debug mode
+        val hostname = window.location.hostname
+        val isLocalhost = hostname == "localhost" || hostname == "127.0.0.1" || hostname.startsWith("192.168.")
+        val hasDebugParam = window.location.search.contains("debug=true")
+
+        val isDebug = isLocalhost || hasDebugParam
+        if (isDebug) {
+            platformLog("BUILD-CONFIG", "Running in debug mode (hostname=$hostname, hasDebugParam=$hasDebugParam)")
+        }
+
+        return isDebug
+    }
 }
