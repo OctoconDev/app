@@ -111,7 +111,7 @@ val platformUtilities = object : PlatformUtilities {
     return recoveryCode to jwe
   }
 
-  override fun setupEncryptionKey(encryptionKey: String): Settings {
+  override suspend fun setupEncryptionKey(encryptionKey: String): Settings {
     encryptionVault.set("encryption_key", encryptionKey)
 
     val settings = getSettingsFromKeychain().copy(encryptedEncryptionKey = "STORED IN KEYCHAIN")
@@ -119,7 +119,7 @@ val platformUtilities = object : PlatformUtilities {
     return settings
   }
 
-  override fun getEncryptionKey(settings: Settings): String {
+  override suspend fun getEncryptionKey(settings: Settings): String {
     return encryptionVault.string("encryption_key")!!
   }
 

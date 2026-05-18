@@ -197,6 +197,7 @@ kotlin {
     val desktopMain by getting {
       dependencies {
         implementation("io.ktor:ktor-client-okhttp:$ktorVersion")
+        implementation("com.nimbusds:nimbus-jose-jwt:9.47")
       }
     }
 

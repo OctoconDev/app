@@ -137,49 +137,52 @@ val platformUtilities = object : PlatformUtilities {
         return recoveryCode to jwe
     }
 
-    override fun setupEncryptionKey(encryptionKey: String): Settings? {
-        try {
-            // Store the encryption key in localStorage directly
-            // The key is already in the correct format from decryptEncryptionKey
-            localStorage.setItem("ENCRYPTION_KEY", encryptionKey)
+    private fun getSettings(): Settings? {
 
-            val currentSettingsJson = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)
-            val currentSettings = if (currentSettingsJson != null) {
-                try {
-                    Settings.deserialize(currentSettingsJson)
-                } catch (e: Exception) {
-                    platformLog("SETTINGS", "Failed to deserialize settings in setupEncryptionKey: $e")
-                    return null
-                }
-            } else {
-                Settings()
+        val currentSettingsJson = localStorage.getItem(SETTINGS_LOCALSTORAGE_KEY)
+        return if (currentSettingsJson != null) {
+            try {
+                Settings.deserialize(currentSettingsJson)
+            } catch (e: Exception) {
+                platformLog("SETTINGS", "Failed to deserialize settings in setupEncryptionKey: $e")
+                return null
             }
-
-            val updatedSettings = currentSettings.copy(encryptedEncryptionKey = encryptionKey)
-            saveSettings(updatedSettings)
-
-            platformLog("CRYPTO", "Encryption key setup successful")
-            return updatedSettings
-        } catch (e: Exception) {
-            platformLog("CRYPTO", "Failed to setup encryption key: ${e.message}")
-            return null
+        } else {
+            Settings()
         }
     }
 
-    override fun getEncryptionKey(settings: Settings): String {
-        val key = settings.encryptedEncryptionKey
-            ?: localStorage.getItem("ENCRYPTION_KEY")
-            ?: throw IllegalStateException("Encryption key not found")
+    override suspend fun setupEncryptionKey(encryptionKey: String): Settings? {
+        val currentSettings = getSettings() ?: return null
 
-        return key
+        // Persist the encryption key in IndexedDB via the web shim and store
+        // a placeholder in settings so callers know it's persisted off-localStorage.
+        try {
+            webStoreEncryptionKey(encryptionKey)
+        } catch (e: Exception) {
+            platformLog("SETTINGS", "Failed to persist encryption key to IndexedDB: $e")
+        }
+
+        val updatedSettings = currentSettings.copy(encryptedEncryptionKey = "STORED_IN_INDEXEDDB")
+        saveSettings(updatedSettings)
+        return updatedSettings
+    }
+
+    override suspend fun getEncryptionKey(settings: Settings): String {
+        val keyFromSettings = settings.encryptedEncryptionKey
+        if (keyFromSettings != null && keyFromSettings != "STORED_IN_INDEXEDDB") {
+            return keyFromSettings
+        }
+
+        val stored = webRetrieveEncryptionKey()
+        return stored ?: throw IllegalStateException("Encryption key not found")
     }
 
     override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
         return try {
-            // On WASM, the server sends us the key as Base64 encoded
-            // We just decode it since we don't have platform-specific encryption like Android KeyStore
-            // We keep it Base64 encoded for storage - it will be decoded when actually used
-            encryptedEncryptionKey
+            // Decode the outer Base64 wrapper to get the inner Base64 key string,
+            // matching other platform implementations (iOS/Desktop/Android).
+            Base64.decode(encryptedEncryptionKey).decodeToString()
         } catch (e: Exception) {
             platformLog("CRYPTO", "Failed to decrypt encryption key: ${e.message}")
             throw e

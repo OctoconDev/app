@@ -71,7 +71,7 @@ interface SettingsInterface : SettingsReadInterface {
   fun setHasViewedOnboarding(hasViewedOnboarding: Boolean)
   fun setIsSinglet(isSinglet: Boolean)
 
-  fun getEncryptionKey(): String
+  suspend fun getEncryptionKey(): String
 }
 
 class SettingsInterfaceImpl(
@@ -284,7 +284,7 @@ class SettingsInterfaceImpl(
       it.copy(isSinglet = isSinglet)
     }
 
-  override fun getEncryptionKey(): String {
+  override suspend fun getEncryptionKey(): String {
     return platformUtilities.getEncryptionKey(_settings.value)
   }
 

@@ -129,8 +129,8 @@ interface CommonPlatformUtilities {
 
   suspend fun recoveryCodeToJWE(recoveryCode: String): String
   suspend fun generateRecoveryCode(): Pair<String, String>
-  fun setupEncryptionKey(encryptionKey: String): Settings?
-  fun getEncryptionKey(settings: Settings): String
+  suspend fun setupEncryptionKey(encryptionKey: String): Settings?
+  suspend fun getEncryptionKey(settings: Settings): String
 
   fun decryptEncryptionKey(encryptedEncryptionKey: String): String
 

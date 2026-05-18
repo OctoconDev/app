@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
       get() = this@MainActivity
 
     override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-      val publicKeyRaw = PublicKeyProvider.getPublicKey()
+      val publicKeyRaw = getPublicKey()
       val publicKeyPEM = publicKeyRaw
         .replace(Regex("-----BEGIN.*?-----"), "")
         .replace(Regex("-----END.*?-----"), "")
@@ -142,7 +142,7 @@ class MainActivity : AppCompatActivity() {
       return recoveryCode to recoveryCodeToJWE(recoveryCode)
     }
 
-    override fun setupEncryptionKey(encryptionKey: String): Settings? {
+    override suspend fun setupEncryptionKey(encryptionKey: String): Settings? {
       val keyPair = KeyStoreHelper.getKeyPair()
       val publicKey = keyPair.public
       val cipher =
@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity() {
       return newSettings
     }
 
-    override fun getEncryptionKey(settings: Settings): String {
+    override suspend fun getEncryptionKey(settings: Settings): String {
       val encryptedEncryptionKey = settings.encryptedEncryptionKey
 
       val keyPair = KeyStoreHelper.getKeyPair()
