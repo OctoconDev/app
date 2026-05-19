@@ -601,6 +601,9 @@
 
     <string name="encryption_reset_successfully">Encryption key reset successfully!</string>
     <string name="recovery_code">Recovery code</string>
+    <string name="recovery_code_sp_note">Recovery code is only used to import notes; it is not stored on the server.</string>
+    <string name="recovery_code_sp_note_recover">To access your existing journal entries and import Simply's notes, you'll need to enter your recovery code you wrote down when you set up encryption on another device.</string>
+    <string name="encryption_not_initialized_sp_note">Octocon protects your journal entries with end-to-end encryption for maximum security. To use the journaling feature and import Simply's notes, you must set up encryption first.</string>
 
     <string name="recover_encryption_dialog_title">Recover encryption key</string>
     <string name="recover_encryption_dialog_body">Enter your recovery code below to recover your encryption key. This will allow you to access your journal entries on this device.</string>

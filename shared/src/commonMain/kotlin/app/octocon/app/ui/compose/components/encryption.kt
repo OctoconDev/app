@@ -30,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -130,7 +131,8 @@ internal fun SetupEncryptionDialog(
   api: ApiInterface,
   settings: SettingsInterface,
   closeDialog: () -> Unit,
-  onRecoveryCodeGenerated: ((String) -> Unit)? = null
+  onRecoveryCodeGenerated: ((String) -> Unit)? = null,
+  onSetupSuccess: ((String) -> Unit)? = null
 ) {
   val haptics = LocalHapticFeedback.current
   var recoveryCode by state<Pair<String, String>?>(null)
@@ -140,15 +142,28 @@ internal fun SetupEncryptionDialog(
       onRecoveryCodeGenerated?.invoke(it.first)
     }
   }
-
-  var isInitializing by savedState(false)
   var confirmCount by savedState(0)
+  var attempting by savedState(false)
+  var seenInit by remember { mutableStateOf(false) }
 
   val clipboard = LocalClipboard.current
+  val encryptionIsInitializing by api.encryptionIsInitializing.collectAsState(false)
+  val loading = attempting || encryptionIsInitializing
+
+  LaunchedEffect(encryptionIsInitializing) {
+    if (encryptionIsInitializing && attempting) {
+      seenInit = true
+    } else if (!encryptionIsInitializing && seenInit) {
+      // Completed successfully
+      attempting = false
+      seenInit = false
+      closeDialog()
+    }
+  }
 
   AlertDialog(
     icon = {
-      if (isInitializing) {
+      if (loading) {
         CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 3.dp)
       } else {
         Icon(
@@ -214,7 +229,7 @@ internal fun SetupEncryptionDialog(
       }
     },
     onDismissRequest = {
-      if (!isInitializing) {
+      if (!loading) {
         closeDialog()
       }
     },
@@ -227,12 +242,22 @@ internal fun SetupEncryptionDialog(
             else -> HapticFeedbackType.LongPress
           })
           confirmCount++
-          if (confirmCount >= 3 && !isInitializing) {
-            isInitializing = true
-            api.setupEncryption(recoveryCode!!.second, settings)
+            if (confirmCount >= 3 && !loading) {
+            attempting = true
+            api.setupEncryption(recoveryCode!!.second, settings,
+              onSuccess = {
+                try {
+                  onSetupSuccess?.invoke(recoveryCode!!.first)
+                } catch (_: Exception) {}
+                // onSuccess will also be observed via encryptionIsInitializing transition
+              },
+              onFailure = {
+                attempting = false
+              }
+            )
           }
         },
-        enabled = !isInitializing
+        enabled = !loading
       ) {
         Text(Res.string.confirm.compose + if (confirmCount > 0) " ($confirmCount/3)" else "")
       }
@@ -242,7 +267,7 @@ internal fun SetupEncryptionDialog(
         onClick = {
           closeDialog()
         },
-        enabled = !isInitializing
+        enabled = !loading
       ) {
         Text(Res.string.cancel.compose)
       }
@@ -299,7 +324,7 @@ internal fun RecoverEncryptionCard(api: ApiInterface, settings: SettingsInterfac
   }
 
   if (recoverDialogOpen) {
-    RecoverEncryptionDialog(api, settings) { recoverDialogOpen = false }
+    RecoverEncryptionDialog(api, settings, closeDialog = { recoverDialogOpen = false })
   }
 }
 
@@ -308,16 +333,30 @@ internal fun RecoverEncryptionDialog(
   api: ApiInterface,
   settings: SettingsInterface,
   closeDialog: () -> Unit,
+  onRecovered: ((String) -> Unit)? = null
 ) {
   var isRecovering by savedState(false)
 
   var recoveryCode by savedState("")
 
   val focusRequester = remember { FocusRequester() }
+  val encryptionIsInitializing by api.encryptionIsInitializing.collectAsState(false)
+  var seenInit by remember { mutableStateOf(false) }
+
+  LaunchedEffect(encryptionIsInitializing) {
+    if (encryptionIsInitializing && isRecovering) {
+      seenInit = true
+    } else if (!encryptionIsInitializing && seenInit) {
+      // Completed successfully
+      isRecovering = false
+      seenInit = false
+      closeDialog()
+    }
+  }
 
   AlertDialog(
     icon = {
-      if (isRecovering) {
+      if (isRecovering || encryptionIsInitializing) {
         CircularProgressIndicator(modifier = Modifier.size(24.dp), strokeWidth = 3.dp)
       } else {
         Icon(
@@ -367,7 +406,7 @@ internal fun RecoverEncryptionDialog(
       }
     },
     onDismissRequest = {
-      if (!isRecovering) {
+      if (!isRecovering && !encryptionIsInitializing) {
         closeDialog()
       }
     },
@@ -376,13 +415,21 @@ internal fun RecoverEncryptionDialog(
         onClick = {
           if (!isRecovering) {
             isRecovering = true
-            api.recoverEncryption(recoveryCode, settings, onFailure = {
-              isRecovering = false
-              // TODO
-            })
+            api.recoverEncryption(recoveryCode, settings,
+              onSuccess = {
+                try {
+                  onRecovered?.invoke(recoveryCode)
+                } catch (_: Exception) {}
+                // success observed via encryptionIsInitializing transition
+              },
+              onFailure = {
+                isRecovering = false
+                // TODO: surface error (snackbar)
+              }
+            )
           }
         },
-        enabled = !isRecovering && recoveryCode.length == 16
+        enabled = !isRecovering && !encryptionIsInitializing && recoveryCode.length == 16
       ) {
         Text(Res.string.confirm.compose)
       }
@@ -392,7 +439,7 @@ internal fun RecoverEncryptionDialog(
         onClick = {
           closeDialog()
         },
-        enabled = !isRecovering
+        enabled = !isRecovering && !encryptionIsInitializing
       ) {
         Text(Res.string.cancel.compose)
       }

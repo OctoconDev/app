@@ -96,9 +96,19 @@ interface ApiInterface {
 
   /* --------------- ENCRYPTION --------------- */
   suspend fun generateRecoveryCode(): Pair<String, String>
-  fun setupEncryption(recoveryCodeJWE: String, settingsInterface: SettingsInterface)
+  fun setupEncryption(
+    recoveryCodeJWE: String,
+    settingsInterface: SettingsInterface,
+    onSuccess: () -> Unit = {},
+    onFailure: (error: String) -> Unit = {}
+  )
   fun resetEncryption()
-  fun recoverEncryption(recoveryCode: String, settingsInterface: SettingsInterface, onFailure: (error: String) -> Unit)
+  fun recoverEncryption(
+    recoveryCode: String,
+    settingsInterface: SettingsInterface,
+    onSuccess: () -> Unit = {},
+    onFailure: (error: String) -> Unit
+  )
   /* --------------- RESOURCES --------------- */
   fun reloadAlters(pushLoadingState: Boolean = true): Job
   fun reloadTags(pushLoadingState: Boolean = true): Job
@@ -197,7 +207,7 @@ interface ApiInterface {
   fun setSystemAvatar(bytes: ByteArray, fileName: String)
   fun removeSystemAvatar()
 
-  fun importSP(spToken: String, encryptionKey: String? = null)
+  fun importSP(spToken: String, recoveryCode: String? = null)
   fun importPK(pkToken: String)
 
   fun deleteAccount()
@@ -341,7 +351,12 @@ internal class ApiInterfaceImpl(
     return platformUtilities.generateRecoveryCode()
   }
 
-  override fun setupEncryption(recoveryCodeJWE: String, settingsInterface: SettingsInterface) {
+  override fun setupEncryption(
+    recoveryCodeJWE: String,
+    settingsInterface: SettingsInterface,
+    onSuccess: () -> Unit,
+    onFailure: (error: String) -> Unit
+  ) {
     coroutineScope.launch(Dispatchers.Default) {
       // val publicKeyPEM = platformUtilities.getPublicKey()
 
@@ -359,13 +374,21 @@ internal class ApiInterfaceImpl(
           withContext(Dispatchers.Default) {
             if (isSuccess) {
               _encryptionIsInitializing.tryEmit(true)
-              val encryptedKey = response.data!!.key
-              val decryptedKey = platformUtilities.decryptEncryptionKey(encryptedKey)
+              try {
+                val encryptedKey = response.data!!.key
+                val decryptedKey = platformUtilities.decryptEncryptionKey(encryptedKey)
 
-              platformUtilities.setupEncryptionKey(decryptedKey)?.let {
-                settingsInterface.pushSettings(it)
+                platformUtilities.setupEncryptionKey(decryptedKey)?.let {
+                  settingsInterface.pushSettings(it)
+                  try {
+                    onSuccess()
+                  } catch (_: Exception) {}
+                }
+              } finally {
+                _encryptionIsInitializing.tryEmit(false)
               }
-              _encryptionIsInitializing.tryEmit(false)
+            } else {
+              onFailure(response.error!!)
             }
           }
         }
@@ -382,6 +405,7 @@ internal class ApiInterfaceImpl(
   override fun recoverEncryption(
     recoveryCode: String,
     settingsInterface: SettingsInterface,
+    onSuccess: () -> Unit,
     onFailure: (error: String) -> Unit
   ) {
     coroutineScope.launch(Dispatchers.Default) {
@@ -402,13 +426,19 @@ internal class ApiInterfaceImpl(
           withContext(Dispatchers.Default) {
             if (isSuccess) {
               _encryptionIsInitializing.tryEmit(true)
-              val encryptedKey = response.data!!.key
-              val decryptedKey = platformUtilities.decryptEncryptionKey(encryptedKey)
+              try {
+                val encryptedKey = response.data!!.key
+                val decryptedKey = platformUtilities.decryptEncryptionKey(encryptedKey)
 
-              platformUtilities.setupEncryptionKey(decryptedKey)?.let {
-                settingsInterface.pushSettings(it)
+                platformUtilities.setupEncryptionKey(decryptedKey)?.let {
+                  settingsInterface.pushSettings(it)
+                  try {
+                    onSuccess()
+                  } catch (_: Exception) {}
+                }
+              } finally {
+                _encryptionIsInitializing.tryEmit(false)
               }
-              _encryptionIsInitializing.tryEmit(false)
             } else {
               onFailure(response.error!!)
             }
@@ -1715,16 +1745,15 @@ internal class ApiInterfaceImpl(
       "settings/avatar"
     )
 
-  override fun importSP(spToken: String, encryptionKey: String?) {
+  override fun importSP(spToken: String, recoveryCode: String?) {
     launchIO {
       val params = mutableMapOf<String, JsonElement>(
         "token" to globalSerializer.encodeToJsonElement(spToken)
       )
-      if (encryptionKey != null) {
-        val jwe = platformUtilities.recoveryCodeToJWE(
-          encryptionKey
-        )
-        params["encryption_key"] = globalSerializer.encodeToJsonElement(jwe)
+      if (recoveryCode != null) {
+        val formatted = recoveryCode.chunked(4).joinToString("-")
+        val jwe = platformUtilities.recoveryCodeToJWE(formatted)
+        params["recovery_code"] = globalSerializer.encodeToJsonElement(jwe)
       }
 
       sendAPIRequest(

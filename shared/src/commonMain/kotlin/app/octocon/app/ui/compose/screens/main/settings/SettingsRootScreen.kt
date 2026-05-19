@@ -3,6 +3,7 @@
 package app.octocon.app.ui.compose.screens.main.settings
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
@@ -31,8 +32,11 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -41,12 +45,16 @@ import app.octocon.app.api.model.MySystem
 import app.octocon.app.ui.compose.LocalNavigationType
 import app.octocon.app.ui.compose.LocalSetShowPushNotifications
 import app.octocon.app.ui.compose.NavigationType
+import app.octocon.app.ui.compose.components.RecoverEncryptionDialog
+import app.octocon.app.ui.compose.components.ResetEncryptionDialog
+import app.octocon.app.ui.compose.components.SetupEncryptionDialog
 import app.octocon.app.ui.compose.components.SettingsButtonItem
 import app.octocon.app.ui.compose.components.SettingsLoneButtonItem
 import app.octocon.app.ui.compose.components.SettingsNavigationItem
 import app.octocon.app.ui.compose.components.SettingsSection
 import app.octocon.app.ui.compose.components.SettingsToggleItem
 import app.octocon.app.ui.compose.components.shared.CardGroupPosition
+import app.octocon.app.ui.compose.components.shared.MaskVisualTransformation
 import app.octocon.app.ui.compose.components.shared.OctoScaffold
 import app.octocon.app.ui.compose.components.shared.OctoTopBar
 import app.octocon.app.ui.compose.components.shared.OpenDrawerNavigationButton
@@ -64,11 +72,19 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.savedState
 import app.octocon.app.utils.state
+import androidx.compose.foundation.layout.Row
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.mikepenz.markdown.compose.LocalMarkdownColors
 import com.mikepenz.markdown.m3.markdownColor
 import octoconapp.shared.generated.resources.Res
 import octoconapp.shared.generated.resources.accessibility
+import octoconapp.shared.generated.resources.reset_encryption_card_button
+import octoconapp.shared.generated.resources.encryption_not_initialized_card_button
+import octoconapp.shared.generated.resources.encryption_not_initialized_sp_note
+import octoconapp.shared.generated.resources.recovery_code_sp_note_recover
+import octoconapp.shared.generated.resources.encryption_recovery_needed_card_button
+import octoconapp.shared.generated.resources.recovery_code
+import octoconapp.shared.generated.resources.recovery_code_sp_note
 import octoconapp.shared.generated.resources.account_options
 import octoconapp.shared.generated.resources.app
 import octoconapp.shared.generated.resources.app_info
@@ -290,14 +306,14 @@ fun SettingsRootScreen(
             )
           }
 
-          if(!isSinglet) {
-            SettingsSection(
-              import_alters,
-              settingsData,
-              { SettingsImportSP(it, { token -> api.importSP(token, settingsData.encryptedEncryptionKey) }, api) },
-              { SettingsImportPK(it, api::importPK, api) }
-            )
-          }
+            if(!isSinglet) {
+              SettingsSection(
+                import_alters,
+                settingsData,
+                { SettingsImportSP(it, api::importSP, api, settings) },
+                { SettingsImportPK(it, api::importPK, api) }
+              )
+            }
 
           SettingsSection(
             danger_zone,
@@ -749,11 +765,32 @@ private fun SettingsImportPK(
 @Composable
 private fun SettingsImportSP(
   cardGroupPosition: CardGroupPosition,
-  importSP: (String) -> Unit,
-  apiInterface: ApiInterface
+  importSP: (String, String?) -> Unit,
+  apiInterface: ApiInterface,
+  settings: SettingsInterface
 ) {
   var spToken by savedState("")
   var status by state<ImportStatus>(ImportStatus.Idle)
+  var recoveryCode by savedState("")
+  var generatedRecoveryCode by savedState<String?>(null)
+
+  val focusRequester = remember { FocusRequester() }
+
+  val systemState by apiInterface.systemMe.collectAsState()
+  val encryptionIsInitializing by apiInterface.encryptionIsInitializing.collectAsState(false)
+
+  // Determine if we have a usable local encryption key
+  var isEncryptionValid by savedState<Boolean?>(null)
+  val settingsData by settings.collectAsState()
+
+  LaunchedEffect(systemState, settingsData.encryptedEncryptionKey) {
+    // Only attempt key retrieval when server says encryption is initialized
+    if (systemState.isSuccess && systemState.ensureData.encryptionInitialized) {
+      isEncryptionValid = settingsData.encryptedEncryptionKey != null
+    } else {
+      isEncryptionValid = null
+    }
+  }
 
   LaunchedEffect(Unit) {
     apiInterface.eventFlow.collect {
@@ -764,6 +801,18 @@ private fun SettingsImportSP(
       }
     }
   }
+
+  LaunchedEffect(Unit) {
+    apiInterface.errorFlow.collect {
+      if (status is ImportStatus.Importing) {
+        status = ImportStatus.Failed
+      }
+    }
+  }
+
+  var recoverDialogOpen by savedState(false)
+  var setupDialogOpen by savedState(false)
+  var resetDialogOpen by savedState(false)
 
   val (Dialog, isOpen, openDialog) = createConfirmationDialog(
     title = Res.string.import_sp_title.compose,
@@ -796,6 +845,7 @@ private fun SettingsImportSP(
             )
           }
         }
+
         if(status !is ImportStatus.Success) {
           item {
             TextField(
@@ -806,8 +856,89 @@ private fun SettingsImportSP(
               },
               label = { Text(Res.string.token.compose) },
               singleLine = true,
-              enabled = status == ImportStatus.Idle
+              enabled = status == ImportStatus.Idle && !encryptionIsInitializing
             )
+          }
+
+          // Recovery code / recovery UI visibility rules:
+          // 1) If server encryption is NOT initialized -> show explanatory text (notes won't import)
+          // 2) If server encryption IS initialized AND local key is valid -> show recovery code TextField
+          // 3) If server encryption IS initialized AND local key is NOT valid -> show recover flow button
+          // 4) If server encryption IS initializing -> disable inputs / show progress where appropriate
+          item {
+            when {
+              !systemState.isSuccess || !systemState.ensureData.encryptionInitialized -> {
+                // Encryption not initialized on server — offer setup dialog
+                Column {
+                  MarkdownRenderer(Res.string.encryption_not_initialized_sp_note.compose)
+                  Spacer(modifier = Modifier.height(8.dp))
+                  Button(onClick = { setupDialogOpen = true }) {
+                    Text(Res.string.encryption_not_initialized_card_button.compose)
+                  }
+                }
+              }
+
+              isEncryptionValid == true -> {
+                val alphabet = listOf(
+                  'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
+                  'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                  '2', '3', '4', '5', '6', '7', '8', '9'
+                )
+
+                TextField(
+                  value = recoveryCode,
+                  onValueChange = {
+                    val validChars = it.uppercase().filter { char -> char in alphabet }
+
+                    if (validChars.length > 16) {
+                      return@TextField
+                    }
+
+                    recoveryCode = validChars
+                  },
+                  label = { Text(Res.string.recovery_code.compose) },
+                  singleLine = true,
+                  modifier = Modifier.focusRequester(focusRequester),
+                  visualTransformation = MaskVisualTransformation("####-####-####-####"),
+                  isError = recoveryCode.isNotEmpty() && recoveryCode.length != 16,
+                  enabled = status == ImportStatus.Idle && !encryptionIsInitializing
+                )
+
+                LaunchedEffect(focusRequester) {
+                  focusRequester.requestFocus()
+                }
+
+                Text(
+                  Res.string.recovery_code_sp_note.compose,
+                  style = MaterialTheme.typography.bodySmall
+                )
+              }
+
+              isEncryptionValid == false -> {
+                Column {
+                  Text(Res.string.recovery_code_sp_note_recover.compose)
+                  Spacer(modifier = Modifier.height(8.dp))
+                  Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { recoverDialogOpen = true }) {
+                      Text(Res.string.encryption_recovery_needed_card_button.compose)
+                    }
+                    Button(
+                      onClick = { resetDialogOpen = true },
+                      colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                        contentColor = MaterialTheme.colorScheme.onError
+                      )
+                    ) {
+                      Text(Res.string.reset_encryption_card_button.compose)
+                    }
+                  }
+                }
+              }
+
+              else -> {
+                // Unknown state; show nothing special and keep recovery field hidden
+              }
+            }
           }
         }
       }
@@ -838,7 +969,11 @@ private fun SettingsImportSP(
     },
     onConfirm = if(status is ImportStatus.Success || status is ImportStatus.Importing) null else { {
       status = ImportStatus.Importing
-      importSP(spToken)
+      if (recoveryCode.isNotEmpty() && recoveryCode.length == 16) {
+        importSP(spToken, recoveryCode)
+      } else {
+        importSP(spToken, null)
+      }
     } },
     closeOnConfirm = false,
     forceOpen = status == ImportStatus.Importing
@@ -846,6 +981,29 @@ private fun SettingsImportSP(
 
   if (isOpen) {
     Dialog()
+  }
+
+  if (recoverDialogOpen) {
+    RecoverEncryptionDialog(apiInterface, settings, closeDialog = { recoverDialogOpen = false }, onRecovered = {
+      recoveryCode = it.replace("-", "")
+    })
+  }
+
+  if (resetDialogOpen) {
+    ResetEncryptionDialog(apiInterface) { resetDialogOpen = false }
+  }
+
+  if (setupDialogOpen) {
+    SetupEncryptionDialog(
+      apiInterface,
+      settings,
+      closeDialog = { setupDialogOpen = false },
+      onRecoveryCodeGenerated = { generatedRecoveryCode = it.replace("-", "") },
+      onSetupSuccess = {
+        recoveryCode = it.replace("-", "")
+        generatedRecoveryCode = null
+      }
+    )
   }
 
   SettingsButtonItem(

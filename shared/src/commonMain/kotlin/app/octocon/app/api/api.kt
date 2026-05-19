@@ -380,7 +380,7 @@ internal class KotlixPhoenixSocketSession(
           }
         }
         is SocketEvent.FailureEvent -> {
-          // errorPipeline.emit(it.throwable.message ?: "Unknown error")
+          errorPipeline.emit(it.throwable.message ?: "Unknown error")
         }
         is SocketEvent.MessageEvent -> {
           parseChannelMessage(it.text)?.let { msg ->
@@ -388,7 +388,7 @@ internal class KotlixPhoenixSocketSession(
           }
         }
         is SocketEvent.CloseEvent -> {
-          // errorPipeline.emit("Channel closed with code ${it.code}")
+          errorPipeline.emit("Channel closed with code ${it.code}")
         }
       }
     }

@@ -101,7 +101,7 @@ val platformUtilities = object : PlatformUtilities {
                 .replace("\r", "")
                 .trim()
 
-            val binaryKey = Base64.decode(strippedKey)
+            val binaryKey = Base64.Mime.decode(strippedKey)
             val key = crypto.subtle.importKey(
                 "spki",
                 toUint8Array(binaryKey),
@@ -171,18 +171,19 @@ val platformUtilities = object : PlatformUtilities {
     override suspend fun getEncryptionKey(settings: Settings): String {
         val keyFromSettings = settings.encryptedEncryptionKey
         if (keyFromSettings != null && keyFromSettings != "STORED_IN_INDEXEDDB") {
-            return keyFromSettings
+            return keyFromSettings.trim()
         }
 
         val stored = webRetrieveEncryptionKey()
-        return stored ?: throw IllegalStateException("Encryption key not found")
+        return stored?.trim() ?: throw IllegalStateException("Encryption key not found")
     }
 
     override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
         return try {
             // Decode the outer Base64 wrapper to get the inner Base64 key string,
             // matching other platform implementations (iOS/Desktop/Android).
-            Base64.decode(encryptedEncryptionKey).decodeToString()
+            // Use Mime decoder to tolerate line-wraps that Android's Base64.DEFAULT produces.
+            Base64.Mime.decode(encryptedEncryptionKey).decodeToString().trim()
         } catch (e: Exception) {
             platformLog("CRYPTO", "Failed to decrypt encryption key: ${e.message}")
             throw e
@@ -192,7 +193,7 @@ val platformUtilities = object : PlatformUtilities {
     override suspend fun encryptData(data: String, settings: Settings): String {
         try {
             val keyString = getEncryptionKey(settings)
-            val keyBytes = Base64.decode(keyString)
+            val keyBytes = Base64.Mime.decode(keyString.trim())
 
             val cryptoKey = crypto.subtle.importKey(
                 "raw",
@@ -237,12 +238,12 @@ val platformUtilities = object : PlatformUtilities {
         require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
 
         try {
-            val iv = toUint8Array(Base64.decode(parts[1]))
-            val ciphertext = Base64.decode(parts[2])
-            val tag = Base64.decode(parts[3])
+            val iv = toUint8Array(Base64.Mime.decode(parts[1].trim()))
+            val ciphertext = Base64.Mime.decode(parts[2].trim())
+            val tag = Base64.Mime.decode(parts[3].trim())
 
             val keyString = getEncryptionKey(settings)
-            val keyBytes = Base64.decode(keyString)
+            val keyBytes = Base64.Mime.decode(keyString.trim())
 
             val cryptoKey = crypto.subtle.importKey(
                 "raw",
