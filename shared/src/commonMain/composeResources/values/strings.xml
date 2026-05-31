@@ -761,4 +761,8 @@
 
     <string name="tooltip_singlet_mode_desc">When enabled, the app will hide all system-specific features, such as alters, tags, front history, and polls. You will only be able to edit your profile and view your friends' profiles.</string>
     <string name="tooltip_logout_desc">This action will log you out of the app and reset all of your local device settings. This will not delete your account or any data stored on the server.</string>
+    <string name="cache_client">Cache client</string>
+    <string name="cache_client_body">When enabled, the app will be cached on your device for offline use. This will also allow you to install the app as a PWA (Progressive Web App).</string>
+    <string name="tooltip_cache_client_desc">This setting controls whether the app is cached on your device using a service worker. This allows the app to load faster and work offline, and is required for installing it as an app on your home screen.</string>
+    <string name="tooltip_cache_client_locked_desc">This setting is required when the app is installed on your device.</string>
 </resources>

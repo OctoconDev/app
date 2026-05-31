@@ -3,58 +3,44 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
 plugins {
-  kotlin("multiplatform")
   id("com.android.application")
   // id("io.sentry.android.gradle").version("4.5.1")
   id("org.jetbrains.compose")
   id("org.jetbrains.kotlin.plugin.compose")
   id("com.google.gms.google-services")
-  id("androidx.baselineprofile")
   id("kotlin-parcelize")
 }
 
-kotlin {
-  androidTarget()
+dependencies {
+  implementation(project(":shared"))
+  val decomposeVersion = "3.4.0"
+  implementation(platform("com.google.firebase:firebase-bom:34.10.0"))
+  implementation("com.google.firebase:firebase-messaging")
+  implementation("androidx.browser:browser:1.9.0")
+  implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
 
-  sourceSets {
-    val androidMain by getting {
-      dependencies {
-        implementation(project(":shared"))
-      }
-    }
-  }
+  implementation("com.nimbusds:nimbus-jose-jwt:10.8")
 
-  dependencies {
-    val decomposeVersion = "3.4.0"
-    implementation(platform("com.google.firebase:firebase-bom:34.10.0"))
-    implementation("com.google.firebase:firebase-messaging")
-    implementation("androidx.browser:browser:1.9.0")
-    implementation("com.arkivanov.decompose:decompose:$decomposeVersion")
+  // Widget
+  implementation("androidx.work:work-runtime-ktx:2.11.1")
+  implementation("io.coil-kt.coil3:coil:3.4.0")
+  implementation("io.coil-kt.coil3:coil-network-ktor3:3.4.0")
+  implementation("androidx.glance:glance-appwidget:1.1.1")
+  implementation("androidx.glance:glance-material3:1.1.1")
+  implementation("com.materialkolor:material-kolor:2.1.1")
+  implementation("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
+  implementation("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
 
-    implementation("com.nimbusds:nimbus-jose-jwt:10.8")
+  val ktorVersion = "3.4.0"
 
-    // Widget
-    implementation("androidx.work:work-runtime-ktx:2.11.1")
-    implementation("io.coil-kt.coil3:coil:3.4.0")
-    implementation("io.coil-kt.coil3:coil-network-ktor3:3.4.0")
-    implementation("androidx.glance:glance-appwidget:1.1.1")
-    implementation("androidx.glance:glance-material3:1.1.1")
-    compileOnly("com.materialkolor:material-kolor:2.1.1")
-    compileOnly("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
-    compileOnly("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
-    // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
+  implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+  implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 
-    val ktorVersion = "3.4.0"
-
-    compileOnly("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
-
-    // HTTP client
-    compileOnly("io.ktor:ktor-client-core:$ktorVersion")
-    compileOnly("io.ktor:ktor-client-content-negotiation:$ktorVersion")
-    compileOnly("io.ktor:ktor-client-logging:$ktorVersion")
-    compileOnly("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-  }
+  // HTTP client
+  implementation("io.ktor:ktor-client-core:$ktorVersion")
+  implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+  implementation("io.ktor:ktor-client-logging:$ktorVersion")
+  implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }
 
 android {
@@ -74,10 +60,6 @@ android {
   compileOptions {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
-  }
-
-  kotlin {
-    jvmToolchain(17)
   }
 
   buildTypes {
@@ -111,9 +93,12 @@ android {
   buildFeatures {
     viewBinding = true
   }
+
+  /*kotlinAndroid {
+    // any Kotlin Android specific config
+  }*/
 }
 
 dependencies {
   implementation("androidx.profileinstaller:profileinstaller:1.3.1")
-  "baselineProfile"(project(":baselineprofile"))
 }

@@ -6,12 +6,16 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
-  id("com.android.library")
+  id("com.android.kotlin.multiplatform.library")
 }
 
 kotlin {
   jvm("desktop")
-  androidTarget()
+
+  targets.named<com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget>("android") {
+    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+    namespace = "app.octocon.kotlix"
+  }
 
   @OptIn(ExperimentalKotlinGradlePluginApi::class)
   compilerOptions {
@@ -82,24 +86,4 @@ kotlin {
     androidMain.dependsOn(mobile)
     iosMain.dependsOn(mobile)
   }
-}
-
-android {
-  compileSdk = (findProperty("android.compileSdk") as String).toInt()
-  namespace = "app.octocon.common"
-
-  defaultConfig {
-    minSdk = (findProperty("android.minSdk") as String).toInt()
-  }
-
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-  kotlin {
-    jvmToolchain(17)
-  }
-}
-dependencies {
-    implementation(project(":shared"))
 }

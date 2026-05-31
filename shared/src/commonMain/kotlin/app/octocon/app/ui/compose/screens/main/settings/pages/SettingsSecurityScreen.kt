@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Security
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -42,9 +43,12 @@ import app.octocon.app.ui.model.main.settings.SettingsSecurityComponent
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.state
+import app.octocon.app.utils.currentPlatform
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import octoconapp.shared.generated.resources.Res
+import octoconapp.shared.generated.resources.cache_client
+import octoconapp.shared.generated.resources.cache_client_body
 import octoconapp.shared.generated.resources.cancel
 import octoconapp.shared.generated.resources.confirm
 import octoconapp.shared.generated.resources.create_pin_body
@@ -57,6 +61,8 @@ import octoconapp.shared.generated.resources.quick_exit_body
 import octoconapp.shared.generated.resources.security
 import octoconapp.shared.generated.resources.stealth_mode
 import octoconapp.shared.generated.resources.stealth_mode_body
+import octoconapp.shared.generated.resources.tooltip_cache_client_desc
+import octoconapp.shared.generated.resources.tooltip_cache_client_locked_desc
 import octoconapp.shared.generated.resources.tooltip_lock_app_with_pin_desc
 import octoconapp.shared.generated.resources.tooltip_quick_exit_desc
 import octoconapp.shared.generated.resources.tooltip_stealth_mode_desc
@@ -95,7 +101,12 @@ fun SettingsSecurityScreen(
           settingsData,
           { SettingsPINEnabled(it, settings, api) },
           { SettingsStealthMode(it, settings) },
-          { SettingsQuickExit(it, settings) }
+          { SettingsQuickExit(it, settings) },
+          {
+            if (currentPlatform.isWasm) {
+                SettingsCacheClient(it, settings)
+            }
+          }
         )
         item {
           Spacer(modifier = Modifier.height(GLOBAL_PADDING))
@@ -234,6 +245,64 @@ private fun SettingsQuickExit(cardGroupPosition: CardGroupPosition, settings: Se
           }
         ) {
           Text("Ok")
+        }
+      }
+    )
+  }
+}
+
+@Composable
+private fun SettingsCacheClient(cardGroupPosition: CardGroupPosition, settings: SettingsInterface) {
+  val settingsData by settings.collectAsState()
+  val cacheClientEnabled by derive { settingsData.installServiceWorker }
+  val isAppInstalled = currentPlatform.isWasm && settings.isAppInstalled()
+
+  var notificationOpen by state(false)
+
+  SettingsToggleItem(
+    text = Res.string.cache_client.compose,
+    value = if (isAppInstalled) true else cacheClientEnabled,
+    enabled = !isAppInstalled,
+    spotlightDescription = if (isAppInstalled) {
+        Res.string.tooltip_cache_client_locked_desc.compose
+    } else {
+        Res.string.tooltip_cache_client_desc.compose
+    },
+    cardGroupPosition = cardGroupPosition,
+    updateValue = {
+      settings.setInstallServiceWorker(it)
+      if (it) {
+        notificationOpen = true
+      }
+    }
+  )
+
+  if (notificationOpen) {
+    AlertDialog(
+      icon = {
+        Icon(
+          Icons.Rounded.Info,
+          contentDescription = null
+        )
+      },
+      title = {
+        Text(text = Res.string.cache_client.compose)
+      },
+      text = {
+        LazyColumn {
+          item {
+            Text(Res.string.cache_client_body.compose)
+          }
+        }
+      },
+      onDismissRequest = { notificationOpen = false },
+      confirmButton = {
+        TextButton(
+          onClick = {
+            notificationOpen = false
+          }
+        ) {
+          Text(Res.string.ok.compose)
         }
       }
     )

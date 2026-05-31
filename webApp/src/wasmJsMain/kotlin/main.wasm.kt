@@ -73,6 +73,8 @@ fun main() {
     initialSettings = initialSettings.copy(token = token)
   }
 
+  platformUtilities.initialize(initialSettings)
+
   val rootComponent = RootComponentImpl(
     componentContext = DefaultComponentContext(lifecycle = lifecycle),
     initialSettings = initialSettings,

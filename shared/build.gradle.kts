@@ -7,7 +7,7 @@ plugins {
   kotlin("multiplatform")
   kotlin("plugin.serialization")
   kotlin("native.cocoapods")
-  id("com.android.library")
+  id("com.android.kotlin.multiplatform.library")
   id("org.jetbrains.compose")
   id("org.jetbrains.kotlin.plugin.compose")
   id("com.mikepenz.aboutlibraries.plugin")
@@ -21,7 +21,10 @@ kotlin {
   val essentyVersion = "2.5.0"
   val decomposeVersion = "3.4.0"
 
-  androidTarget()
+  targets.named<com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget>("android") {
+    namespace = "app.octocon.common"
+    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+  }
 
   @OptIn(ExperimentalKotlinGradlePluginApi::class)
   compilerOptions {
@@ -149,6 +152,7 @@ kotlin {
     }
     val androidMain by getting {
       dependencies {
+        implementation("androidx.core:core-ktx:1.17.0")
         api("androidx.activity:activity-compose:1.12.4")
         api("androidx.appcompat:appcompat:1.7.1")
         api("androidx.core:core-ktx:1.17.0")
@@ -214,33 +218,4 @@ kotlin {
 
 compose.resources {
   publicResClass = true
-}
-
-android {
-  compileSdk = (findProperty("android.compileSdk") as String).toInt()
-  namespace = "app.octocon.common"
-
-  sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-  sourceSets["main"].res.srcDirs("src/androidMain/res", "src/commonMain/res")
-  sourceSets["main"].resources.srcDirs("src/commonMain/resources")
-
-  defaultConfig {
-    minSdk = (findProperty("android.minSdk") as String).toInt()
-  }
-
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-  
-  kotlin {
-    jvmToolchain(17)
-  }
-
-  buildFeatures {
-    buildConfig = true
-  }
-}
-dependencies {
-  implementation("androidx.core:core-ktx:1.17.0")
 }

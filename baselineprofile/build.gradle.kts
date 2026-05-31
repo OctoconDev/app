@@ -1,11 +1,5 @@
 plugins {
-  kotlin("multiplatform")
   id("com.android.test")
-  id("androidx.baselineprofile")
-}
-
-kotlin {
-  androidTarget()
 }
 
 android {
@@ -25,15 +19,8 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  kotlin {
-    jvmToolchain(17)
-  }
-}
-
-// This is the configuration block for the Baseline Profile plugin.
-// You can specify to run the generators on a managed devices or connected devices.
-baselineProfile {
-  useConnectedDevices = true
+  /*kotlinAndroid {
+  }*/
 }
 
 dependencies {

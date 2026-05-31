@@ -70,6 +70,8 @@ interface SettingsInterface : SettingsReadInterface {
   fun setTagsCollapsed(tagsCollapsed: Boolean)
   fun setHasViewedOnboarding(hasViewedOnboarding: Boolean)
   fun setIsSinglet(isSinglet: Boolean)
+  fun setInstallServiceWorker(installServiceWorker: Boolean)
+  fun isAppInstalled(): Boolean
 
   suspend fun getEncryptionKey(): String
 }
@@ -283,6 +285,13 @@ class SettingsInterfaceImpl(
     updateSettings {
       it.copy(isSinglet = isSinglet)
     }
+
+  override fun setInstallServiceWorker(installServiceWorker: Boolean) =
+    updateSettings {
+      it.copy(installServiceWorker = installServiceWorker)
+    }
+
+  override fun isAppInstalled(): Boolean = platformUtilities.isAppInstalled()
 
   override suspend fun getEncryptionKey(): String {
     return platformUtilities.getEncryptionKey(_settings.value)

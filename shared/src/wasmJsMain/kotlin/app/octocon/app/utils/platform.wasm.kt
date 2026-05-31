@@ -52,6 +52,15 @@ private external fun aesEncryptUsages(): JsArray<JsString>
 @JsFun("() => ['decrypt']")
 private external fun aesDecryptUsages(): JsArray<JsString>
 
+@JsFun("(url) => { if ('serviceWorker' in navigator) { navigator.serviceWorker.register(url).then(reg => console.log('Service worker registered:', reg)).catch(err => console.warn('Service worker registration failed:', err)); } }")
+private external fun registerServiceWorker(url: String)
+
+@JsFun("() => { if ('serviceWorker' in navigator) { navigator.serviceWorker.getRegistrations().then(registrations => { for (let registration of registrations) { registration.unregister(); } }); } }")
+private external fun unregisterServiceWorkers()
+
+@JsFun("() => window.matchMedia('(display-mode: standalone)').matches")
+private external fun isStandalone(): Boolean
+
 @JsFun("(buffer) => new Uint8Array(buffer)")
 private external fun jsUint8Array(buffer: JsAny): Uint8Array
 
@@ -73,7 +82,23 @@ private val alphabet = listOf(
     '2', '3', '4', '5', '6', '7', '8', '9'
 )
 
+private val base64 = Base64.withPadding(Base64.PaddingOption.PRESENT_OPTIONAL)
+
 val platformUtilities = object : PlatformUtilities {
+    override fun initialize(settings: Settings) {
+        if (isAppInstalled()) {
+            if (!settings.installServiceWorker) {
+                saveSettings(settings.copy(installServiceWorker = true))
+            } else {
+                updateServiceWorkerRegistration(true)
+            }
+        } else {
+            updateServiceWorkerRegistration(settings.installServiceWorker)
+        }
+    }
+
+    override fun isAppInstalled(): Boolean = isStandalone()
+
     override fun exitApplication(exitApplicationType: ExitApplicationType) {
         when (exitApplicationType) {
             // TODO: Make quick exit URL configurable on web?
@@ -83,7 +108,20 @@ val platformUtilities = object : PlatformUtilities {
     }
 
     override fun saveSettings(settings: Settings) {
+        val oldSettings = getSettings()
         localStorage.setItem(SETTINGS_LOCALSTORAGE_KEY, settings.serialize())
+
+        if (settings.installServiceWorker != (oldSettings?.installServiceWorker ?: false)) {
+            updateServiceWorkerRegistration(settings.installServiceWorker)
+        }
+    }
+
+    fun updateServiceWorkerRegistration(enabled: Boolean) {
+        if (enabled) {
+            registerServiceWorker("/service-worker.js")
+        } else {
+            unregisterServiceWorkers()
+        }
     }
 
     override fun showAlert(message: String) {
@@ -101,7 +139,7 @@ val platformUtilities = object : PlatformUtilities {
                 .replace("\r", "")
                 .trim()
 
-            val binaryKey = Base64.Mime.decode(strippedKey)
+            val binaryKey = base64.decode(strippedKey)
             val key = crypto.subtle.importKey(
                 "spki",
                 toUint8Array(binaryKey),
@@ -179,21 +217,13 @@ val platformUtilities = object : PlatformUtilities {
     }
 
     override fun decryptEncryptionKey(encryptedEncryptionKey: String): String {
-        return try {
-            // Decode the outer Base64 wrapper to get the inner Base64 key string,
-            // matching other platform implementations (iOS/Desktop/Android).
-            // Use Mime decoder to tolerate line-wraps that Android's Base64.DEFAULT produces.
-            Base64.Mime.decode(encryptedEncryptionKey).decodeToString().trim()
-        } catch (e: Exception) {
-            platformLog("CRYPTO", "Failed to decrypt encryption key: ${e.message}")
-            throw e
-        }
+        return base64.decode(encryptedEncryptionKey).decodeToString().trim()
     }
 
     override suspend fun encryptData(data: String, settings: Settings): String {
         try {
             val keyString = getEncryptionKey(settings)
-            val keyBytes = Base64.Mime.decode(keyString.trim())
+            val keyBytes = base64.decode(keyString.trim())
 
             val cryptoKey = crypto.subtle.importKey(
                 "raw",
@@ -219,9 +249,9 @@ val platformUtilities = object : PlatformUtilities {
             val ciphertext = encryptedBytes.copyOfRange(0, encryptedBytes.size - tagLength)
             val tag = encryptedBytes.copyOfRange(encryptedBytes.size - tagLength, encryptedBytes.size)
 
-            val ivBase64 = Base64.encode(iv.toByteArray())
-            val ciphertextBase64 = Base64.encode(ciphertext)
-            val tagBase64 = Base64.encode(tag)
+            val ivBase64 = base64.encode(iv.toByteArray())
+            val ciphertextBase64 = base64.encode(ciphertext)
+            val tagBase64 = base64.encode(tag)
 
             val result = "enc|$ivBase64|$ciphertextBase64|$tagBase64"
             return result
@@ -238,12 +268,12 @@ val platformUtilities = object : PlatformUtilities {
         require(data.startsWith("enc|") && parts.size == 4) { "Invalid encrypted data format" }
 
         try {
-            val iv = toUint8Array(Base64.Mime.decode(parts[1].trim()))
-            val ciphertext = Base64.Mime.decode(parts[2].trim())
-            val tag = Base64.Mime.decode(parts[3].trim())
+            val iv = toUint8Array(base64.decode(parts[1].trim()))
+            val ciphertext = base64.decode(parts[2].trim())
+            val tag = base64.decode(parts[3].trim())
 
             val keyString = getEncryptionKey(settings)
-            val keyBytes = Base64.Mime.decode(keyString.trim())
+            val keyBytes = base64.decode(keyString.trim())
 
             val cryptoKey = crypto.subtle.importKey(
                 "raw",

@@ -518,7 +518,10 @@ data class Settings(
   val hasViewedOnboarding: Boolean = false,
 
   @SerialName("is_singlet")
-  val isSinglet: Boolean = false
+  val isSinglet: Boolean = false,
+
+  @SerialName("install_service_worker")
+  val installServiceWorker: Boolean = false
 ) {
   fun serialize() = globalSerializer.encodeToString(this)
 

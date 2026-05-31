@@ -4,24 +4,18 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
   kotlin("multiplatform")
-  id("com.android.library")
+  id("com.android.kotlin.multiplatform.library")
   id("org.jetbrains.compose")
   id("org.jetbrains.kotlin.plugin.compose")
 }
 
 kotlin {
   jvm("desktop")
-  androidTarget()
-
-  /*listOf(
-    iosArm64(),
-    iosSimulatorArm64()
-  ).forEach {
-    it.binaries.framework {
-      baseName = "markdown_m3"
-      isStatic = true
-    }
-  }*/
+  
+  targets.named<com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryTarget>("android") {
+    namespace = "com.mikepenz.markdown.m3"
+    compileSdk = (findProperty("android.compileSdk") as String).toInt()
+  }
 
   iosArm64()
   iosSimulatorArm64()
@@ -38,20 +32,5 @@ kotlin {
         // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
       }
     }
-  }
-}
-
-android {
-  namespace = "com.mikepenz.markdown.m3"
-  compileSdk = (findProperty("android.compileSdk") as String).toInt()
-  defaultConfig {
-    minSdk = (findProperty("android.minSdk") as String).toInt()
-  }
-  compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-  }
-  kotlin {
-    jvmToolchain(17)
   }
 }

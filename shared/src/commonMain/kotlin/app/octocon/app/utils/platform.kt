@@ -121,7 +121,9 @@ enum class ExitApplicationType {
 }
 
 interface CommonPlatformUtilities {
-  fun exitApplication(exitApplicationType: ExitApplicationType)
+    fun initialize(settings: Settings) {}
+    fun isAppInstalled(): Boolean = false
+    fun exitApplication(exitApplicationType: ExitApplicationType)
 
   fun saveSettings(settings: Settings)
 
