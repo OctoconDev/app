@@ -6,7 +6,7 @@ plugins {
   kotlin("multiplatform")
   id("org.jetbrains.compose")
   id("org.jetbrains.kotlin.plugin.compose")
-  id("dev.hydraulic.conveyor") version "1.12"
+  id("dev.hydraulic.conveyor") version "1.13"
 }
 
 kotlin {

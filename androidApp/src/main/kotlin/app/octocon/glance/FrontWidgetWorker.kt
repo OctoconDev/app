@@ -46,6 +46,7 @@ class FrontWidgetWorker(
         setInputData(
           Data.Builder()
             .putString("token", settings.token!!)
+            .putString("endpoint", settings.apiEndpoint)
             .putBoolean("force", force)
             .build()
         )
@@ -84,8 +85,9 @@ class FrontWidgetWorker(
   override suspend fun doWork(): Result {
     return try {
       val token = inputData.getString("token")!!
+      val endpoint = inputData.getString("endpoint")!!
 
-      val currentlyFronting = getFrontingAlters(token).let {
+      val currentlyFronting = getFrontingAlters(endpoint, token).let {
         if (it.isError) {
           it
         } else {

@@ -47,7 +47,7 @@ android {
   compileSdk = (findProperty("android.compileSdk") as String).toInt()
   namespace = "app.octocon"
 
-  sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+  sourceSets["main"].assets.srcDirs(layout.buildDirectory.dir("generated/shared-assets"))
 
   defaultConfig {
     applicationId = "app.octocon.OctoconApp"
@@ -58,8 +58,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
   }
 
   buildTypes {
@@ -101,4 +101,23 @@ android {
 
 dependencies {
   implementation("androidx.profileinstaller:profileinstaller:1.3.1")
+}
+
+val copyComposeResources by tasks.creating {
+  val modules = listOf("shared" to "octoconapp.shared.generated.resources", "krop" to "octoconapp.krop.generated.resources")
+  
+  modules.forEach { (moduleName, targetFolder) ->
+    val copyTask = tasks.create("copy${moduleName.capitalize()}Resources", Copy::class) {
+      from(project(":$moduleName").layout.buildDirectory.dir("generated/compose/resourceGenerator/preparedResources/commonMain/composeResources"))
+      into(layout.buildDirectory.dir("generated/shared-assets/composeResources/$targetFolder"))
+      dependsOn(":$moduleName:prepareComposeResourcesTaskForCommonMain")
+    }
+    dependsOn(copyTask)
+  }
+}
+
+tasks.matching { it.name.contains("Assets") || it.name.contains("JavaRes") || it.name.contains("Resources") }.configureEach {
+  if (this != copyComposeResources && !this.name.startsWith("copy") && !this.name.endsWith("Resources")) {
+    dependsOn(copyComposeResources)
+  }
 }

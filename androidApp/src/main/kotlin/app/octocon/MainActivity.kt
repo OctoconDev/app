@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
       get() = this@MainActivity
 
     override suspend fun recoveryCodeToJWE(recoveryCode: String, settings: Settings): String {
-      val publicKeyRaw = getPublicKey("${settings.apiEndpoint}/api")
+      val publicKeyRaw = getPublicKey()
       val publicKeyPEM = publicKeyRaw
         .replace(Regex("-----BEGIN.*?-----"), "")
         .replace(Regex("-----END.*?-----"), "")
@@ -368,7 +368,7 @@ class MainActivity : AppCompatActivity() {
     return when (path) {
       "/auth/token", "/deep/auth/token" -> {
         platformLog("/deep/auth/token hit!")
-        val token = appLinkData.getQueryParameter("token")
+        val token = appLinkData?.getQueryParameter("token")
         // val id = appLinkData.getQueryParameter("id")
         token?.let {
           val newSettings = settings.copy(token = it)
