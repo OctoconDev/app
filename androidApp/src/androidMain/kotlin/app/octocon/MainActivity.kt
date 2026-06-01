@@ -104,8 +104,8 @@ class MainActivity : AppCompatActivity() {
     override val context: Context
       get() = this@MainActivity
 
-    override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-      val publicKeyRaw = getPublicKey()
+    override suspend fun recoveryCodeToJWE(recoveryCode: String, settings: Settings): String {
+      val publicKeyRaw = getPublicKey("${settings.apiEndpoint}/api")
       val publicKeyPEM = publicKeyRaw
         .replace(Regex("-----BEGIN.*?-----"), "")
         .replace(Regex("-----END.*?-----"), "")
@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity() {
       return jweObject.serialize()
     }
 
-    override suspend fun generateRecoveryCode(): Pair<String, String> {
+    override suspend fun generateRecoveryCode(settings: Settings): Pair<String, String> {
       val random = SecureRandom()
       val recoveryCode =
         List(16) { alphabet[random.nextInt(alphabet.size)] }
@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity() {
           .chunked(4)
           .joinToString("-")
 
-      return recoveryCode to recoveryCodeToJWE(recoveryCode)
+      return recoveryCode to recoveryCodeToJWE(recoveryCode, settings)
     }
 
     override suspend fun setupEncryptionKey(encryptionKey: String): Settings? {
@@ -313,7 +313,7 @@ class MainActivity : AppCompatActivity() {
     // Asynchronously ensure we have a fresh public key and persist it for future runs
     GlobalScope.launch {
       try {
-        val key = PublicKeyProvider.getPublicKey()
+        val key = PublicKeyProvider.getPublicKey("${settings.apiEndpoint}/api")
         val fetchedAt = System.currentTimeMillis()
         sharedPreferences.edit(commit = true) {
           putString(PREF_PUBLIC_KEY, key)
@@ -351,10 +351,22 @@ class MainActivity : AppCompatActivity() {
   private fun handleIntent(settings: Settings): Settings {
     val appLinkData: Uri? = intent.data
 
-    platformLog("OCTOCON", appLinkData?.path ?: "No path")
+    platformLog("OCTOCON", appLinkData?.toString() ?: "No data")
 
-    return when (appLinkData?.path) {
-      "/auh/token", "/deep/auth/token" -> {
+    val path = if (appLinkData?.scheme == "octocon") {
+      // For octocon://auth/token, host is "auth" and path is "/token"
+      // We want to treat it as "/auth/token"
+      if (appLinkData.host != null && appLinkData.path != null) {
+        "/" + appLinkData.host + appLinkData.path
+      } else {
+        appLinkData.path
+      }
+    } else {
+      appLinkData?.path
+    }
+
+    return when (path) {
+      "/auth/token", "/deep/auth/token" -> {
         platformLog("/deep/auth/token hit!")
         val token = appLinkData.getQueryParameter("token")
         // val id = appLinkData.getQueryParameter("id")
@@ -379,7 +391,7 @@ class MainActivity : AppCompatActivity() {
       }
 
       "/link_success/apple", "/deep/link_success/apple" -> {
-        platformLog("/deep/link_success/google hit!")
+        platformLog("/deep/link_success/apple hit!")
         platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.AppleAccountLinked)
         settings
       }

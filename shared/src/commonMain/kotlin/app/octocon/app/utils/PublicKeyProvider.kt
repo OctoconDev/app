@@ -1,6 +1,7 @@
 package app.octocon.app.utils
 
 import app.octocon.app.api.fetchPublicKey
+import app.octocon.app.Settings
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.time.Clock
@@ -13,7 +14,7 @@ object PublicKeyProvider {
   // default TTL 28 days
   const val TTL_MS: Long = 24 * 28 * 60 * 60 * 1000
 
-  suspend fun getPublicKey(): String {
+  suspend fun getPublicKey(endpoint: String = Settings.DEFAULT_API_ENDPOINT + "/api"): String {
     mutex.withLock {
       val now = Clock.System.now().toEpochMilliseconds()
       if (cachedKey != null && (now - cachedAt) < TTL_MS) {
@@ -21,7 +22,7 @@ object PublicKeyProvider {
       }
 
       try {
-        val response = fetchPublicKey()
+        val response = fetchPublicKey(endpoint)
         if (response.data != null && response.data.isNotBlank()) {
           cachedKey = response.data
           cachedAt = now

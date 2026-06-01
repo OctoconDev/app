@@ -129,9 +129,9 @@ val platformUtilities = object : PlatformUtilities {
         window.alert(message)
     }
 
-    override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
+    override suspend fun recoveryCodeToJWE(recoveryCode: String, settings: Settings): String {
         try {
-            val publicKey = getPublicKey()
+            val publicKey = PublicKeyProvider.getPublicKey("${settings.apiEndpoint}/api")
             val strippedKey = publicKey
                 .replace(Regex("-----BEGIN.*?-----"), "")
                 .replace(Regex("-----END.*?-----"), "")
@@ -161,7 +161,7 @@ val platformUtilities = object : PlatformUtilities {
         }
     }
 
-    override suspend fun generateRecoveryCode(): Pair<String, String> {
+    override suspend fun generateRecoveryCode(settings: Settings): Pair<String, String> {
         platformLog("CRYPTO", "Creating recovery code")
         val array = Uint8Array(16)
         randomizeArray(array)
@@ -171,7 +171,7 @@ val platformUtilities = object : PlatformUtilities {
             .chunked(4)
             .joinToString("-")
 
-        val jwe = recoveryCodeToJWE(recoveryCode)
+        val jwe = recoveryCodeToJWE(recoveryCode, settings)
         return recoveryCode to jwe
     }
 

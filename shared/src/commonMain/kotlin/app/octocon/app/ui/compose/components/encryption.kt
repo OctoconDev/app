@@ -244,7 +244,7 @@ internal fun SetupEncryptionDialog(
           confirmCount++
             if (confirmCount >= 3 && !loading) {
             attempting = true
-            api.setupEncryption(recoveryCode!!.second, settings,
+            api.setupEncryption(recoveryCode!!.second,
               onSuccess = {
                 try {
                   onSetupSuccess?.invoke(recoveryCode!!.first)
@@ -415,7 +415,7 @@ internal fun RecoverEncryptionDialog(
         onClick = {
           if (!isRecovering) {
             isRecovering = true
-            api.recoverEncryption(recoveryCode, settings,
+            api.recoverEncryption(recoveryCode,
               onSuccess = {
                 try {
                   onRecovered?.invoke(recoveryCode)

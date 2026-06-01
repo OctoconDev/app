@@ -77,11 +77,12 @@ class SwiftPlatformDelegate : PlatformDelegate {
     return combinedData as Data
   }
   
-  func recoveryCodeToJWE(recoveryCode: String) -> String {
+  func recoveryCodeToJWE(recoveryCode: String, endpoint: String) -> String {
     let header = JWEHeader(keyManagementAlgorithm: .RSAOAEP256, contentEncryptionAlgorithm: .A256GCM)
     let payload = Payload(recoveryCode.data(using: .utf8)!)
     
-    let publicKeyString = Platform_iosKt.getOctoconPublicKey()
+    // Pass the endpoint down to the Kotlin helper to fetch the correct public key
+    let publicKeyString = Platform_iosKt.getOctoconPublicKey(endpoint: endpoint)
     let publicKey = publicKeyFromString(publicKeyString)
     
     let encrypter = Encrypter(keyManagementAlgorithm: .RSAOAEP256, contentEncryptionAlgorithm: .A256GCM, encryptionKey: publicKey)!

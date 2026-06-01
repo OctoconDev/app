@@ -121,7 +121,7 @@ fun main(args: Array<String>) {
 
     GlobalScope.launch {
       try {
-        val key = PublicKeyProvider.getPublicKey()
+        val key = PublicKeyProvider.getPublicKey("${initialSettings.apiEndpoint}/api")
         javaPreferences.put("PUBLIC_KEY_PEM", key)
         javaPreferences.putLong("PUBLIC_KEY_AT", System.currentTimeMillis())
       } catch (_: Exception) {

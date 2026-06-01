@@ -38,8 +38,8 @@ val platformUtilities = object : PlatformUtilities {
     // TODO: Implement desktop alerts (could use JOptionPane or system notifications)
   }
 
-  override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
-    val publicKeyRaw = PublicKeyProvider.getPublicKey()
+  override suspend fun recoveryCodeToJWE(recoveryCode: String, settings: Settings): String {
+    val publicKeyRaw = PublicKeyProvider.getPublicKey("${settings.apiEndpoint}/api")
     val publicKeyPEM = publicKeyRaw
       .replace(Regex("-----BEGIN.*?-----"), "")
       .replace(Regex("-----END.*?-----"), "")
@@ -68,7 +68,7 @@ val platformUtilities = object : PlatformUtilities {
     return jweObject.serialize()
   }
 
-  override suspend fun generateRecoveryCode(): Pair<String, String> {
+  override suspend fun generateRecoveryCode(settings: Settings): Pair<String, String> {
     val alphabet = listOf(
       'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M',
       'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -81,7 +81,7 @@ val platformUtilities = object : PlatformUtilities {
       .chunked(4)
       .joinToString("-")
 
-    return recoveryCode to recoveryCodeToJWE(recoveryCode)
+    return recoveryCode to recoveryCodeToJWE(recoveryCode, settings)
   }
 
   override suspend fun setupEncryptionKey(encryptionKey: String): Settings? {

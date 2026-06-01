@@ -521,11 +521,15 @@ data class Settings(
   val isSinglet: Boolean = false,
 
   @SerialName("install_service_worker")
-  val installServiceWorker: Boolean = false
+  val installServiceWorker: Boolean = false,
+
+  @SerialName("api_endpoint")
+  val apiEndpoint: String = DEFAULT_API_ENDPOINT
 ) {
   fun serialize() = globalSerializer.encodeToString(this)
 
   companion object {
+    const val DEFAULT_API_ENDPOINT = "https://api.octocon.app"
     fun deserialize(json: String) = globalSerializer.decodeFromString<Settings>(json)
   }
 }

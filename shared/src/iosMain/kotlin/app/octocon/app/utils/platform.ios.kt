@@ -28,14 +28,13 @@ import platform.posix.memcpy
 import kotlin.experimental.ExperimentalNativeApi
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
-import app.octocon.app.utils.PublicKeyProvider
 
 actual val currentPlatform = DevicePlatform.iOS
 
 @Suppress("unused") // Used in Swift
-fun getOctoconPublicKey(): String {
+fun getOctoconPublicKey(endpoint: String): String {
   return runBlocking(ioDispatcher) {
-    PublicKeyProvider.getPublicKey()
+    PublicKeyProvider.getPublicKey(endpoint)
   }
 }
 
@@ -48,7 +47,7 @@ actual interface PlatformUtilities : CommonPlatformUtilities {
 }
 
 actual interface PlatformDelegate {
-  fun recoveryCodeToJWE(recoveryCode: String): String
+  fun recoveryCodeToJWE(recoveryCode: String, endpoint: String): String
 
   fun encryptData(key: NSData, iv: NSData, plainText: String): NSData
   fun decryptData(key: NSData, iv: NSData, cipherText: NSData, tag: NSData): String?
@@ -93,21 +92,21 @@ val platformUtilities = object : PlatformUtilities {
     viewController?.presentViewController(alert, animated = true, completion = null)
   }
 
-  override suspend fun recoveryCodeToJWE(recoveryCode: String): String {
+  override suspend fun recoveryCodeToJWE(recoveryCode: String, settings: Settings): String {
     require(injectedPlatformDelegate != null) {
       "PlatformDelegate must be injected before calling recoveryCodeToJWE"
     }
-    return injectedPlatformDelegate!!.recoveryCodeToJWE(recoveryCode)
+    return injectedPlatformDelegate!!.recoveryCodeToJWE(recoveryCode, "${settings.apiEndpoint}/api")
   }
 
-  override suspend fun generateRecoveryCode(): Pair<String, String> {
+  override suspend fun generateRecoveryCode(settings: Settings): Pair<String, String> {
     val recoveryCode =
       List(16) { alphabet[arc4random_uniform(alphabet.size.toUInt()).toInt()] }
         .joinToString("")
         .chunked(4)
         .joinToString("-")
 
-    val jwe = recoveryCodeToJWE(recoveryCode)
+    val jwe = recoveryCodeToJWE(recoveryCode, settings)
     return recoveryCode to jwe
   }
 

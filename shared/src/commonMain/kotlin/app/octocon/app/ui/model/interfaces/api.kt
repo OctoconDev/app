@@ -91,21 +91,19 @@ interface ApiInterface {
   val friendRequests: StateFlow<APIState<FriendRequests>>
   val encryptionIsInitializing: StateFlow<Boolean>
 
-  fun loadClient(initialToken: String, settingsInterface: SettingsInterface): Job
+  fun loadClient(initialToken: String): Job
   fun logOut(soft: Boolean = true)
 
   /* --------------- ENCRYPTION --------------- */
   suspend fun generateRecoveryCode(): Pair<String, String>
   fun setupEncryption(
     recoveryCodeJWE: String,
-    settingsInterface: SettingsInterface,
     onSuccess: () -> Unit = {},
     onFailure: (error: String) -> Unit = {}
   )
   fun resetEncryption()
   fun recoverEncryption(
     recoveryCode: String,
-    settingsInterface: SettingsInterface,
     onSuccess: () -> Unit = {},
     onFailure: (error: String) -> Unit
   )
@@ -216,7 +214,8 @@ interface ApiInterface {
 
 internal class ApiInterfaceImpl(
   val coroutineScope: CoroutineScope,
-  val platformUtilities: PlatformUtilities
+  val platformUtilities: PlatformUtilities,
+  val settingsInterface: SettingsInterface
 ) : ApiInterface, InstanceKeeper.Instance {
   /* --------------- STATE --------------- */
 
@@ -288,10 +287,13 @@ internal class ApiInterfaceImpl(
   private val _encryptionIsInitializing: MutableStateFlow<Boolean> = MutableStateFlow(false)
   override val encryptionIsInitializing: StateFlow<Boolean> = _encryptionIsInitializing
 
+  private var apiEndpoint: String = app.octocon.app.Settings.DEFAULT_API_ENDPOINT + "/api"
+
   @OptIn(ExperimentalEncodingApi::class)
-  override fun loadClient(initialToken: String, settingsInterface: SettingsInterface) =
+  override fun loadClient(initialToken: String) =
     coroutineScope.launch {
       platformLog("Loading client")
+      apiEndpoint = "${settingsInterface.data.value.apiEndpoint}/api"
       val parts = initialToken.split(".")
       val payload = globalSerializer.decodeFromString<JsonObject>(
         Base64.UrlSafe.withPadding(Base64.PaddingOption.PRESENT_OPTIONAL).decode(parts[1])
@@ -309,7 +311,8 @@ internal class ApiInterfaceImpl(
                 userID,
                 _eventFlow,
                 _errorFlow,
-                coroutineScope
+                coroutineScope,
+                "${settingsInterface.data.value.apiEndpoint}/api"
               ) { json ->
                 if (!_initComplete.value) {
                   println(json)
@@ -332,7 +335,7 @@ internal class ApiInterfaceImpl(
               }
 
             eventFlow.onEach { message ->
-              handleChannelMessage(message, settingsInterface)
+              handleChannelMessage(message)
             }.launchIn(coroutineScope)
           }
         }
@@ -348,12 +351,11 @@ internal class ApiInterfaceImpl(
   }
 
   override suspend fun generateRecoveryCode(): Pair<String, String> {
-    return platformUtilities.generateRecoveryCode()
+    return platformUtilities.generateRecoveryCode(settingsInterface.data.value)
   }
 
   override fun setupEncryption(
     recoveryCodeJWE: String,
-    settingsInterface: SettingsInterface,
     onSuccess: () -> Unit,
     onFailure: (error: String) -> Unit
   ) {
@@ -404,7 +406,6 @@ internal class ApiInterfaceImpl(
 
   override fun recoverEncryption(
     recoveryCode: String,
-    settingsInterface: SettingsInterface,
     onSuccess: () -> Unit,
     onFailure: (error: String) -> Unit
   ) {
@@ -416,7 +417,8 @@ internal class ApiInterfaceImpl(
           mapOf(
             "recovery_code" to globalSerializer.encodeToJsonElement(
               platformUtilities.recoveryCodeToJWE(
-                recoveryCode.chunked(4).joinToString("-")
+                recoveryCode.chunked(4).joinToString("-"),
+                settingsInterface.data.value
               )
             )
           )
@@ -448,7 +450,7 @@ internal class ApiInterfaceImpl(
     }
   }
 
-  private fun handleChannelMessage(message: ChannelMessage, settingsInterface: SettingsInterface) {
+  private fun handleChannelMessage(message: ChannelMessage) {
     when (message) {
       is ChannelMessage.AlterDeleted -> {
         if (_alters.value !is APIState.Success) return
@@ -1220,7 +1222,7 @@ internal class ApiInterfaceImpl(
 
   override fun setAlterAvatar(alterID: Int, bytes: ByteArray, fileName: String) =
     launchIO {
-      app.octocon.app.api.setAlterAvatar(token.value, alterID, bytes, fileName).emitError()
+      app.octocon.app.api.setAlterAvatar(apiEndpoint, token.value, alterID, bytes, fileName).emitError()
     }
 
   override fun removeAlterAvatar(alterID: Int) =
@@ -1583,13 +1585,14 @@ internal class ApiInterfaceImpl(
 
   override fun updatePushNotificationToken() {
     launchIO {
-      app.octocon.app.api.updatePushNotificationToken(token.value, firebaseMessagingToken)?.emitError()
+      app.octocon.app.api.updatePushNotificationToken(apiEndpoint, token.value, firebaseMessagingToken)?.emitError()
     }
   }
 
   override fun invalidatePushNotificationToken() {
     launchIO {
       app.octocon.app.api.invalidatePushNotificationToken(
+        apiEndpoint,
         token.value,
         firebaseMessagingToken
       )//?.emitError()
@@ -1646,8 +1649,9 @@ internal class ApiInterfaceImpl(
       callback = { isSuccess, response ->
         if (isSuccess) {
           val linkToken = response.data!!.token
+          val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("https://api.octocon.app/auth/link/discord?link_token=$linkToken")
+          openUri("$apiEndpoint/auth/link/discord?link_token=$linkToken&redirect_uri=octocon://link_success/discord")
         }
       }
     )
@@ -1669,8 +1673,9 @@ internal class ApiInterfaceImpl(
       callback = { isSuccess, response ->
         if (isSuccess) {
           val linkToken = response.data!!.token
+          val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("https://api.octocon.app/auth/link/google?link_token=$linkToken")
+          openUri("$apiEndpoint/auth/link/google?link_token=$linkToken&redirect_uri=octocon://link_success/google")
         }
       }
     )
@@ -1692,8 +1697,9 @@ internal class ApiInterfaceImpl(
       callback = { isSuccess, response ->
         if (isSuccess) {
           val linkToken = response.data!!.token
+          val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("https://api.octocon.app/auth/link/apple?link_token=$linkToken")
+          openUri("$apiEndpoint/auth/link/apple?link_token=$linkToken&redirect_uri=octocon://link_success/apple")
         }
       }
     )
@@ -1735,7 +1741,7 @@ internal class ApiInterfaceImpl(
 
   override fun setSystemAvatar(bytes: ByteArray, fileName: String) {
     launchIO {
-      app.octocon.app.api.setSystemAvatar(token.value, bytes, fileName).emitError()
+      app.octocon.app.api.setSystemAvatar(apiEndpoint, token.value, bytes, fileName).emitError()
     }
   }
 
@@ -1752,7 +1758,7 @@ internal class ApiInterfaceImpl(
       )
       if (recoveryCode != null) {
         val formatted = recoveryCode.chunked(4).joinToString("-")
-        val jwe = platformUtilities.recoveryCodeToJWE(formatted)
+        val jwe = platformUtilities.recoveryCodeToJWE(formatted, settingsInterface.data.value)
         params["recovery_code"] = globalSerializer.encodeToJsonElement(jwe)
       }
 

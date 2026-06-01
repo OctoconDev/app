@@ -48,7 +48,7 @@ fun main() {
 
         if (pemToCache == null || (now - atToCache) >= PublicKeyProvider.TTL_MS) {
           try {
-            val freshKey = PublicKeyProvider.getPublicKey()
+            val freshKey = PublicKeyProvider.getPublicKey("${initialSettings.apiEndpoint}/api")
             pemToCache = freshKey
             atToCache = now
             localStorage.setItem("PUBLIC_KEY_PEM", freshKey)

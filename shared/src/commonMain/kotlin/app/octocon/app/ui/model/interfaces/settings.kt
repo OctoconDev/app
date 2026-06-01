@@ -71,6 +71,7 @@ interface SettingsInterface : SettingsReadInterface {
   fun setHasViewedOnboarding(hasViewedOnboarding: Boolean)
   fun setIsSinglet(isSinglet: Boolean)
   fun setInstallServiceWorker(installServiceWorker: Boolean)
+  fun setApiEndpoint(apiEndpoint: String)
   fun isAppInstalled(): Boolean
 
   suspend fun getEncryptionKey(): String
@@ -289,6 +290,11 @@ class SettingsInterfaceImpl(
   override fun setInstallServiceWorker(installServiceWorker: Boolean) =
     updateSettings {
       it.copy(installServiceWorker = installServiceWorker)
+    }
+
+  override fun setApiEndpoint(apiEndpoint: String) =
+    updateSettings {
+      it.copy(apiEndpoint = apiEndpoint)
     }
 
   override fun isAppInstalled(): Boolean = platformUtilities.isAppInstalled()

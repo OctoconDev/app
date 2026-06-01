@@ -72,7 +72,8 @@ struct OctoconWidgetProvider: TimelineProvider {
         "User-Agent": "Octocon iOS v\(Bundle.main.releaseVersionNumber ?? "UNKNOWN") (\(Bundle.main.buildVersionNumber ?? "UNKNOWN"))"
       ]
       
-      let response = await AF.request("https://api.octocon.app/api/systems/me/fronting", headers: headers).serializingDecodable(FrontingResponse.self).response
+      let endpoint = settings.apiEndpoint
+      let response = await AF.request("\(endpoint)/api/systems/me/fronting", headers: headers).serializingDecodable(FrontingResponse.self).response
       
       switch response.result {
         case .success(let frontingResponse):

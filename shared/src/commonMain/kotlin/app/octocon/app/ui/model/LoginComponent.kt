@@ -34,11 +34,12 @@ interface LoginComponent {
 
 private const val DIRECT_TOKEN_PRESSES_REQUIRED = 5
 
-private fun buildLoginUrl(provider: String): String =
-  "https://api.octocon.app/auth/${provider}" +
+private fun buildLoginUrl(provider: String, apiEndpoint: String): String =
+  "$apiEndpoint/auth/${provider}" +
       "?platform=${DevicePlatform.internalName}" +
       "&version_code=${VERSION_CODE}" +
-      "&is_beta=${IS_BETA}"
+      "&is_beta=${IS_BETA}" +
+      "&redirect_uri=octocon://auth/token"
 
 internal class LoginComponentImpl(
   componentContext: CommonComponentContext
@@ -55,7 +56,7 @@ internal class LoginComponentImpl(
 
   private fun logInWithProvider(provider: String, colorSchemeParams: ColorSchemeParams) {
     platformUtilities.openURL(
-      buildLoginUrl(provider),
+      buildLoginUrl(provider, settings.data.value.apiEndpoint),
       colorSchemeParams,
       webURLOpenBehavior = WebURLOpenBehavior.SameTab
     )

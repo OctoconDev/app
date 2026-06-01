@@ -28,13 +28,16 @@ internal actual fun connectToPhoenixChannel(
   eventPipeline: MutableSharedFlow<ChannelMessage>,
   errorPipeline: MutableSharedFlow<String>,
   coroutineScope: CoroutineScope,
+  endpoint: String,
   onConnected: (String) -> Unit,
-): PhoenixSocketSession =
-  KotlixPhoenixSocketSession(
+): PhoenixSocketSession {
+  return KotlixPhoenixSocketSession(
     token = token,
     userID = userID,
     eventPipeline = eventPipeline,
     errorPipeline = errorPipeline,
     coroutineScope = coroutineScope,
-    onConnected = onConnected
+    onConnected = onConnected,
+    endpoint = endpoint,
   )
+}

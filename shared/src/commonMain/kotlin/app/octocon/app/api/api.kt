@@ -312,7 +312,6 @@ sealed interface ChannelMessage {
   }
 }
 
-const val endpoint = "https://api.octocon.app/api"
 
 fun parseAmbiguousID(id: String): String = id.trim().let {
   when {
@@ -335,6 +334,7 @@ internal class KotlixPhoenixSocketSession(
   errorPipeline: MutableSharedFlow<String>,
   private val coroutineScope: CoroutineScope,
   onConnected: (String) -> Unit,
+  endpoint: String,
 ) : PhoenixSocketSession {
   private val params = hashMapOf<String, Any?>("token" to token, "protocolVersion" to "2.0.0", "platform" to DevicePlatform.internalName)
   private val paramsClosure: (isReconnect: Boolean) -> Payload = {
@@ -438,6 +438,7 @@ internal expect fun connectToPhoenixChannel(
   eventPipeline: MutableSharedFlow<ChannelMessage>,
   errorPipeline: MutableSharedFlow<String>,
   coroutineScope: CoroutineScope,
+  endpoint: String,
   onConnected: (String) -> Unit,
 ): PhoenixSocketSession
 
@@ -487,12 +488,12 @@ val httpBuilder: (token: String?, body: Any?) -> (HttpRequestBuilder.() -> Unit)
   }
 }
 
-private suspend fun get(token: String?, path: String) =
+private suspend fun get(endpoint: String, token: String?, path: String) =
   withContext(ioDispatcher) {
     client.get("$endpoint/$path", httpBuilder(token, null))
   }
 
-private suspend fun post(token: String, path: String, body: Any? = null) =
+private suspend fun post(endpoint: String, token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.post("$endpoint/$path", httpBuilder(token, body))
   }
@@ -500,12 +501,13 @@ private suspend fun post(token: String, path: String, body: Any? = null) =
 /**
  * Sends a PUT request to the Octocon API.
  *
+ * @param endpoint The API endpoint.
  * @param token The user's access token.
  * @param path The endpoint to call.
  * @param body The body of the request.
  * @return The response from the API.
  */
-private suspend fun put(token: String, path: String, body: Any? = null) =
+private suspend fun put(endpoint: String, token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.put("$endpoint/$path", httpBuilder(token, body))
   }
@@ -513,19 +515,20 @@ private suspend fun put(token: String, path: String, body: Any? = null) =
 /**
  * Sends a DELETE request to the Octocon API.
  *
+ * @param endpoint The API endpoint.
  * @param token The user's access token.
  * @param path The endpoint to call.
  * @param body The body of the request.
  * @return The response from the API.
  */
-private suspend fun delete(token: String, path: String, body: Any? = null) =
+private suspend fun delete(endpoint: String, token: String, path: String, body: Any? = null) =
   withContext(ioDispatcher) {
     client.delete("$endpoint/$path", httpBuilder(token, body))
   }
 
-suspend fun setAlterAvatar(token: String, alterID: Int, bytes: ByteArray, fileName: String) =
+suspend fun setAlterAvatar(endpoint: String, token: String, alterID: Int, bytes: ByteArray, fileName: String) =
   put(
-    token, "systems/me/alters/$alterID/avatar", MultiPartFormDataContent(
+    endpoint, token, "systems/me/alters/$alterID/avatar", MultiPartFormDataContent(
       formData {
         append("file", bytes, Headers.build {
           append(HttpHeaders.ContentType, "image/${fileName.substringAfterLast(".")}")
@@ -536,9 +539,9 @@ suspend fun setAlterAvatar(token: String, alterID: Int, bytes: ByteArray, fileNa
     )
   )
 
-suspend fun setSystemAvatar(token: String, bytes: ByteArray, fileName: String) =
+suspend fun setSystemAvatar(endpoint: String, token: String, bytes: ByteArray, fileName: String) =
   put(
-    token, "settings/avatar", MultiPartFormDataContent(
+    endpoint, token, "settings/avatar", MultiPartFormDataContent(
       formData {
         append("file", bytes, Headers.build {
           append(HttpHeaders.ContentType, "image/${fileName.substringAfterLast(".")}")
@@ -549,26 +552,26 @@ suspend fun setSystemAvatar(token: String, bytes: ByteArray, fileName: String) =
     )
   )
 
-suspend fun getFrontingAlters(token: String) = get(token, "systems/me/fronting").body<APIResponse<List<MyFrontItem>>>()
+suspend fun getFrontingAlters(endpoint: String, token: String) = get(endpoint, token, "systems/me/fronting").body<APIResponse<List<MyFrontItem>>>()
 
 @Serializable
 data class KeyResponse(
   val key: String
 )
 
-suspend fun updatePushNotificationToken(token: String, pushToken: String?): HttpResponse? {
+suspend fun updatePushNotificationToken(endpoint: String, token: String, pushToken: String?): HttpResponse? {
   if (pushToken == null) return null
-  return post(token, "settings/push-token", buildJsonObject {
+  return post(endpoint, token, "settings/push-token", buildJsonObject {
     put("token", pushToken)
   }.toString())
 }
 
-suspend fun invalidatePushNotificationToken(token: String, pushToken: String?): HttpResponse? {
+suspend fun invalidatePushNotificationToken(endpoint: String, token: String, pushToken: String?): HttpResponse? {
   if (pushToken == null) return null
-  return delete(token, "settings/push-token", buildJsonObject {
+  return delete(endpoint, token, "settings/push-token", buildJsonObject {
     put("token", pushToken)
   }.toString())
 }
 
-suspend fun fetchPublicKey(): APIResponse<String> =
-  get(null, "settings/public-key").body<APIResponse<String>>()
+suspend fun fetchPublicKey(endpoint: String): APIResponse<String> =
+  get(endpoint, null, "settings/public-key").body<APIResponse<String>>()

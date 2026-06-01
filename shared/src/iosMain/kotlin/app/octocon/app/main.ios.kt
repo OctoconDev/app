@@ -66,8 +66,8 @@ fun MainViewController(platformDelegate: PlatformDelegate, root: RootComponent, 
 
     GlobalScope.launch {
       try {
-        val key = app.octocon.app.utils.PublicKeyProvider.getPublicKey()
-        saveStoredPublicKey(key, kotlinx.datetime.Clock.System.now().toEpochMilliseconds())
+        val key = app.octocon.app.utils.PublicKeyProvider.getPublicKey("${settings.apiEndpoint}/api")
+        saveStoredPublicKey(key, Clock.System.now().toEpochMilliseconds())
       } catch (e: Exception) {
         NSLog("Failed to preload public key: $e")
       }
@@ -112,8 +112,18 @@ fun providePushNotificationToken(token: String?) {
 fun handleDeepLink(latestDeepLink: String?) {
   val url = latestDeepLink?.let { Url(it) } ?: return
 
-  when (url.encodedPath) {
-    "/deep/auth/token" -> {
+  val path = if (url.protocol.name == "octocon") {
+    if (url.host.isNotEmpty()) {
+      "/" + url.host + url.encodedPath
+    } else {
+      url.encodedPath
+    }
+  } else {
+    url.encodedPath
+  }
+
+  when (path) {
+    "/auth/token", "/deep/auth/token" -> {
       platformLog("/deep/auth/token hit!")
       url.parameters["token"]?.let {
         platformLog("Token received: $it")
@@ -121,17 +131,17 @@ fun handleDeepLink(latestDeepLink: String?) {
       }
     }
 
-    "/deep/link_success/discord" -> {
+    "/link_success/discord", "/deep/link_success/discord" -> {
       platformLog("/deep/link_success/discord hit!")
       platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.DiscordAccountLinked)
     }
 
-    "/deep/link_success/google" -> {
+    "/link_success/google", "/deep/link_success/google" -> {
       platformLog("/deep/link_success/google hit!")
       platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.GoogleAccountLinked)
     }
 
-    "/deep/link_success/apple" -> {
+    "/link_success/apple", "/deep/link_success/apple" -> {
       platformLog("/deep/link_success/apple hit!")
       platformEventFlow.tryEmit(PlatformEvent.ExternallyHandleable.AppleAccountLinked)
     }

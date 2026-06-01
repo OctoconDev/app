@@ -69,7 +69,8 @@ class RootComponentImpl(
   private val _api = retainedInstance {
     ApiInterfaceImpl(
       coroutineScope = coroutineScope,
-      platformUtilities = platformUtilities
+      platformUtilities = platformUtilities,
+      settingsInterface = settings
     )
   }
   override val api: ApiInterface = _api
@@ -77,7 +78,7 @@ class RootComponentImpl(
   override fun tryLoadClient(token: String?) {
     if(token == null || api.initComplete.value)
       return
-    api.loadClient(token, settings)
+    api.loadClient(token)
   }
 
   private val navigator = StackNavigation<Config>()
