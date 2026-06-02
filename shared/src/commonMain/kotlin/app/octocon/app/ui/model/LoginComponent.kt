@@ -46,7 +46,7 @@ interface LoginComponent {
   data class Model(
     val directTokenTimesPressed: Int = 0,
     val directTokenDialogOpen: Boolean = false,
-    val serverUrl: String = "https://api.octocon.app",
+    val serverUrl: String = app.octocon.app.Settings.DEFAULT_API_ENDPOINT,
     val serverHealthStatus: ServerHealthStatus = ServerHealthStatus.UNKNOWN
   )
 }

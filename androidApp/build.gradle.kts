@@ -107,7 +107,7 @@ dependencies {
 }
 
 val copyComposeResources by tasks.creating {
-  val modules = listOf("shared" to "octoconapp.shared.generated.resources", "krop" to "octoconapp.krop.generated.resources")
+  val modules = listOf("shared" to "octoconapp.shared.resources", "krop" to "octoconapp.krop.resources")
   
   modules.forEach { (moduleName, targetFolder) ->
     val copyTask = tasks.create("copy${moduleName.capitalize()}Resources", Copy::class) {
