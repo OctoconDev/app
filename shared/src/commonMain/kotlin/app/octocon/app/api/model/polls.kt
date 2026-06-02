@@ -20,13 +20,13 @@ import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.poll_type_choice
-import octoconapp.shared.generated.resources.poll_type_vote
-import octoconapp.shared.generated.resources.vote_abstain
-import octoconapp.shared.generated.resources.vote_no
-import octoconapp.shared.generated.resources.vote_veto
-import octoconapp.shared.generated.resources.vote_yes
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.poll_type_choice
+import octoconapp.shared.resources.poll_type_vote
+import octoconapp.shared.resources.vote_abstain
+import octoconapp.shared.resources.vote_no
+import octoconapp.shared.resources.vote_veto
+import octoconapp.shared.resources.vote_yes
 
 @Serializable
 enum class PollType {

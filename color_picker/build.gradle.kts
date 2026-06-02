@@ -31,9 +31,10 @@ kotlin {
         implementation("com.github.ajalt.colormath:colormath:3.6.1")
 
         val composeVersion = findProperty("compose.version") as String
+        val material3Version = findProperty("compose.material3.version") as String
         compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
         compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
-        compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
+        compileOnly("org.jetbrains.compose.material3:material3:$material3Version")
         compileOnly("org.jetbrains.compose.components:components-resources:$composeVersion")
       }
     }

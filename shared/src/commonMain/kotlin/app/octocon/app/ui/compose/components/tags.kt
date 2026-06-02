@@ -48,18 +48,18 @@ import app.octocon.app.ui.compose.theme.ThemeFromColor
 import app.octocon.app.ui.compose.utils.SpotlightTooltip
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.state
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.action_irreversible
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.confirm_delete_tag
-import octoconapp.shared.generated.resources.create
-import octoconapp.shared.generated.resources.create_tag
-import octoconapp.shared.generated.resources.delete
-import octoconapp.shared.generated.resources.delete_tag
-import octoconapp.shared.generated.resources.name
-import octoconapp.shared.generated.resources.open_tag
-import octoconapp.shared.generated.resources.tag_context_menu
-import octoconapp.shared.generated.resources.tooltip_delete_tag_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.action_irreversible
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.confirm_delete_tag
+import octoconapp.shared.resources.create
+import octoconapp.shared.resources.create_tag
+import octoconapp.shared.resources.delete
+import octoconapp.shared.resources.delete_tag
+import octoconapp.shared.resources.name
+import octoconapp.shared.resources.open_tag
+import octoconapp.shared.resources.tag_context_menu
+import octoconapp.shared.resources.tooltip_delete_tag_desc
 import org.jetbrains.compose.resources.stringResource
 
 private val tagCardHeight = 72.dp

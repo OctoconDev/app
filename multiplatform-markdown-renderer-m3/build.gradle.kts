@@ -28,9 +28,9 @@ kotlin {
         api(project(":multiplatform-markdown-renderer"))
         api("org.jetbrains:markdown:0.7.3")
         val composeVersion = findProperty("compose.version") as String
+        val material3Version = findProperty("compose.material3.version") as String
         compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
-        compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
-        // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
+        compileOnly("org.jetbrains.compose.material3:material3:$material3Version")
       }
     }
   }

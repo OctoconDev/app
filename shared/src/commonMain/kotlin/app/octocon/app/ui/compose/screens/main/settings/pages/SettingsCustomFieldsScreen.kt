@@ -52,8 +52,8 @@ import app.octocon.app.utils.state
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.custom_fields
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.custom_fields
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 

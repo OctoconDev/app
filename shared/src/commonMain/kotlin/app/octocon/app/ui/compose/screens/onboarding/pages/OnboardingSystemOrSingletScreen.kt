@@ -20,10 +20,10 @@ import androidx.compose.ui.unit.em
 import app.octocon.app.ui.compose.screens.GLOBAL_PADDING
 import app.octocon.app.ui.model.onboarding.pages.OnboardingSystemOrSingletComponent
 import app.octocon.app.utils.compose
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.im_a_singlet
-import octoconapp.shared.generated.resources.system_or_singlet_body
-import octoconapp.shared.generated.resources.system_or_singlet_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.im_a_singlet
+import octoconapp.shared.resources.system_or_singlet_body
+import octoconapp.shared.resources.system_or_singlet_title
 
 @Composable
 fun OnboardingSystemOrSingletScreen(

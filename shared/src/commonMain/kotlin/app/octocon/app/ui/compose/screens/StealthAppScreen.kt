@@ -53,9 +53,9 @@ import io.kamel.image.config.LocalKamelConfig
 import kotlinx.coroutines.launch
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.app_name
-import octoconapp.shared.generated.resources.stealth_app_subtitle
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.app_name
+import octoconapp.shared.resources.stealth_app_subtitle
 
 @Composable
 fun StealthAppScreen(component: StealthAppComponent) {

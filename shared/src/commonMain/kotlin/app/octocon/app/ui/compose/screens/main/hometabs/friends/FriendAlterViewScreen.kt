@@ -63,21 +63,21 @@ import com.mikepenz.markdown.m3.markdownColor
 import io.kamel.core.utils.cacheControl
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.basic_info
-import octoconapp.shared.generated.resources.color
-import octoconapp.shared.generated.resources.description
-import octoconapp.shared.generated.resources.error_loading_avatar
-import octoconapp.shared.generated.resources.fields
-import octoconapp.shared.generated.resources.id
-import octoconapp.shared.generated.resources.loading
-import octoconapp.shared.generated.resources.name
-import octoconapp.shared.generated.resources.name_avatar
-import octoconapp.shared.generated.resources.no_avatar
-import octoconapp.shared.generated.resources.no_description
-import octoconapp.shared.generated.resources.no_pronouns
-import octoconapp.shared.generated.resources.pronouns
-import octoconapp.shared.generated.resources.unnamed_alter
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.basic_info
+import octoconapp.shared.resources.color
+import octoconapp.shared.resources.description
+import octoconapp.shared.resources.error_loading_avatar
+import octoconapp.shared.resources.fields
+import octoconapp.shared.resources.id
+import octoconapp.shared.resources.loading
+import octoconapp.shared.resources.name
+import octoconapp.shared.resources.name_avatar
+import octoconapp.shared.resources.no_avatar
+import octoconapp.shared.resources.no_description
+import octoconapp.shared.resources.no_pronouns
+import octoconapp.shared.resources.pronouns
+import octoconapp.shared.resources.unnamed_alter
 import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalDecomposeApi::class)

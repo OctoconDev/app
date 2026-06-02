@@ -58,18 +58,18 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.allow_veto
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.choices
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.description
-import octoconapp.shared.generated.resources.end_time
-import octoconapp.shared.generated.resources.no_end_time
-import octoconapp.shared.generated.resources.poll_description
-import octoconapp.shared.generated.resources.poll_title
-import octoconapp.shared.generated.resources.remove_end_time
-import octoconapp.shared.generated.resources.title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.allow_veto
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.choices
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.description
+import octoconapp.shared.resources.end_time
+import octoconapp.shared.resources.no_end_time
+import octoconapp.shared.resources.poll_description
+import octoconapp.shared.resources.poll_title
+import octoconapp.shared.resources.remove_end_time
+import octoconapp.shared.resources.title
 
 @Composable
 fun PollViewSettingsTab(

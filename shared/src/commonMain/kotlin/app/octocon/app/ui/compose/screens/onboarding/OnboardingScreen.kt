@@ -15,7 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
@@ -36,12 +36,12 @@ import app.octocon.app.utils.derive
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.finish
-import octoconapp.shared.generated.resources.get_started
-import octoconapp.shared.generated.resources.im_a_system
-import octoconapp.shared.generated.resources.next
-import octoconapp.shared.generated.resources.previous
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.finish
+import octoconapp.shared.resources.get_started
+import octoconapp.shared.resources.im_a_system
+import octoconapp.shared.resources.next
+import octoconapp.shared.resources.previous
 
 @Composable
 fun OnboardingScreen(
@@ -62,10 +62,8 @@ fun OnboardingScreen(
   Scaffold(
     modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
     topBar = {
-      TopAppBar(
+      CenterAlignedTopAppBar(
         title = { Text(Res.string.get_started.compose) },
-        subtitle = {},
-        titleHorizontalAlignment = Alignment.CenterHorizontally,
         scrollBehavior = scrollBehavior
       )
     },

@@ -196,7 +196,7 @@ val platformUtilities = object : PlatformUtilities {
         URI(url) // Validate URI for exception behavior consistent with the Desktop.browse() case (throwing URISyntaxException)
         Runtime.getRuntime().exec(arrayOf("xdg-open", URL(url).toString()))
       }
-      OS.Android, OS.Windows, OS.MacOS, OS.Ios, OS.Tvos, OS.JS, OS.Unknown -> {
+      OS.Android, OS.Windows, OS.MacOS, OS.Ios, OS.Tvos, OS.Unknown -> {
         throw UnsupportedOperationException("AWT does not support the BROWSE action on this platform")
       }
     }

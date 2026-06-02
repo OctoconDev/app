@@ -115,16 +115,16 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.color
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.remove_avatar
-import octoconapp.shared.generated.resources.search_alters
-import octoconapp.shared.generated.resources.search_tags
-import octoconapp.shared.generated.resources.set_avatar
-import octoconapp.shared.generated.resources.unnamed_alter
-import octoconapp.shared.generated.resources.update_color
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.color
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.remove_avatar
+import octoconapp.shared.resources.search_alters
+import octoconapp.shared.resources.search_tags
+import octoconapp.shared.resources.set_avatar
+import octoconapp.shared.resources.unnamed_alter
+import octoconapp.shared.resources.update_color
 import kotlin.math.absoluteValue
 
 @Composable

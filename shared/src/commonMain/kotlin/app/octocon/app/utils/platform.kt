@@ -9,7 +9,7 @@ import app.octocon.app.Settings
 import com.mikepenz.aboutlibraries.Libs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import octoconapp.shared.generated.resources.Res
+import octoconapp.shared.resources.Res
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 
 class ColorSchemeParams(

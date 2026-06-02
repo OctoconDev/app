@@ -31,23 +31,23 @@ import app.octocon.app.utils.derive
 import app.octocon.app.utils.state
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.accessibility
-import octoconapp.shared.generated.resources.color_contrast_level
-import octoconapp.shared.generated.resources.font_choice
-import octoconapp.shared.generated.resources.font_size
-import octoconapp.shared.generated.resources.reduce_motion
-import octoconapp.shared.generated.resources.show_permanent_tips
-import octoconapp.shared.generated.resources.spotlight_enabled
-import octoconapp.shared.generated.resources.spotlight_long_press_timeout
-import octoconapp.shared.generated.resources.spotlight_tooltips
-import octoconapp.shared.generated.resources.tooltip_color_contrast_level_desc
-import octoconapp.shared.generated.resources.tooltip_font_choice_desc
-import octoconapp.shared.generated.resources.tooltip_font_size_desc
-import octoconapp.shared.generated.resources.tooltip_reduce_motion_desc
-import octoconapp.shared.generated.resources.tooltip_show_permanent_tips_desc
-import octoconapp.shared.generated.resources.tooltip_spotlight_desc
-import octoconapp.shared.generated.resources.tooltip_spotlight_long_press_timeout_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.accessibility
+import octoconapp.shared.resources.color_contrast_level
+import octoconapp.shared.resources.font_choice
+import octoconapp.shared.resources.font_size
+import octoconapp.shared.resources.reduce_motion
+import octoconapp.shared.resources.show_permanent_tips
+import octoconapp.shared.resources.spotlight_enabled
+import octoconapp.shared.resources.spotlight_long_press_timeout
+import octoconapp.shared.resources.spotlight_tooltips
+import octoconapp.shared.resources.tooltip_color_contrast_level_desc
+import octoconapp.shared.resources.tooltip_font_choice_desc
+import octoconapp.shared.resources.tooltip_font_size_desc
+import octoconapp.shared.resources.tooltip_reduce_motion_desc
+import octoconapp.shared.resources.tooltip_show_permanent_tips_desc
+import octoconapp.shared.resources.tooltip_spotlight_desc
+import octoconapp.shared.resources.tooltip_spotlight_long_press_timeout_desc
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

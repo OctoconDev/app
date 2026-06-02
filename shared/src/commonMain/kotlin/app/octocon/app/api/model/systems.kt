@@ -15,18 +15,18 @@ import app.octocon.app.utils.compose
 import kotlinx.serialization.EncodeDefault
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.custom_field_type_boolean
-import octoconapp.shared.generated.resources.custom_field_type_colour
-import octoconapp.shared.generated.resources.custom_field_type_date
-import octoconapp.shared.generated.resources.custom_field_type_month
-import octoconapp.shared.generated.resources.custom_field_type_month_day
-import octoconapp.shared.generated.resources.custom_field_type_month_year
-import octoconapp.shared.generated.resources.custom_field_type_number
-import octoconapp.shared.generated.resources.custom_field_type_plaintext
-import octoconapp.shared.generated.resources.custom_field_type_text
-import octoconapp.shared.generated.resources.custom_field_type_timestamp
-import octoconapp.shared.generated.resources.custom_field_type_year
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.custom_field_type_boolean
+import octoconapp.shared.resources.custom_field_type_colour
+import octoconapp.shared.resources.custom_field_type_date
+import octoconapp.shared.resources.custom_field_type_month
+import octoconapp.shared.resources.custom_field_type_month_day
+import octoconapp.shared.resources.custom_field_type_month_year
+import octoconapp.shared.resources.custom_field_type_number
+import octoconapp.shared.resources.custom_field_type_plaintext
+import octoconapp.shared.resources.custom_field_type_text
+import octoconapp.shared.resources.custom_field_type_timestamp
+import octoconapp.shared.resources.custom_field_type_year
 
 interface SystemBase {
   val id: String

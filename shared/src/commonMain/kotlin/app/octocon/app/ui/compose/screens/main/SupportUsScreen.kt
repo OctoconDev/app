@@ -45,18 +45,18 @@ import com.mikepenz.markdown.compose.Markdown
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.model.markdownAnimations
 import com.mikepenz.markdown.model.markdownPadding
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.kofi_logo
-import octoconapp.shared.generated.resources.open
-import octoconapp.shared.generated.resources.patreon_logo
-import octoconapp.shared.generated.resources.support_us
-import octoconapp.shared.generated.resources.support_us_kofi_card_body
-import octoconapp.shared.generated.resources.support_us_kofi_card_title
-import octoconapp.shared.generated.resources.support_us_patreon_card_body
-import octoconapp.shared.generated.resources.support_us_patreon_card_title
-import octoconapp.shared.generated.resources.tooltip_support_us_desc
-import octoconapp.shared.generated.resources.transparency
-import octoconapp.shared.generated.resources.transparency_text
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.kofi_logo
+import octoconapp.shared.resources.open
+import octoconapp.shared.resources.patreon_logo
+import octoconapp.shared.resources.support_us
+import octoconapp.shared.resources.support_us_kofi_card_body
+import octoconapp.shared.resources.support_us_kofi_card_title
+import octoconapp.shared.resources.support_us_patreon_card_body
+import octoconapp.shared.resources.support_us_patreon_card_title
+import octoconapp.shared.resources.tooltip_support_us_desc
+import octoconapp.shared.resources.transparency
+import octoconapp.shared.resources.transparency_text
 import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalDecomposeApi::class)

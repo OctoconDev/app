@@ -43,9 +43,9 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.results
-import octoconapp.shared.generated.resources.settings
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.results
+import octoconapp.shared.resources.settings
 
 
 interface PollViewComponent : CommonInterface {

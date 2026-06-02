@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ContainedLoadingIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,8 +14,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.octocon.app.ui.compose.screens.GLOBAL_PADDING
 import app.octocon.app.utils.compose
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.loading
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.loading
 
 @Composable
 fun IndeterminateProgressSpinner(
@@ -29,7 +29,7 @@ fun IndeterminateProgressSpinner(
     verticalArrangement = Arrangement.spacedBy(10.dp),
     horizontalAlignment = Alignment.CenterHorizontally
   ) {
-    ContainedLoadingIndicator()
+    CircularProgressIndicator()
     Text(realText, style = MaterialTheme.typography.labelLarge)
   }
 }

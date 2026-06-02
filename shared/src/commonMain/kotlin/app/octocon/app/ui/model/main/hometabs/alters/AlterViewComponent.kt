@@ -44,15 +44,15 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.basic_info
-import octoconapp.shared.generated.resources.custom_fields
-import octoconapp.shared.generated.resources.fields
-import octoconapp.shared.generated.resources.journal
-import octoconapp.shared.generated.resources.tooltip_alter_journal_desc
-import octoconapp.shared.generated.resources.tooltip_alter_journal_title
-import octoconapp.shared.generated.resources.tooltip_basic_info_desc
-import octoconapp.shared.generated.resources.tooltip_custom_fields_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.basic_info
+import octoconapp.shared.resources.custom_fields
+import octoconapp.shared.resources.fields
+import octoconapp.shared.resources.journal
+import octoconapp.shared.resources.tooltip_alter_journal_desc
+import octoconapp.shared.resources.tooltip_alter_journal_title
+import octoconapp.shared.resources.tooltip_basic_info_desc
+import octoconapp.shared.resources.tooltip_custom_fields_desc
 
 interface AlterViewComponent {
   val settings: SettingsInterface

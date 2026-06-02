@@ -85,11 +85,11 @@ import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.friend_fronting_count_collapse
-import octoconapp.shared.generated.resources.friend_fronting_count_expand
-import octoconapp.shared.generated.resources.trusted_friend
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.friend_fronting_count_collapse
+import octoconapp.shared.resources.friend_fronting_count_expand
+import octoconapp.shared.resources.trusted_friend
 import org.jetbrains.compose.resources.pluralStringResource
 import kotlin.coroutines.CoroutineContext
 

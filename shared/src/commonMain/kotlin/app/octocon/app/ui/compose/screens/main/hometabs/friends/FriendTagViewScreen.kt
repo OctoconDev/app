@@ -45,10 +45,10 @@ import app.octocon.app.utils.derive
 import app.octocon.app.utils.ioDispatcher
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.alters
-import octoconapp.shared.generated.resources.loading
-import octoconapp.shared.generated.resources.tags
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.alters
+import octoconapp.shared.resources.loading
+import octoconapp.shared.resources.tags
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

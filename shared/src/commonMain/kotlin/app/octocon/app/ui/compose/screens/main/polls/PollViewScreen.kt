@@ -45,12 +45,12 @@ import app.octocon.app.utils.state
 import com.arkivanov.decompose.extensions.compose.pages.ChildPages
 import com.arkivanov.decompose.extensions.compose.pages.PagesScrollAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.delete_poll
-import octoconapp.shared.generated.resources.loading
-import octoconapp.shared.generated.resources.revert_changes
-import octoconapp.shared.generated.resources.saving
-import octoconapp.shared.generated.resources.tooltip_revert_changes_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.delete_poll
+import octoconapp.shared.resources.loading
+import octoconapp.shared.resources.revert_changes
+import octoconapp.shared.resources.saving
+import octoconapp.shared.resources.tooltip_revert_changes_desc
 
 
 @Composable

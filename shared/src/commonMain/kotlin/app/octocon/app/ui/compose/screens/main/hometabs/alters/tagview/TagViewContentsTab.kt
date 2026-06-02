@@ -53,16 +53,16 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.ioDispatcher
 import app.octocon.app.utils.savedState
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.add_alter
-import octoconapp.shared.generated.resources.empty_tag_card_body
-import octoconapp.shared.generated.resources.empty_tag_card_button
-import octoconapp.shared.generated.resources.empty_tag_card_title
-import octoconapp.shared.generated.resources.remove_from_tag
-import octoconapp.shared.generated.resources.tag_no_valid_alters
-import octoconapp.shared.generated.resources.tooltip_remove_alter_from_tag_desc
-import octoconapp.shared.generated.resources.tooltip_remove_alter_from_tag_title
-import octoconapp.shared.generated.resources.unnamed_alter
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.add_alter
+import octoconapp.shared.resources.empty_tag_card_body
+import octoconapp.shared.resources.empty_tag_card_button
+import octoconapp.shared.resources.empty_tag_card_title
+import octoconapp.shared.resources.remove_from_tag
+import octoconapp.shared.resources.tag_no_valid_alters
+import octoconapp.shared.resources.tooltip_remove_alter_from_tag_desc
+import octoconapp.shared.resources.tooltip_remove_alter_from_tag_title
+import octoconapp.shared.resources.unnamed_alter
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable

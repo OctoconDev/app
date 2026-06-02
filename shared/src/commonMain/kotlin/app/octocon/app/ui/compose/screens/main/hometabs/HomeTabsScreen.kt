@@ -62,12 +62,12 @@ import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.s
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.alters
-import octoconapp.shared.generated.resources.friends
-import octoconapp.shared.generated.resources.history
-import octoconapp.shared.generated.resources.journal
-import octoconapp.shared.generated.resources.menu
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.alters
+import octoconapp.shared.resources.friends
+import octoconapp.shared.resources.history
+import octoconapp.shared.resources.journal
+import octoconapp.shared.resources.menu
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

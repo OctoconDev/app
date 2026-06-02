@@ -63,14 +63,14 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.delete_journal_entry
-import octoconapp.shared.generated.resources.edit_journal_entry
-import octoconapp.shared.generated.resources.lock_journal_entry
-import octoconapp.shared.generated.resources.pin_journal_entry
-import octoconapp.shared.generated.resources.search_journal_entries
-import octoconapp.shared.generated.resources.unlock_journal_entry
-import octoconapp.shared.generated.resources.unpin_journal_entry
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.delete_journal_entry
+import octoconapp.shared.resources.edit_journal_entry
+import octoconapp.shared.resources.lock_journal_entry
+import octoconapp.shared.resources.pin_journal_entry
+import octoconapp.shared.resources.search_journal_entries
+import octoconapp.shared.resources.unlock_journal_entry
+import octoconapp.shared.resources.unpin_journal_entry
 
 @Composable
 fun AlterViewJournalTab(

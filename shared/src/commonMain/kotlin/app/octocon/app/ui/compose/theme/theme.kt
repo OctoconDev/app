@@ -1,14 +1,10 @@
 package app.octocon.app.ui.compose.theme
 
-import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ColorScheme
-import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MotionScheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
@@ -416,7 +412,7 @@ fun OctoconTheme(
     LocalOctoTypography provides typography,
     LocalOctoShapes provides shapes
   ) {
-    MaterialExpressiveTheme(
+    MaterialTheme(
       colorScheme = scheme,
       /*if (colorMode.shouldUseDarkTheme())
         themeColor.themeColors.darkColors
@@ -427,7 +423,6 @@ fun OctoconTheme(
         isAmoled = true
       ),*/
       typography = typography,
-      motionScheme = if(reduceMotion) ReducedMotionScheme else null,
       shapes = shapes,
       content = content
     )
@@ -588,10 +583,9 @@ fun ThemeFromColor(
     scrim = colorScheme.scrim.animate(animationSpec),
     )
 
-  MaterialExpressiveTheme(
+  MaterialTheme(
     colorScheme = scheme,
     shapes = shapes,
-    motionScheme = if(reduceMotion) ReducedMotionScheme else null,
     typography = typography,
     content = content
   )
@@ -614,50 +608,5 @@ fun hexStringToARGBInt(hex: String): Int {
     6 -> color.toInt(16) or 0xFF000000.toInt()
     8 -> color.toInt(16)
     else -> throw IllegalArgumentException("Invalid color string: $hex")
-  }
-}
-
-@Suppress("UNCHECKED_CAST")
-private object ReducedMotionScheme : MotionScheme {
-  private val defaultSpatialSpec =
-    tween<Any>(0)
-
-  private val fastSpatialSpec =
-    tween<Any>(0)
-
-  private val slowSpatialSpec =
-    tween<Any>(0)
-
-  private val defaultEffectsSpec =
-    tween<Any>(0)
-
-  private val fastEffectsSpec =
-    tween<Any>(0)
-
-  private val slowEffectsSpec =
-    tween<Any>(0)
-
-  override fun <T> defaultSpatialSpec(): FiniteAnimationSpec<T> {
-    return defaultSpatialSpec as FiniteAnimationSpec<T>
-  }
-
-  override fun <T> fastSpatialSpec(): FiniteAnimationSpec<T> {
-    return fastSpatialSpec as FiniteAnimationSpec<T>
-  }
-
-  override fun <T> slowSpatialSpec(): FiniteAnimationSpec<T> {
-    return slowSpatialSpec as FiniteAnimationSpec<T>
-  }
-
-  override fun <T> defaultEffectsSpec(): FiniteAnimationSpec<T> {
-    return defaultEffectsSpec as FiniteAnimationSpec<T>
-  }
-
-  override fun <T> fastEffectsSpec(): FiniteAnimationSpec<T> {
-    return fastEffectsSpec as FiniteAnimationSpec<T>
-  }
-
-  override fun <T> slowEffectsSpec(): FiniteAnimationSpec<T> {
-    return slowEffectsSpec as FiniteAnimationSpec<T>
   }
 }

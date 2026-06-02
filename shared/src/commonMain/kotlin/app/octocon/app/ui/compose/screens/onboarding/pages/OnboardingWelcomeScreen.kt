@@ -18,13 +18,13 @@ import androidx.compose.ui.unit.em
 import app.octocon.app.ui.compose.screens.GLOBAL_PADDING
 import app.octocon.app.ui.model.onboarding.pages.OnboardingWelcomeComponent
 import app.octocon.app.utils.compose
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.onboarding_card_get_started_body
-import octoconapp.shared.generated.resources.onboarding_card_get_started_title
-import octoconapp.shared.generated.resources.onboarding_card_what_can_it_do_body
-import octoconapp.shared.generated.resources.onboarding_card_what_can_it_do_title
-import octoconapp.shared.generated.resources.welcome_body
-import octoconapp.shared.generated.resources.welcome_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.onboarding_card_get_started_body
+import octoconapp.shared.resources.onboarding_card_get_started_title
+import octoconapp.shared.resources.onboarding_card_what_can_it_do_body
+import octoconapp.shared.resources.onboarding_card_what_can_it_do_title
+import octoconapp.shared.resources.welcome_body
+import octoconapp.shared.resources.welcome_title
 
 @Composable
 fun OnboardingWelcomeScreen(

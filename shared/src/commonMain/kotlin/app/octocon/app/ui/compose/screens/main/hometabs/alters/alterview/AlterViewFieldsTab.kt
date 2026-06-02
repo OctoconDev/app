@@ -41,10 +41,10 @@ import app.octocon.app.ui.compose.screens.GLOBAL_PADDING
 import app.octocon.app.ui.model.main.hometabs.alters.alterview.AlterViewFieldsComponent
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.no_custom_fields_card_body
-import octoconapp.shared.generated.resources.no_custom_fields_card_button
-import octoconapp.shared.generated.resources.no_custom_fields_card_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.no_custom_fields_card_body
+import octoconapp.shared.resources.no_custom_fields_card_button
+import octoconapp.shared.resources.no_custom_fields_card_title
 
 @Composable
 fun AlterViewFieldsTab(

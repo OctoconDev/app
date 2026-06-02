@@ -90,9 +90,10 @@ kotlin {
 
         val composeVersion = findProperty("compose.version") as String
         val materialIconsVersion = findProperty("material.icons.version") as String
+        val material3Version = findProperty("compose.material3.version") as String
         implementation("org.jetbrains.compose.runtime:runtime:$composeVersion")
         implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
-        implementation("org.jetbrains.compose.material3:material3:$composeVersion")
+        compileOnly("org.jetbrains.compose.material3:material3:$material3Version")
         implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
         implementation("org.jetbrains.compose.material:material-icons-core:$materialIconsVersion")
         implementation("org.jetbrains.compose.material:material-icons-extended:$materialIconsVersion")
@@ -218,5 +219,6 @@ kotlin {
 }
 
 compose.resources {
+  packageOfResClass = "octoconapp.shared.resources"
   publicResClass = true
 }

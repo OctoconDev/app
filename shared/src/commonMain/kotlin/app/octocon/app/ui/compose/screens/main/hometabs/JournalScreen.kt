@@ -27,9 +27,9 @@ import app.octocon.app.ui.model.main.hometabs.JournalComponent
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.app_logo
-import octoconapp.shared.generated.resources.select_journal_entry_placeholder
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.app_logo
+import octoconapp.shared.resources.select_journal_entry_placeholder
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

@@ -38,8 +38,8 @@ import app.octocon.app.utils.timeFormat
 import io.kamel.core.utils.cacheControl
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.unnamed_alter
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.unnamed_alter
 import kotlin.coroutines.CoroutineContext
 
 val frontHistoryItemCardHeight = 56.dp

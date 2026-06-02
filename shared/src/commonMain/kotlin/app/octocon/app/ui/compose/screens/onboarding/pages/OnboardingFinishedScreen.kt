@@ -20,15 +20,15 @@ import app.octocon.app.ui.compose.screens.GLOBAL_PADDING
 import app.octocon.app.ui.model.onboarding.pages.OnboardingFinishedComponent
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.composeColorSchemeParams
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.onboarding_card_discord_body
-import octoconapp.shared.generated.resources.onboarding_card_discord_button
-import octoconapp.shared.generated.resources.onboarding_card_discord_title
-import octoconapp.shared.generated.resources.onboarding_card_finish_body
-import octoconapp.shared.generated.resources.onboarding_card_finish_button
-import octoconapp.shared.generated.resources.onboarding_card_finish_title
-import octoconapp.shared.generated.resources.onboarding_card_import_body
-import octoconapp.shared.generated.resources.onboarding_card_import_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.onboarding_card_discord_body
+import octoconapp.shared.resources.onboarding_card_discord_button
+import octoconapp.shared.resources.onboarding_card_discord_title
+import octoconapp.shared.resources.onboarding_card_finish_body
+import octoconapp.shared.resources.onboarding_card_finish_button
+import octoconapp.shared.resources.onboarding_card_finish_title
+import octoconapp.shared.resources.onboarding_card_import_body
+import octoconapp.shared.resources.onboarding_card_import_title
 
 @Composable
 fun OnboardingFinishedScreen(

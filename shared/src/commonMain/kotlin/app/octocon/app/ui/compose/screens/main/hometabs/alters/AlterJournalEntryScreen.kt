@@ -55,12 +55,12 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import com.mikepenz.markdown.m3.markdownColor
 import kotlinx.coroutines.delay
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.delete_journal_entry
-import octoconapp.shared.generated.resources.revert_changes
-import octoconapp.shared.generated.resources.saving
-import octoconapp.shared.generated.resources.tooltip_revert_changes_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.delete_journal_entry
+import octoconapp.shared.resources.revert_changes
+import octoconapp.shared.resources.saving
+import octoconapp.shared.resources.tooltip_revert_changes_desc
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

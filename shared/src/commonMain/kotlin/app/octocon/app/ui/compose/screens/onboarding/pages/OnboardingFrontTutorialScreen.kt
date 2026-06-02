@@ -42,13 +42,13 @@ import app.octocon.app.ui.model.onboarding.pages.OnboardingFrontTutorialComponen
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.state
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.change_front_mode
-import octoconapp.shared.generated.resources.front_setting_bidirectional_swipe_description
-import octoconapp.shared.generated.resources.front_setting_button_description
-import octoconapp.shared.generated.resources.front_setting_swipe_description
-import octoconapp.shared.generated.resources.onboarding_card_front_setting_body
-import octoconapp.shared.generated.resources.onboarding_card_front_setting_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.change_front_mode
+import octoconapp.shared.resources.front_setting_bidirectional_swipe_description
+import octoconapp.shared.resources.front_setting_button_description
+import octoconapp.shared.resources.front_setting_swipe_description
+import octoconapp.shared.resources.onboarding_card_front_setting_body
+import octoconapp.shared.resources.onboarding_card_front_setting_title
 import org.jetbrains.compose.resources.stringResource
 
 @Composable

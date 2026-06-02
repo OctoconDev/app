@@ -46,26 +46,26 @@ import app.octocon.app.utils.state
 import app.octocon.app.utils.currentPlatform
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.cache_client
-import octoconapp.shared.generated.resources.cache_client_body
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.create_pin_body
-import octoconapp.shared.generated.resources.create_pin_title
-import octoconapp.shared.generated.resources.lock_app_with_pin
-import octoconapp.shared.generated.resources.ok
-import octoconapp.shared.generated.resources.pin
-import octoconapp.shared.generated.resources.quick_exit
-import octoconapp.shared.generated.resources.quick_exit_body
-import octoconapp.shared.generated.resources.security
-import octoconapp.shared.generated.resources.stealth_mode
-import octoconapp.shared.generated.resources.stealth_mode_body
-import octoconapp.shared.generated.resources.tooltip_cache_client_desc
-import octoconapp.shared.generated.resources.tooltip_cache_client_locked_desc
-import octoconapp.shared.generated.resources.tooltip_lock_app_with_pin_desc
-import octoconapp.shared.generated.resources.tooltip_quick_exit_desc
-import octoconapp.shared.generated.resources.tooltip_stealth_mode_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.cache_client
+import octoconapp.shared.resources.cache_client_body
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.create_pin_body
+import octoconapp.shared.resources.create_pin_title
+import octoconapp.shared.resources.lock_app_with_pin
+import octoconapp.shared.resources.ok
+import octoconapp.shared.resources.pin
+import octoconapp.shared.resources.quick_exit
+import octoconapp.shared.resources.quick_exit_body
+import octoconapp.shared.resources.security
+import octoconapp.shared.resources.stealth_mode
+import octoconapp.shared.resources.stealth_mode_body
+import octoconapp.shared.resources.tooltip_cache_client_desc
+import octoconapp.shared.resources.tooltip_cache_client_locked_desc
+import octoconapp.shared.resources.tooltip_lock_app_with_pin_desc
+import octoconapp.shared.resources.tooltip_quick_exit_desc
+import octoconapp.shared.resources.tooltip_stealth_mode_desc
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

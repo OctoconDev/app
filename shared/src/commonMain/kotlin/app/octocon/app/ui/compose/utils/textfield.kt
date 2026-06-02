@@ -69,9 +69,9 @@ import app.octocon.app.utils.state
 import com.mikepenz.markdown.m3.markdownColor
 import com.mikepenz.markdown.model.MarkdownColors
 import com.mikepenz.markdown.model.MarkdownTypography
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.cannot_be_blank
-import octoconapp.shared.generated.resources.start_writing
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.cannot_be_blank
+import octoconapp.shared.resources.start_writing
 
 class ModelTransformation(
   val update: (String) -> Result<String>

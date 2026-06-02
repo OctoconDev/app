@@ -72,23 +72,23 @@ import app.octocon.app.utils.derive
 import app.octocon.app.utils.ioDispatcher
 import app.octocon.app.utils.savedState
 import app.octocon.app.utils.state
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.alters
-import octoconapp.shared.generated.resources.create_alter
-import octoconapp.shared.generated.resources.create_tag
-import octoconapp.shared.generated.resources.new_user_card_body
-import octoconapp.shared.generated.resources.new_user_card_button
-import octoconapp.shared.generated.resources.new_user_card_title
-import octoconapp.shared.generated.resources.no_alters_body
-import octoconapp.shared.generated.resources.no_alters_title
-import octoconapp.shared.generated.resources.sort_alphabetically
-import octoconapp.shared.generated.resources.sort_by_id
-import octoconapp.shared.generated.resources.tags
-import octoconapp.shared.generated.resources.tooltip_alter_ids_desc
-import octoconapp.shared.generated.resources.tooltip_alter_ids_title
-import octoconapp.shared.generated.resources.tooltip_alters_desc
-import octoconapp.shared.generated.resources.tooltip_tags_desc
-import octoconapp.shared.generated.resources.unnamed_alter
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.alters
+import octoconapp.shared.resources.create_alter
+import octoconapp.shared.resources.create_tag
+import octoconapp.shared.resources.new_user_card_body
+import octoconapp.shared.resources.new_user_card_button
+import octoconapp.shared.resources.new_user_card_title
+import octoconapp.shared.resources.no_alters_body
+import octoconapp.shared.resources.no_alters_title
+import octoconapp.shared.resources.sort_alphabetically
+import octoconapp.shared.resources.sort_by_id
+import octoconapp.shared.resources.tags
+import octoconapp.shared.resources.tooltip_alter_ids_desc
+import octoconapp.shared.resources.tooltip_alter_ids_title
+import octoconapp.shared.resources.tooltip_alters_desc
+import octoconapp.shared.resources.tooltip_tags_desc
+import octoconapp.shared.resources.unnamed_alter
 
 
 @OptIn(ExperimentalSharedTransitionApi::class)

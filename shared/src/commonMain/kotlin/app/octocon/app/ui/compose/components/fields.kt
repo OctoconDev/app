@@ -102,11 +102,11 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.field_locked
-import octoconapp.shared.generated.resources.tap_to_unlock
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.field_locked
+import octoconapp.shared.resources.tap_to_unlock
 
 val LocalFieldFocusRequester: ProvidableCompositionLocal<FocusRequester> =
   compositionLocalOf { error("No FocusRequester provided") }

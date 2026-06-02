@@ -41,6 +41,7 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
 import io.ktor.http.Headers
 import io.ktor.http.HttpHeaders
+import io.ktor.http.isSuccess
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -575,3 +576,17 @@ suspend fun invalidatePushNotificationToken(endpoint: String, token: String, pus
 
 suspend fun fetchPublicKey(endpoint: String): APIResponse<String> =
   get(endpoint, null, "settings/public-key").body<APIResponse<String>>()
+
+suspend fun checkHealthLive(endpoint: String): Boolean =
+  try {
+    get(endpoint, null, "health/live").status.isSuccess()
+  } catch (e: Exception) {
+    false
+  }
+
+suspend fun checkHealthReady(endpoint: String): Boolean =
+  try {
+    get(endpoint, null, "health/ready").status.isSuccess()
+  } catch (e: Exception) {
+    false
+  }

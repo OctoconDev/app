@@ -28,8 +28,8 @@ import com.mr0xf00.easycrop.core.crop.CropState
 import com.mr0xf00.easycrop.core.crop.CropperStyle
 import com.mr0xf00.easycrop.core.crop.DefaultCropperStyle
 import com.mr0xf00.easycrop.core.crop.LocalCropperStyle
-import com.mr0xf00.easycrop.ui.generated.resources.Res
-import com.mr0xf00.easycrop.ui.generated.resources.restore
+import octoconapp.krop.resources.Res
+import octoconapp.krop.resources.restore
 import org.jetbrains.compose.resources.painterResource
 
 val CropperDialogProperties = (DialogProperties(

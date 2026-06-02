@@ -44,10 +44,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.ok
-import octoconapp.shared.generated.resources.open_tooltip
-import octoconapp.shared.generated.resources.spotlight
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.ok
+import octoconapp.shared.resources.open_tooltip
+import octoconapp.shared.resources.spotlight
 
 @Composable
 fun SpotlightTooltip(

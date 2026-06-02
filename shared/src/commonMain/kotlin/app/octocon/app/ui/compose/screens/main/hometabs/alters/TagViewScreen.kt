@@ -65,18 +65,18 @@ import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import com.mikepenz.markdown.compose.LocalMarkdownColors
 import com.mikepenz.markdown.m3.markdownColor
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.create_subtag
-import octoconapp.shared.generated.resources.delete_tag
-import octoconapp.shared.generated.resources.revert_changes
-import octoconapp.shared.generated.resources.saving
-import octoconapp.shared.generated.resources.sort_alphabetically
-import octoconapp.shared.generated.resources.sort_by_id
-import octoconapp.shared.generated.resources.tooltip_add_subtag_desc
-import octoconapp.shared.generated.resources.tooltip_alter_ids_desc
-import octoconapp.shared.generated.resources.tooltip_alter_ids_title
-import octoconapp.shared.generated.resources.tooltip_delete_tag_desc
-import octoconapp.shared.generated.resources.tooltip_revert_changes_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.create_subtag
+import octoconapp.shared.resources.delete_tag
+import octoconapp.shared.resources.revert_changes
+import octoconapp.shared.resources.saving
+import octoconapp.shared.resources.sort_alphabetically
+import octoconapp.shared.resources.sort_by_id
+import octoconapp.shared.resources.tooltip_add_subtag_desc
+import octoconapp.shared.resources.tooltip_alter_ids_desc
+import octoconapp.shared.resources.tooltip_alter_ids_title
+import octoconapp.shared.resources.tooltip_delete_tag_desc
+import octoconapp.shared.resources.tooltip_revert_changes_desc
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalDecomposeApi::class)
 @Composable

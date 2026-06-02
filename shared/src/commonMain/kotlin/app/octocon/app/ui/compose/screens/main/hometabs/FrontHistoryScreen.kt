@@ -75,16 +75,16 @@ import app.octocon.app.utils.state
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.Month
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.collapse
-import octoconapp.shared.generated.resources.delete_front
-import octoconapp.shared.generated.resources.expand
-import octoconapp.shared.generated.resources.history
-import octoconapp.shared.generated.resources.next_month
-import octoconapp.shared.generated.resources.permanent_tip_front_history
-import octoconapp.shared.generated.resources.previous_month
-import octoconapp.shared.generated.resources.tooltip_delete_front_desc
-import octoconapp.shared.generated.resources.tooltip_history_desc
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.collapse
+import octoconapp.shared.resources.delete_front
+import octoconapp.shared.resources.expand
+import octoconapp.shared.resources.history
+import octoconapp.shared.resources.next_month
+import octoconapp.shared.resources.permanent_tip_front_history
+import octoconapp.shared.resources.previous_month
+import octoconapp.shared.resources.tooltip_delete_front_desc
+import octoconapp.shared.resources.tooltip_history_desc
 import org.jetbrains.compose.resources.stringResource
 
 enum class FrontHistoryTimeType {

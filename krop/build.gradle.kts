@@ -29,12 +29,12 @@ kotlin {
       dependencies {
         val composeVersion = findProperty("compose.version") as String
         val materialIconsVersion = findProperty("material.icons.version") as String
+        val material3Version = findProperty("compose.material3.version") as String
         compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
         compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
-        compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
+        compileOnly("org.jetbrains.compose.material3:material3:$material3Version")
         implementation("org.jetbrains.compose.material:material-icons-core:$materialIconsVersion")
         implementation("org.jetbrains.compose.material:material-icons-extended:$materialIconsVersion")
-        // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
         implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
       }
     }
@@ -48,5 +48,5 @@ kotlin {
 
 compose.resources {
   publicResClass = true
-  packageOfResClass = "com.mr0xf00.easycrop.ui"
+  packageOfResClass = "octoconapp.krop.resources"
 }

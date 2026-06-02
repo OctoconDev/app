@@ -56,19 +56,19 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.savedState
 import app.octocon.app.utils.state
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.color
-import octoconapp.shared.generated.resources.description
-import octoconapp.shared.generated.resources.name
-import octoconapp.shared.generated.resources.no_color
-import octoconapp.shared.generated.resources.no_description
-import octoconapp.shared.generated.resources.no_other_tags
-import octoconapp.shared.generated.resources.no_parent_tag
-import octoconapp.shared.generated.resources.parent_tag
-import octoconapp.shared.generated.resources.remove_parent_tag
-import octoconapp.shared.generated.resources.security_level
-import octoconapp.shared.generated.resources.set_parent_tag
-import octoconapp.shared.generated.resources.tag_name
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.color
+import octoconapp.shared.resources.description
+import octoconapp.shared.resources.name
+import octoconapp.shared.resources.no_color
+import octoconapp.shared.resources.no_description
+import octoconapp.shared.resources.no_other_tags
+import octoconapp.shared.resources.no_parent_tag
+import octoconapp.shared.resources.parent_tag
+import octoconapp.shared.resources.remove_parent_tag
+import octoconapp.shared.resources.security_level
+import octoconapp.shared.resources.set_parent_tag
+import octoconapp.shared.resources.tag_name
 
 @Composable
 fun TagViewSettingsTab(

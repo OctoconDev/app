@@ -22,8 +22,8 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeFlexibleTopAppBar
-import androidx.compose.material3.MediumFlexibleTopAppBar
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -59,9 +59,9 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.effectsSpec
 import app.octocon.app.utils.state
 import kotlinx.coroutines.launch
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.back
-import octoconapp.shared.generated.resources.menu
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.back
+import octoconapp.shared.resources.menu
 
 @Composable
 private fun KeyboardNestedScrollConnection(): NestedScrollConnection? {
@@ -269,7 +269,7 @@ fun OctoTopBar(
     topAppBarState
   )
 ) {
-  MediumFlexibleTopAppBar(
+  MediumTopAppBar(
     actions = actions,
     navigationIcon = navigation,
     title = {
@@ -318,7 +318,7 @@ fun OctoLargeTopBar(
     topAppBarState
   ),
 ) {
-  LargeFlexibleTopAppBar(
+  LargeTopAppBar(
     actions = actions,
     navigationIcon = navigation,
     title = {

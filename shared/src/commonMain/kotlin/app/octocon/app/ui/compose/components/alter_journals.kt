@@ -38,9 +38,9 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.dateTimeFormat
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.locked
-import octoconapp.shared.generated.resources.pinned
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.locked
+import octoconapp.shared.resources.pinned
 
 @Composable
 fun LazyItemScope.AlterJournalEntryCard(

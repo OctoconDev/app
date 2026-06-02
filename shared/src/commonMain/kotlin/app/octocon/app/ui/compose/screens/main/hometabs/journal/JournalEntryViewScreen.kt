@@ -81,14 +81,14 @@ import io.kamel.core.utils.cacheControl
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.coroutines.delay
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.delete_journal_entry
-import octoconapp.shared.generated.resources.name_avatar
-import octoconapp.shared.generated.resources.revert_changes
-import octoconapp.shared.generated.resources.saving
-import octoconapp.shared.generated.resources.tooltip_revert_changes_desc
-import octoconapp.shared.generated.resources.unnamed_alter
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.delete_journal_entry
+import octoconapp.shared.resources.name_avatar
+import octoconapp.shared.resources.revert_changes
+import octoconapp.shared.resources.saving
+import octoconapp.shared.resources.tooltip_revert_changes_desc
+import octoconapp.shared.resources.unnamed_alter
 import org.jetbrains.compose.resources.stringResource
 import kotlin.jvm.JvmName
 

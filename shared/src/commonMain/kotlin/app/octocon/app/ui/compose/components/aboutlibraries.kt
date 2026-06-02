@@ -47,8 +47,8 @@ import com.mikepenz.aboutlibraries.ui.compose.util.author
 import com.mikepenz.aboutlibraries.ui.compose.util.htmlReadyLicenseContent
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.ok
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.ok
 
 @Composable
 fun FixedLibrariesContainer(

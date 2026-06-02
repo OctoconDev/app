@@ -4,13 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.lexiereadable_bold
-import octoconapp.shared.generated.resources.lexiereadable_regular
-import octoconapp.shared.generated.resources.opendyslexic_bold
-import octoconapp.shared.generated.resources.opendyslexic_regular
-import octoconapp.shared.generated.resources.ubuntu_medium
-import octoconapp.shared.generated.resources.ubuntu_regular
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.lexiereadable_bold
+import octoconapp.shared.resources.lexiereadable_regular
+import octoconapp.shared.resources.opendyslexic_bold
+import octoconapp.shared.resources.opendyslexic_regular
+import octoconapp.shared.resources.ubuntu_medium
+import octoconapp.shared.resources.ubuntu_regular
 import org.jetbrains.compose.resources.Font
 
 

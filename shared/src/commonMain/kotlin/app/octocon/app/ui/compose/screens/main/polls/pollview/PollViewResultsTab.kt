@@ -60,10 +60,10 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.derive
 import app.octocon.app.utils.state
 import com.materialkolor.ktx.harmonizeWithPrimary
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.choose_an_alter
-import octoconapp.shared.generated.resources.no_votes
-import octoconapp.shared.generated.resources.poll_no_valid_alters
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.choose_an_alter
+import octoconapp.shared.resources.no_votes
+import octoconapp.shared.resources.poll_no_valid_alters
 import kotlin.enums.enumEntries
 import kotlin.math.round
 

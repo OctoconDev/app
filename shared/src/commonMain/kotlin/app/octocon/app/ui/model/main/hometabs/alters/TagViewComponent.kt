@@ -42,13 +42,13 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.contents
-import octoconapp.shared.generated.resources.settings
-import octoconapp.shared.generated.resources.tooltip_tag_contents_desc
-import octoconapp.shared.generated.resources.tooltip_tag_contents_title
-import octoconapp.shared.generated.resources.tooltip_tag_settings_desc
-import octoconapp.shared.generated.resources.tooltip_tag_settings_title
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.contents
+import octoconapp.shared.resources.settings
+import octoconapp.shared.resources.tooltip_tag_contents_desc
+import octoconapp.shared.resources.tooltip_tag_contents_title
+import octoconapp.shared.resources.tooltip_tag_settings_desc
+import octoconapp.shared.resources.tooltip_tag_settings_title
 
 interface TagViewComponent : CommonInterface {
   val pages: Value<ChildPages<*, Child>>

@@ -74,19 +74,19 @@ import app.octocon.app.utils.state
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
 import kotlinx.coroutines.delay
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.friend_requests
-import octoconapp.shared.generated.resources.friends
-import octoconapp.shared.generated.resources.make_trusted_friend
-import octoconapp.shared.generated.resources.make_untrusted_friend
-import octoconapp.shared.generated.resources.permanent_tip_friends
-import octoconapp.shared.generated.resources.remove_friend
-import octoconapp.shared.generated.resources.tooltip_friends_desc
-import octoconapp.shared.generated.resources.tooltip_remove_friend_desc
-import octoconapp.shared.generated.resources.tooltip_remove_friend_title
-import octoconapp.shared.generated.resources.tooltip_trusted_friends_desc
-import octoconapp.shared.generated.resources.tooltip_trusted_friends_title
-import octoconapp.shared.generated.resources.view_friend
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.friend_requests
+import octoconapp.shared.resources.friends
+import octoconapp.shared.resources.make_trusted_friend
+import octoconapp.shared.resources.make_untrusted_friend
+import octoconapp.shared.resources.permanent_tip_friends
+import octoconapp.shared.resources.remove_friend
+import octoconapp.shared.resources.tooltip_friends_desc
+import octoconapp.shared.resources.tooltip_remove_friend_desc
+import octoconapp.shared.resources.tooltip_remove_friend_title
+import octoconapp.shared.resources.tooltip_trusted_friends_desc
+import octoconapp.shared.resources.tooltip_trusted_friends_title
+import octoconapp.shared.resources.view_friend
 import kotlin.coroutines.CoroutineContext
 
 @OptIn(ExperimentalDecomposeApi::class)

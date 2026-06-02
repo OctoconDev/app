@@ -21,11 +21,11 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.unit.dp
 import app.octocon.app.utils.compose
 import app.octocon.app.utils.savedState
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.update
-import octoconapp.shared.generated.resources.update_username
-import octoconapp.shared.generated.resources.username
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.update
+import octoconapp.shared.resources.update_username
+import octoconapp.shared.resources.username
 
 @Composable
 fun UpdateUsernameDialog(

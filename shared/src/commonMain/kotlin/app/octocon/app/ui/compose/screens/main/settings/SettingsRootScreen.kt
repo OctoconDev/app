@@ -22,7 +22,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -76,92 +76,92 @@ import androidx.compose.foundation.layout.Row
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.mikepenz.markdown.compose.LocalMarkdownColors
 import com.mikepenz.markdown.m3.markdownColor
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.accessibility
-import octoconapp.shared.generated.resources.reset_encryption_card_button
-import octoconapp.shared.generated.resources.encryption_not_initialized_card_button
-import octoconapp.shared.generated.resources.encryption_not_initialized_sp_note
-import octoconapp.shared.generated.resources.recovery_code_sp_note_recover
-import octoconapp.shared.generated.resources.encryption_recovery_needed_card_button
-import octoconapp.shared.generated.resources.recovery_code
-import octoconapp.shared.generated.resources.recovery_code_sp_note
-import octoconapp.shared.generated.resources.account_options
-import octoconapp.shared.generated.resources.app
-import octoconapp.shared.generated.resources.app_info
-import octoconapp.shared.generated.resources.appearance
-import octoconapp.shared.generated.resources.apple_account
-import octoconapp.shared.generated.resources.cancel
-import octoconapp.shared.generated.resources.confirm
-import octoconapp.shared.generated.resources.custom_fields
-import octoconapp.shared.generated.resources.danger_zone
-import octoconapp.shared.generated.resources.delete_account
-import octoconapp.shared.generated.resources.delete_account_body
-import octoconapp.shared.generated.resources.discord_account
-import octoconapp.shared.generated.resources.google_account
-import octoconapp.shared.generated.resources.import
-import octoconapp.shared.generated.resources.import_alters
-import octoconapp.shared.generated.resources.import_complete_pk_body
-import octoconapp.shared.generated.resources.import_complete_sp_body
-import octoconapp.shared.generated.resources.import_failed_pk_body
-import octoconapp.shared.generated.resources.import_failed_sp_body
-import octoconapp.shared.generated.resources.import_pk_body
-import octoconapp.shared.generated.resources.import_pk_title
-import octoconapp.shared.generated.resources.import_sp_body
-import octoconapp.shared.generated.resources.import_sp_title
-import octoconapp.shared.generated.resources.importing_data_body
-import octoconapp.shared.generated.resources.link
-import octoconapp.shared.generated.resources.link_apple_account_body
-import octoconapp.shared.generated.resources.link_apple_account_title
-import octoconapp.shared.generated.resources.link_discord_account_body
-import octoconapp.shared.generated.resources.link_discord_account_title
-import octoconapp.shared.generated.resources.link_google_account_body
-import octoconapp.shared.generated.resources.link_google_account_title
-import octoconapp.shared.generated.resources.login_methods
-import octoconapp.shared.generated.resources.logout
-import octoconapp.shared.generated.resources.logout_body
-import octoconapp.shared.generated.resources.notifications
-import octoconapp.shared.generated.resources.ok
-import octoconapp.shared.generated.resources.open_source_licenses
-import octoconapp.shared.generated.resources.pluralkit
-import octoconapp.shared.generated.resources.reset_device_settings
-import octoconapp.shared.generated.resources.reset_device_settings_body
-import octoconapp.shared.generated.resources.security
-import octoconapp.shared.generated.resources.server_status
-import octoconapp.shared.generated.resources.settings
-import octoconapp.shared.generated.resources.show_push_notifications
-import octoconapp.shared.generated.resources.simply_plural
-import octoconapp.shared.generated.resources.singlet_mode
-import octoconapp.shared.generated.resources.singlet_mode_body
-import octoconapp.shared.generated.resources.token
-import octoconapp.shared.generated.resources.tooltip_apple_account_desc
-import octoconapp.shared.generated.resources.tooltip_custom_fields_desc
-import octoconapp.shared.generated.resources.tooltip_delete_account_desc
-import octoconapp.shared.generated.resources.tooltip_discord_account_desc
-import octoconapp.shared.generated.resources.tooltip_google_account_desc
-import octoconapp.shared.generated.resources.tooltip_logout_desc
-import octoconapp.shared.generated.resources.tooltip_notifications_desc
-import octoconapp.shared.generated.resources.tooltip_open_source_licenses_desc
-import octoconapp.shared.generated.resources.tooltip_plural_kit_import_desc
-import octoconapp.shared.generated.resources.tooltip_plural_kit_import_title
-import octoconapp.shared.generated.resources.tooltip_reset_device_settings_desc
-import octoconapp.shared.generated.resources.tooltip_server_status_desc
-import octoconapp.shared.generated.resources.tooltip_settings_accessibility_desc
-import octoconapp.shared.generated.resources.tooltip_settings_appearance_desc
-import octoconapp.shared.generated.resources.tooltip_settings_desc
-import octoconapp.shared.generated.resources.tooltip_settings_security_desc
-import octoconapp.shared.generated.resources.tooltip_simply_plural_import_desc
-import octoconapp.shared.generated.resources.tooltip_simply_plural_import_title
-import octoconapp.shared.generated.resources.tooltip_singlet_mode_desc
-import octoconapp.shared.generated.resources.tooltip_wipe_alters_desc
-import octoconapp.shared.generated.resources.unlink
-import octoconapp.shared.generated.resources.unlink_apple_account_body
-import octoconapp.shared.generated.resources.unlink_apple_account_title
-import octoconapp.shared.generated.resources.unlink_discord_account_body
-import octoconapp.shared.generated.resources.unlink_discord_account_title
-import octoconapp.shared.generated.resources.unlink_google_account_body
-import octoconapp.shared.generated.resources.unlink_google_account_title
-import octoconapp.shared.generated.resources.wipe_alters
-import octoconapp.shared.generated.resources.wipe_alters_body
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.accessibility
+import octoconapp.shared.resources.account_options
+import octoconapp.shared.resources.app
+import octoconapp.shared.resources.app_info
+import octoconapp.shared.resources.appearance
+import octoconapp.shared.resources.apple_account
+import octoconapp.shared.resources.cancel
+import octoconapp.shared.resources.confirm
+import octoconapp.shared.resources.custom_fields
+import octoconapp.shared.resources.danger_zone
+import octoconapp.shared.resources.delete_account
+import octoconapp.shared.resources.delete_account_body
+import octoconapp.shared.resources.discord_account
+import octoconapp.shared.resources.encryption_not_initialized_card_button
+import octoconapp.shared.resources.encryption_not_initialized_sp_note
+import octoconapp.shared.resources.encryption_recovery_needed_card_button
+import octoconapp.shared.resources.google_account
+import octoconapp.shared.resources.import
+import octoconapp.shared.resources.import_alters
+import octoconapp.shared.resources.import_complete_pk_body
+import octoconapp.shared.resources.import_complete_sp_body
+import octoconapp.shared.resources.import_failed_pk_body
+import octoconapp.shared.resources.import_failed_sp_body
+import octoconapp.shared.resources.import_pk_body
+import octoconapp.shared.resources.import_pk_title
+import octoconapp.shared.resources.import_sp_body
+import octoconapp.shared.resources.import_sp_title
+import octoconapp.shared.resources.importing_data_body
+import octoconapp.shared.resources.link
+import octoconapp.shared.resources.link_apple_account_body
+import octoconapp.shared.resources.link_apple_account_title
+import octoconapp.shared.resources.link_discord_account_body
+import octoconapp.shared.resources.link_discord_account_title
+import octoconapp.shared.resources.link_google_account_body
+import octoconapp.shared.resources.link_google_account_title
+import octoconapp.shared.resources.login_methods
+import octoconapp.shared.resources.logout
+import octoconapp.shared.resources.logout_body
+import octoconapp.shared.resources.notifications
+import octoconapp.shared.resources.ok
+import octoconapp.shared.resources.open_source_licenses
+import octoconapp.shared.resources.pluralkit
+import octoconapp.shared.resources.recovery_code
+import octoconapp.shared.resources.recovery_code_sp_note
+import octoconapp.shared.resources.recovery_code_sp_note_recover
+import octoconapp.shared.resources.reset_device_settings
+import octoconapp.shared.resources.reset_device_settings_body
+import octoconapp.shared.resources.reset_encryption_card_button
+import octoconapp.shared.resources.security
+import octoconapp.shared.resources.server_status
+import octoconapp.shared.resources.settings
+import octoconapp.shared.resources.show_push_notifications
+import octoconapp.shared.resources.simply_plural
+import octoconapp.shared.resources.singlet_mode
+import octoconapp.shared.resources.singlet_mode_body
+import octoconapp.shared.resources.token
+import octoconapp.shared.resources.tooltip_apple_account_desc
+import octoconapp.shared.resources.tooltip_custom_fields_desc
+import octoconapp.shared.resources.tooltip_delete_account_desc
+import octoconapp.shared.resources.tooltip_discord_account_desc
+import octoconapp.shared.resources.tooltip_google_account_desc
+import octoconapp.shared.resources.tooltip_logout_desc
+import octoconapp.shared.resources.tooltip_notifications_desc
+import octoconapp.shared.resources.tooltip_open_source_licenses_desc
+import octoconapp.shared.resources.tooltip_plural_kit_import_desc
+import octoconapp.shared.resources.tooltip_plural_kit_import_title
+import octoconapp.shared.resources.tooltip_reset_device_settings_desc
+import octoconapp.shared.resources.tooltip_server_status_desc
+import octoconapp.shared.resources.tooltip_settings_accessibility_desc
+import octoconapp.shared.resources.tooltip_settings_appearance_desc
+import octoconapp.shared.resources.tooltip_settings_desc
+import octoconapp.shared.resources.tooltip_settings_security_desc
+import octoconapp.shared.resources.tooltip_simply_plural_import_desc
+import octoconapp.shared.resources.tooltip_simply_plural_import_title
+import octoconapp.shared.resources.tooltip_singlet_mode_desc
+import octoconapp.shared.resources.tooltip_wipe_alters_desc
+import octoconapp.shared.resources.unlink
+import octoconapp.shared.resources.unlink_apple_account_body
+import octoconapp.shared.resources.unlink_apple_account_title
+import octoconapp.shared.resources.unlink_discord_account_body
+import octoconapp.shared.resources.unlink_discord_account_title
+import octoconapp.shared.resources.unlink_google_account_body
+import octoconapp.shared.resources.unlink_google_account_title
+import octoconapp.shared.resources.wipe_alters
+import octoconapp.shared.resources.wipe_alters_body
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
@@ -725,7 +725,7 @@ private fun SettingsImportPK(
           contentDescription = null
         )
 
-        ImportStatus.Importing -> LoadingIndicator()
+        ImportStatus.Importing -> CircularProgressIndicator()
 
         ImportStatus.Failed -> Icon(
           imageVector = Icons.Rounded.Error,
@@ -952,7 +952,7 @@ private fun SettingsImportSP(
           contentDescription = null
         )
 
-        ImportStatus.Importing -> LoadingIndicator()
+        ImportStatus.Importing -> CircularProgressIndicator()
 
         ImportStatus.Failed -> Icon(
           imageVector = Icons.Rounded.Error,

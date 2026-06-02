@@ -22,6 +22,7 @@ dependencies {
   implementation("com.nimbusds:nimbus-jose-jwt:10.8")
 
   val composeVersion = findProperty("compose.version") as String
+  val material3Version = findProperty("compose.material3.version") as String
 
   // Widget
   implementation("androidx.work:work-runtime-ktx:2.11.1")
@@ -30,7 +31,7 @@ dependencies {
   implementation("androidx.glance:glance-appwidget:1.1.1")
   implementation("androidx.glance:glance-material3:1.1.1")
   implementation("com.materialkolor:material-kolor:2.1.1")
-  implementation("org.jetbrains.compose.material3:material3:$composeVersion")
+  implementation("org.jetbrains.compose.material3:material3:$material3Version")
   implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
 
   val ktorVersion = "3.4.0"

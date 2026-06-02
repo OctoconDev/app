@@ -15,8 +15,8 @@ import app.octocon.app.utils.compose
 import app.octocon.app.utils.rememberLibraries
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.panels.ChildPanelsMode
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.open_source_licenses
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.open_source_licenses
 
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable

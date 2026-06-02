@@ -43,12 +43,12 @@ import app.octocon.app.ui.compose.utils.ModelTransformation
 import app.octocon.app.ui.model.PINEntryComponent
 import app.octocon.app.utils.compose
 import kotlinx.coroutines.launch
-import octoconapp.shared.generated.resources.Res
-import octoconapp.shared.generated.resources.enter_pin
-import octoconapp.shared.generated.resources.invalid_pin
-import octoconapp.shared.generated.resources.pin
-import octoconapp.shared.generated.resources.pin_hint
-import octoconapp.shared.generated.resources.submit
+import octoconapp.shared.resources.Res
+import octoconapp.shared.resources.enter_pin
+import octoconapp.shared.resources.invalid_pin
+import octoconapp.shared.resources.pin
+import octoconapp.shared.resources.pin_hint
+import octoconapp.shared.resources.submit
 
 @Composable
 fun PINScreen(
