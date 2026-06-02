@@ -89,12 +89,13 @@ kotlin {
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
         val composeVersion = findProperty("compose.version") as String
+        val materialIconsVersion = findProperty("material.icons.version") as String
         implementation("org.jetbrains.compose.runtime:runtime:$composeVersion")
         implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
         implementation("org.jetbrains.compose.material3:material3:$composeVersion")
         implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
-        implementation("org.jetbrains.compose.material:material-icons-core:$composeVersion")
-        implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-core:$materialIconsVersion")
+        implementation("org.jetbrains.compose.material:material-icons-extended:$materialIconsVersion")
 
         api("com.arkivanov.essenty:lifecycle:$essentyVersion")
         implementation("com.arkivanov.essenty:lifecycle-coroutines:$essentyVersion")

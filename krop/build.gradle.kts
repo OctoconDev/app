@@ -28,11 +28,12 @@ kotlin {
     val commonMain by getting {
       dependencies {
         val composeVersion = findProperty("compose.version") as String
+        val materialIconsVersion = findProperty("material.icons.version") as String
         compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
         compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
         compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
-        implementation("org.jetbrains.compose.material:material-icons-core:$composeVersion")
-        implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-core:$materialIconsVersion")
+        implementation("org.jetbrains.compose.material:material-icons-extended:$materialIconsVersion")
         // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
         implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
       }
