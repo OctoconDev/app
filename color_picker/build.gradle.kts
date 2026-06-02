@@ -30,11 +30,11 @@ kotlin {
       dependencies {
         implementation("com.github.ajalt.colormath:colormath:3.6.1")
 
-        compileOnly("org.jetbrains.compose.runtime:runtime:1.11.0-alpha03")
-        compileOnly("org.jetbrains.compose.foundation:foundation:1.11.0-alpha03")
-        compileOnly("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
-        // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
-        compileOnly("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
+        val composeVersion = findProperty("compose.version") as String
+        compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
+        compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
+        compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
+        compileOnly("org.jetbrains.compose.components:components-resources:$composeVersion")
       }
     }
 

@@ -9,6 +9,8 @@ plugins {
   id("dev.hydraulic.conveyor") version "1.13"
 }
 
+val composeVersion = findProperty("compose.version") as String
+
 kotlin {
   jvm()
   jvmToolchain {
@@ -21,7 +23,7 @@ kotlin {
 
     val jvmMain by getting {
       dependencies {
-        implementation(compose.desktop.currentOs)
+        implementation("org.jetbrains.compose.desktop:desktop-jvm:$composeVersion")
         implementation(project(":shared"))
         implementation("com.arkivanov.decompose:extensions-compose:$decomposeVersion")
         implementation("org.jetbrains.kotlinx:kotlinx-coroutines-swing:1.10.1")
@@ -67,8 +69,8 @@ compose.desktop {
 
 dependencies {
   // Use the configurations created by the Conveyor plugin to tell Gradle/Conveyor where to find the artifacts for each platform.
-  linuxAmd64(compose.desktop.linux_x64)
-  macAmd64(compose.desktop.macos_x64)
-  macAarch64(compose.desktop.macos_arm64)
-  windowsAmd64(compose.desktop.windows_x64)
+  linuxAmd64("org.jetbrains.compose.desktop:desktop-jvm-linux-x64:$composeVersion")
+  macAmd64("org.jetbrains.compose.desktop:desktop-jvm-macos-x64:$composeVersion")
+  macAarch64("org.jetbrains.compose.desktop:desktop-jvm-macos-arm64:$composeVersion")
+  windowsAmd64("org.jetbrains.compose.desktop:desktop-jvm-windows-x64:$composeVersion")
 }

@@ -26,9 +26,10 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains:markdown:0.7.3")
-                compileOnly(compose.runtime)
-                compileOnly(compose.ui)
-                compileOnly(compose.foundation)
+                val composeVersion = findProperty("compose.version") as String
+                compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
+                compileOnly("org.jetbrains.compose.ui:ui:$composeVersion")
+                compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
             }
         }
     }

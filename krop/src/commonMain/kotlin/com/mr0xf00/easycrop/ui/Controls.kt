@@ -46,12 +46,12 @@ import com.mr0xf00.easycrop.core.crop.rotLeft
 import com.mr0xf00.easycrop.core.crop.rotRight
 import com.mr0xf00.easycrop.core.utils.eq0
 import com.mr0xf00.easycrop.core.utils.setAspect
-import octoconapp.krop.generated.resources.Res
-import octoconapp.krop.generated.resources.flip_hor
-import octoconapp.krop.generated.resources.flip_ver
-import octoconapp.krop.generated.resources.resize
-import octoconapp.krop.generated.resources.rot_left
-import octoconapp.krop.generated.resources.rot_right
+import com.mr0xf00.easycrop.ui.generated.resources.Res
+import com.mr0xf00.easycrop.ui.generated.resources.flip_hor
+import com.mr0xf00.easycrop.ui.generated.resources.flip_ver
+import com.mr0xf00.easycrop.ui.generated.resources.resize
+import com.mr0xf00.easycrop.ui.generated.resources.rot_left
+import com.mr0xf00.easycrop.ui.generated.resources.rot_right
 import org.jetbrains.compose.resources.painterResource
 
 fun Size.isAspect(aspect: AspectRatio): Boolean {

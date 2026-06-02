@@ -30,10 +30,11 @@ kotlin {
   sourceSets {
     val wasmJsMain by getting {
       dependencies {
+        val composeVersion = findProperty("compose.version") as String
         implementation(project(":shared"))
 
-        implementation("org.jetbrains.compose.ui:ui:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.foundation:foundation:1.11.0-alpha03")
+        implementation("org.jetbrains.compose.ui:ui:$composeVersion")
+        implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
 
         implementation("org.jetbrains.kotlinx:kotlinx-browser-wasm-js:0.5.0")
       }

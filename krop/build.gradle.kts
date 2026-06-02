@@ -27,13 +27,14 @@ kotlin {
   sourceSets {
     val commonMain by getting {
       dependencies {
-        compileOnly("org.jetbrains.compose.runtime:runtime:1.11.0-alpha03")
-        compileOnly("org.jetbrains.compose.foundation:foundation:1.11.0-alpha03")
-        compileOnly("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
-        implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+        val composeVersion = findProperty("compose.version") as String
+        compileOnly("org.jetbrains.compose.runtime:runtime:$composeVersion")
+        compileOnly("org.jetbrains.compose.foundation:foundation:$composeVersion")
+        compileOnly("org.jetbrains.compose.material3:material3:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-core:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
         // compileOnly("org.jetbrains.compose.material3:material3:1.8.0+dev2098")
-        implementation("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
+        implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
       }
     }
     val iosMain by getting {
@@ -42,4 +43,9 @@ kotlin {
       }
     }
   }
+}
+
+compose.resources {
+  publicResClass = true
+  packageOfResClass = "com.mr0xf00.easycrop.ui"
 }

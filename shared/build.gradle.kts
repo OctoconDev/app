@@ -88,13 +88,13 @@ kotlin {
         implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
         implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
 
-        implementation("org.jetbrains.compose.runtime:runtime:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.foundation:foundation:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.foundation:foundation:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.material3:material3:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.components:components-resources:1.11.0-alpha03")
-        implementation("org.jetbrains.compose.material:material-icons-core:1.7.3")
-        implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
+        val composeVersion = findProperty("compose.version") as String
+        implementation("org.jetbrains.compose.runtime:runtime:$composeVersion")
+        implementation("org.jetbrains.compose.foundation:foundation:$composeVersion")
+        implementation("org.jetbrains.compose.material3:material3:$composeVersion")
+        implementation("org.jetbrains.compose.components:components-resources:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-core:$composeVersion")
+        implementation("org.jetbrains.compose.material:material-icons-extended:$composeVersion")
 
         api("com.arkivanov.essenty:lifecycle:$essentyVersion")
         implementation("com.arkivanov.essenty:lifecycle-coroutines:$essentyVersion")
