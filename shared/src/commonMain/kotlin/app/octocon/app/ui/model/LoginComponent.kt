@@ -9,6 +9,7 @@ import app.octocon.app.utils.ColorSchemeParams
 import app.octocon.app.utils.DevicePlatform
 import app.octocon.app.utils.ExitApplicationType
 import app.octocon.app.utils.WebURLOpenBehavior
+import app.octocon.app.utils.buildRedirectUri
 import app.octocon.app.utils.ioDispatcher
 import com.arkivanov.essenty.lifecycle.coroutines.coroutineScope
 import kotlinx.coroutines.Job
@@ -46,7 +47,7 @@ interface LoginComponent {
   data class Model(
     val directTokenTimesPressed: Int = 0,
     val directTokenDialogOpen: Boolean = false,
-    val serverUrl: String = app.octocon.app.Settings.DEFAULT_API_ENDPOINT,
+    val serverUrl: String = "",
     val serverHealthStatus: ServerHealthStatus = ServerHealthStatus.UNKNOWN
   )
 }
@@ -62,12 +63,12 @@ private fun buildLoginUrl(provider: String, apiEndpoint: String): String =
           "?platform=${DevicePlatform.internalName}" +
           "&version_code=${VERSION_CODE}" +
           "&is_beta=${IS_BETA}" +
-          "&redirect_uri=octocon://auth/token"
+          "&redirect_uri=${buildRedirectUri("auth/token")}"
 
 internal class LoginComponentImpl(
   componentContext: CommonComponentContext
 ) : LoginComponent, CommonComponentContext by componentContext {
-  private val handler = retainStateHandler { LoginComponent.Model() }
+  private val handler = retainStateHandler { LoginComponent.Model(serverUrl = settings.data.value.apiEndpoint) }
   init {
     registerStateHandler(handler)
   }
@@ -81,8 +82,10 @@ internal class LoginComponentImpl(
   override fun logInWithApple(colorSchemeParams: ColorSchemeParams) = logInWithProvider("apple", colorSchemeParams)
 
   private fun logInWithProvider(provider: String, colorSchemeParams: ColorSchemeParams) {
+    val serverUrl = model.value.serverUrl.trimEnd('/')
+    settings.setApiEndpoint(serverUrl)
     platformUtilities.openURL(
-      buildLoginUrl(provider, settings.data.value.apiEndpoint),
+      buildLoginUrl(provider, serverUrl),
       colorSchemeParams,
       webURLOpenBehavior = WebURLOpenBehavior.SameTab
     )

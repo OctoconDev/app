@@ -232,3 +232,5 @@ interface BuildConfigInterface {
 }
 
 expect object BuildConfig : BuildConfigInterface
+
+expect fun buildRedirectUri(path: String): String

@@ -344,3 +344,8 @@ actual object BuildConfig : BuildConfigInterface {
         return isDebug
     }
 }
+
+actual fun buildRedirectUri(path: String): String {
+    val origin = window.location.origin
+    return "$origin/$path"
+}

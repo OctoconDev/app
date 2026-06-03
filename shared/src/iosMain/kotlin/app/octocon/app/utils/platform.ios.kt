@@ -225,3 +225,5 @@ actual object BuildConfig : BuildConfigInterface {
     return Platform.isDebugBinary
   }
 }
+
+actual fun buildRedirectUri(path: String): String = "octocon://$path"

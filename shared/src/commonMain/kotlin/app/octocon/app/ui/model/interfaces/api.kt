@@ -34,6 +34,7 @@ import app.octocon.app.api.toState
 import app.octocon.app.ui.compose.screens.main.hometabs.FrontHistoryItem
 import app.octocon.app.utils.MonthYearPair
 import app.octocon.app.utils.PlatformUtilities
+import app.octocon.app.utils.buildRedirectUri
 import app.octocon.app.utils.globalSerializer
 import app.octocon.app.utils.ioDispatcher
 import app.octocon.app.utils.monthDays
@@ -1651,7 +1652,7 @@ internal class ApiInterfaceImpl(
           val linkToken = response.data!!.token
           val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("$apiEndpoint/auth/link/discord?link_token=$linkToken&redirect_uri=octocon://link_success/discord")
+          openUri("$apiEndpoint/auth/link/discord?link_token=$linkToken&redirect_uri=${buildRedirectUri("link_success/discord")}")
         }
       }
     )
@@ -1675,7 +1676,7 @@ internal class ApiInterfaceImpl(
           val linkToken = response.data!!.token
           val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("$apiEndpoint/auth/link/google?link_token=$linkToken&redirect_uri=octocon://link_success/google")
+          openUri("$apiEndpoint/auth/link/google?link_token=$linkToken&redirect_uri=${buildRedirectUri("link_success/google")}")
         }
       }
     )
@@ -1699,7 +1700,7 @@ internal class ApiInterfaceImpl(
           val linkToken = response.data!!.token
           val apiEndpoint = settingsInterface.data.value.apiEndpoint
 
-          openUri("$apiEndpoint/auth/link/apple?link_token=$linkToken&redirect_uri=octocon://link_success/apple")
+          openUri("$apiEndpoint/auth/link/apple?link_token=$linkToken&redirect_uri=${buildRedirectUri("link_success/apple")}")
         }
       }
     )

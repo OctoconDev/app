@@ -21,3 +21,5 @@ actual object BuildConfig : BuildConfigInterface {
     return 0 != applicationContext!!.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE
   }
 }
+
+actual fun buildRedirectUri(path: String): String = "octocon://$path"
