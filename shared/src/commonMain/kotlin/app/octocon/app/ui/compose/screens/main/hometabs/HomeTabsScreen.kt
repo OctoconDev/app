@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -69,10 +70,20 @@ import octoconapp.shared.resources.history
 import octoconapp.shared.resources.journal
 import octoconapp.shared.resources.menu
 
+object HomeTabsTestTags {
+  const val BOTTOM_BAR = "homeTabs.bottomBar"
+  const val NAVIGATION_RAIL = "homeTabs.navigationRail"
+  const val TAB_ALTERS = "homeTabs.tab.alters"
+  const val TAB_HISTORY = "homeTabs.tab.history"
+  const val TAB_JOURNAL = "homeTabs.tab.journal"
+  const val TAB_FRIENDS = "homeTabs.tab.friends"
+}
+
 @OptIn(ExperimentalDecomposeApi::class)
 @Composable
 fun HomeTabsScreen(
-  component: HomeTabsComponent
+  component: HomeTabsComponent,
+  renderChild: @Composable (HomeTabsComponent.Child) -> Unit = { DefaultHomeTabsChild(it) }
 ) {
   /*val topAppBarState = rememberTopAppBarState()
   val scrollBehavior =
@@ -179,12 +190,7 @@ fun HomeTabsScreen(
           animation = stackAnimation(fade(tween(200))),
           modifier = Modifier.fillMaxSize()
         ) {
-          when (val child = it.instance) {
-            is HomeTabsComponent.Child.AltersChild -> AltersScreen(child.component)
-            is HomeTabsComponent.Child.FrontHistoryChild -> FrontHistoryScreen(child.component)
-            is HomeTabsComponent.Child.JournalChild -> JournalScreen(child.component)
-            is HomeTabsComponent.Child.FriendsChild -> FriendsScreen(child.component)
-          }
+          renderChild(it.instance)
         }
       }
     }
@@ -216,6 +222,16 @@ fun HomeTabsScreen(
 }
 
 @Composable
+private fun DefaultHomeTabsChild(child: HomeTabsComponent.Child) {
+  when (child) {
+    is HomeTabsComponent.Child.AltersChild -> AltersScreen(child.component)
+    is HomeTabsComponent.Child.FrontHistoryChild -> FrontHistoryScreen(child.component)
+    is HomeTabsComponent.Child.JournalChild -> JournalScreen(child.component)
+    is HomeTabsComponent.Child.FriendsChild -> FriendsScreen(child.component)
+  }
+}
+
+@Composable
 fun NavigationRail(
   settings: Settings,
   component: HomeTabsComponent,
@@ -235,7 +251,7 @@ fun NavigationRail(
     reduceMotion = settings.reduceMotion
   ) {
     NavigationRail(
-      modifier = modifier,
+      modifier = modifier.testTag(HomeTabsTestTags.NAVIGATION_RAIL),
       header = {
         IconButton(
           onClick = { toggleDrawer(true) }
@@ -254,7 +270,8 @@ fun NavigationRail(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.AltersChild,
-        component::navigateToAlters
+        component::navigateToAlters,
+        testTag = HomeTabsTestTags.TAB_ALTERS
       )
       OctoconNavigationRailItem(
         Res.string.history.compose,
@@ -262,7 +279,8 @@ fun NavigationRail(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.FrontHistoryChild,
-        component::navigateToHistory
+        component::navigateToHistory,
+        testTag = HomeTabsTestTags.TAB_HISTORY
       )
       OctoconNavigationRailItem(
         Res.string.journal.compose,
@@ -270,7 +288,8 @@ fun NavigationRail(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.JournalChild,
-        component::navigateToJournal
+        component::navigateToJournal,
+        testTag = HomeTabsTestTags.TAB_JOURNAL
       )
       OctoconNavigationRailItem(
         Res.string.friends.compose,
@@ -278,7 +297,8 @@ fun NavigationRail(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.FriendsChild,
-        component::navigateToFriends
+        component::navigateToFriends,
+        testTag = HomeTabsTestTags.TAB_FRIENDS
       )
       Spacer(modifier = Modifier.weight(1f))
     }
@@ -306,7 +326,7 @@ fun BottomBar(
   ) {
     ShortNavigationBar(
       // windowInsets = WindowInsets.navigationBars,
-      modifier = modifier
+      modifier = modifier.testTag(HomeTabsTestTags.BOTTOM_BAR)
     ) {
       OctoconNavigationBarItem(
         Res.string.alters.compose,
@@ -314,7 +334,8 @@ fun BottomBar(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.AltersChild,
-        component::navigateToAlters
+        component::navigateToAlters,
+        testTag = HomeTabsTestTags.TAB_ALTERS
       )
       OctoconNavigationBarItem(
         Res.string.history.compose,
@@ -322,7 +343,8 @@ fun BottomBar(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.FrontHistoryChild,
-        component::navigateToHistory
+        component::navigateToHistory,
+        testTag = HomeTabsTestTags.TAB_HISTORY
       )
       OctoconNavigationBarItem(
         Res.string.journal.compose,
@@ -330,7 +352,8 @@ fun BottomBar(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.JournalChild,
-        component::navigateToJournal
+        component::navigateToJournal,
+        testTag = HomeTabsTestTags.TAB_JOURNAL
       )
       OctoconNavigationBarItem(
         Res.string.friends.compose,
@@ -338,7 +361,8 @@ fun BottomBar(
         lazyListCoroutineScope,
         lazyListState,
         currentScreen is HomeTabsComponent.Child.FriendsChild,
-        component::navigateToFriends
+        component::navigateToFriends,
+        testTag = HomeTabsTestTags.TAB_FRIENDS
       )
     }
   }
@@ -352,9 +376,11 @@ private fun OctoconNavigationBarItem(
   lazyListCoroutineScope: CoroutineScope,
   lazyListState: LazyListState?,
   isSelected: Boolean,
-  navigate: () -> Unit
+  navigate: () -> Unit,
+  testTag: String? = null
 ) {
   ShortNavigationBarItem(
+    modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
     selected = isSelected,
     onClick = {
       if (isSelected) {
@@ -379,9 +405,11 @@ private fun ColumnScope.OctoconNavigationRailItem(
   lazyListCoroutineScope: CoroutineScope,
   lazyListState: LazyListState?,
   isSelected: Boolean,
-  navigate: () -> Unit
+  navigate: () -> Unit,
+  testTag: String? = null
 ) {
   NavigationRailItem(
+    modifier = if (testTag != null) Modifier.testTag(testTag) else Modifier,
     selected = isSelected,
     onClick = {
       if(isSelected) {

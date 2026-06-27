@@ -5,9 +5,175 @@ on:
     branches:
       - main
       - interfold-additions
+  pull_request:
+    branches:
+      - main
+      - interfold-additions
 
 jobs:
+  test:
+    name: shared :connectedAndroidDeviceTest
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # Smoke-compile the test source set on the runner without an emulator.
+      # Fails fast on Gradle / source-set wiring issues before paying the
+      # ~5 min AVD boot. Task name comes from the new
+      # com.android.kotlin.multiplatform.library plugin (androidDeviceTest).
+      - name: Compile instrumented tests
+        run: ./gradlew :shared:compileAndroidDeviceTest --stacktrace
+
+      - name: AVD cache
+        id: avd-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-api-34-x86_64-v1
+
+      - name: Create AVD and generate snapshot (cold)
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: default
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run :shared:connectedAndroidDeviceTest
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: default
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew :shared:connectedAndroidDeviceTest --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-android-test-report
+          path: |
+            shared/build/reports/androidTests/
+            shared/build/outputs/androidTest-results/
+
+  # Fast JVM run of every `commonTest` case (~30s after warm cache). Runs in
+  # parallel with `test` to give PR authors near-immediate feedback if a common
+  # test breaks, without paying the Android emulator boot. The Android job
+  # remains the deploy gate (`build-wasm-image needs: test`) — a flaky Skia/AWT
+  # failure on this job cannot, by itself, block a deploy.
+  desktop-test:
+    name: shared :desktopTest
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run :shared:desktopTest
+        run: ./gradlew :shared:desktopTest --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-desktop-test-report
+          path: |
+            shared/build/reports/tests/desktopTest/
+            shared/build/test-results/desktopTest/
+
+  # End-to-end slice against the published Octocon backend image
+  # (digest-pinned in shared/src/desktopIntegrationTest/.../BackendContainer.kt).
+  # Boots the image in Testcontainers, drives the OAuth-callback auth flow
+  # to obtain a real token, then exercises ApiInterfaceImpl through the
+  # Phoenix WebSocket + endpoint-proxy paths (LoadClient + CreateAlter).
+  #
+  # Not currently a deploy gate (build-wasm-image still needs only `test`).
+  # Treat as parity with desktop-test: fast PR feedback, surface failures
+  # via branch protection in the GH UI rather than via `needs:` here.
+  # Approximate cost on a cold runner: ~30 s image pull + ~5 s tests.
+  #
+  # Requirements satisfied implicitly on `ubuntu-latest`:
+  # - Docker daemon pre-installed and reachable on the default Unix socket.
+  # - Bridge-network container IPs (172.17.x.y) are directly routable from
+  #   the host JVM, which BackendContainer.baseUrl depends on so the
+  #   backend's WebSocket endpoint-proxy loopback resolves correctly.
+  integration-test:
+    name: shared :desktopIntegrationTest
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      # Only required if ghcr.io/azyyyyyy/interfold-api ever flips private;
+      # harmless when it stays public, so granted defensively.
+      packages: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Run :shared:desktopIntegrationTest
+        run: ./gradlew :shared:desktopIntegrationTest --stacktrace
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: shared-integration-test-report
+          path: |
+            shared/build/reports/tests/desktopIntegrationTest/
+            shared/build/test-results/desktopIntegrationTest/
+
   build-wasm-image:
+    needs: test
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: read

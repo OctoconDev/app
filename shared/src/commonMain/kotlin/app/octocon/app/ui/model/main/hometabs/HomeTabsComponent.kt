@@ -1,5 +1,6 @@
 package app.octocon.app.ui.model.main.hometabs
 
+import app.octocon.app.Settings
 import app.octocon.app.ui.model.MainComponentContext
 import app.octocon.app.ui.model.interfaces.SettingsInterface
 import com.arkivanov.decompose.router.stack.ChildStack
@@ -40,9 +41,7 @@ class HomeTabsComponentImpl(
     childStack(
       source = navigator,
       serializer = Config.serializer(),
-      initialStack = { listOf(
-        if(settings.data.value.isSinglet) Config.Friends else Config.Alters
-      ) },
+      initialStack = { initialStackConfigs(settings.data.value) },
       handleBackButton = false,
       childFactory = ::child,
     )
@@ -114,5 +113,11 @@ class HomeTabsComponentImpl(
 
     @Serializable
     data object Journal : Config
+  }
+
+  companion object {
+    internal fun initialStackConfigs(settings: Settings): List<Config> = listOf(
+      if (settings.isSinglet) Config.Friends else Config.Alters
+    )
   }
 }

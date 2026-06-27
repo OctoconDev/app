@@ -119,7 +119,12 @@ val copyComposeResources by tasks.creating {
   }
 }
 
-tasks.matching { it.name.contains("Assets") || it.name.contains("JavaRes") || it.name.contains("Resources") }.configureEach {
+tasks.matching {
+  it.name.contains("Assets") ||
+    it.name.contains("JavaRes") ||
+    it.name.contains("Resources") ||
+    it.name.contains("lint", ignoreCase = true)
+}.configureEach {
   if (this != copyComposeResources && !this.name.startsWith("copy") && !this.name.endsWith("Resources")) {
     dependsOn(copyComposeResources)
   }
