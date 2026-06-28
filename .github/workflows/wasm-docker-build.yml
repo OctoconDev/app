@@ -210,7 +210,16 @@ jobs:
           context: .
           file: ./Dockerfile.wasm
           push: true
+          # Multi-arch fan-out. Builder stage runs once on $BUILDPLATFORM
+          # (the GHA amd64 runner) — see Dockerfile.wasm header comment.
+          # Runtime stage is COPY-only, so no QEMU binfmt handler is needed.
+          platforms: linux/amd64,linux/arm64,linux/arm/v7
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # Suppress the SBOM/provenance attestation manifests — they otherwise
+          # show up as `unknown/unknown` entries in the OCI index, which confuses
+          # the bootstrapper's manifest inspection.
+          provenance: false
+          sbom: false
           cache-from: type=gha,scope=octocon-wasm
           cache-to: type=gha,mode=max,scope=octocon-wasm

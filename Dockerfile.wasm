@@ -1,6 +1,12 @@
 # syntax=docker/dockerfile:1.7
 
-FROM eclipse-temurin:21-jdk-jammy AS builder
+# Builder is pinned to $BUILDPLATFORM so the Gradle/Kotlin-Wasm compile
+# always runs natively on the CI host architecture (typically linux/amd64).
+# This is required because Temurin has no linux/arm/v7 JDK tag — without it,
+# `buildx --platform linux/arm/v7` would fail to pull the base image.
+# The Wasm bundle produced is CPU-architecture-neutral, so the per-arch
+# runtime stages below all consume the same artifact.
+FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk-jammy AS builder
 
 WORKDIR /workspace
 
@@ -25,12 +31,35 @@ RUN --mount=type=cache,id=octocon-gradle-cache,target=/root/.gradle,sharing=lock
               -Dorg.gradle.internal.http.socketTimeout=120000 \
               webApp:wasmJsBrowserDistribution
 
+# Runtime stage is intentionally metadata-only (COPY + CMD, no RUN) so that
+# buildx can produce per-arch manifests without any QEMU binfmt handler.
+# nginx:1.30 is already a multi-arch manifest, so omitting --platform lets
+# buildx pick the correct per-target base for amd64 / arm64 / arm/v7.
 FROM nginx:1.30 AS runtime
 
 # Serve the Kotlin/Wasm production bundle directly from Nginx.
 COPY --from=builder /workspace/webApp/build/dist/wasmJs/productionExecutable/ /usr/share/nginx/html/
 
-RUN sed -i 's/listen       80;/listen       8080;/' /etc/nginx/conf.d/default.conf
+# Replace the stock default.conf wholesale (port 8080, dual-stack) via a
+# BuildKit heredoc — avoids a target-arch `RUN sed` that would otherwise
+# require QEMU under multi-arch buildx.
+COPY <<'EOF' /etc/nginx/conf.d/default.conf
+server {
+    listen       8080;
+    listen       [::]:8080;
+    server_name  localhost;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+}
+EOF
 
 EXPOSE 8080
 
