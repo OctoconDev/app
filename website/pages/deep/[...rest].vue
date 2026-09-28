@@ -103,10 +103,6 @@ useHead({
   title: 'Link access'
 })
 
-definePageMeta({
-  layout: 'bare'
-})
-
 // const event = useRequestEvent()
 // if (event) {
 //  setResponseStatus(event, 404)
